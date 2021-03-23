@@ -25,10 +25,16 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/assets/dashkit/img"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/dashkit/css/theme.min.css",
+              "src/assets/dashkit/fonts/feather/feather.css",
+              "src/assets/dashkit/libs/flatpickr/dist/flatpickr.min.css",
+              "src/assets/dashkit/libs/quill/dist/quill.core.css",
+              "src/assets/dashkit/libs/highlightjs/styles/vs2015.css"
             ],
             "scripts": []
           },
@@ -87,13 +93,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
@@ -105,9 +106,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
