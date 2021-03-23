@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "reseller-savvy-dev": {
+      "hosting": {
+        "reseller-savvy": [
+          "reseller-savvy-dev"
+        ]
+      }
+    }
+  }
+}

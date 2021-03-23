@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
 };
+
+//TODO: create production version of firebase
