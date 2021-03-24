@@ -1,3 +1,281 @@
-<app-navbar></app-navbar>
+<div class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light">
+  <app-navbar></app-navbar>
+</div>
 
-<div class="main-content">hi</div>
+<!-- LATER: Change alot of 'a' links to routerlinks -->
+
+<!-- Header -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="header">
+          <div class="header-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Pretitle -->
+                <h6 class="header-pretitle">Dashboard</h6>
+
+                <!-- Title -->
+                <h1 class="header-title text-truncate">Inventory</h1>
+                <p class="small text-truncate text-secondary mt-2">
+                  <!-- TODO: add item count based on price plan -->
+                  3/5 Items (Mar 20 - Apr 20) - <i>Pro Plan</i>
+                </p>
+              </div>
+              <div class="col-auto">
+                <!-- Buttons -->
+                <a href="#!" class="btn btn-white ms-2 mr-2"> Import Item </a>
+                <a href="#!" class="btn btn-primary ms-2"> New Item </a>
+              </div>
+            </div>
+            <!-- / .row -->
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Nav -->
+                <ul class="nav nav-tabs nav-overflow header-tabs">
+                  <li class="nav-item">
+                    <a href="#!" class="nav-link text-nowrap active">
+                      Unlisted
+                      <span class="badge rounded-pill bg-secondary-soft"
+                        >627</span
+                      >
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#!" class="nav-link text-nowrap">
+                      Active
+                      <span class="badge rounded-pill bg-secondary-soft"
+                        >198</span
+                      >
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#!" class="nav-link text-nowrap">
+                      Sold
+                      <span class="badge rounded-pill bg-secondary-soft"
+                        >29</span
+                      >
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- List -->
+
+    <div class="tab-content">
+      <div
+        class="tab-pane fade show active"
+        id="companiesListPane"
+        role="tabpanel"
+        aria-labelledby="companiesListTab"
+      >
+        <!-- Card -->
+        <div class="card">
+          <!-- Card Header -->
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col">
+                <form>
+                  <div class="input-group input-group-flush">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fe fe-search"></i>
+                      </span>
+                    </div>
+                    <input
+                      class="list-search form-control"
+                      type="search"
+                      placeholder="Search"
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Listings -->
+          <!-- TODO: Pagination -->
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Cost</th>
+                <th scope="col">Price</th>
+                <th scope="col">Potential Profit</th>
+                <th scope="col">Date</th>
+                <th scope="col text-right">Marketplaces</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="products-product">
+                  <div class="d-flex align-items-center">
+                    <!-- Image -->
+                    <div class="avatar">
+                      <img
+                        class="avatar-img rounded mr-3"
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        alt="..."
+                      />
+                    </div>
+
+                    <div class="ml-3">
+                      <!-- Heading -->
+                      <h4
+                        class="font-weight-normal mb-1"
+                        style="max-width: 200px"
+                      >
+                        <a href="">
+                          Make this multiline super long butso long tyou ds
+                          kdsgkjdfng
+                        </a>
+                      </h4>
+
+                      <!-- Text -->
+                      <small class="text-muted">3" x 5" Size</small>
+                    </div>
+                  </div>
+                </td>
+                <td>$2.79</td>
+
+                <td class="products-price">$15.87</td>
+                <td class="products-price text-success font-weight-bold">
+                  $14.87
+                </td>
+                <td>Jan 17, 21</td>
+                <!-- TODO: add image -->
+                <td class="text-right">
+                  <div class="avatar-group">
+                    <span
+                      class="avatar avatar-xs"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Dianna Smiley"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        class="avatar-img rounded-circle"
+                        alt="..."
+                      />
+                    </span>
+                    <span
+                      class="avatar avatar-xs"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Ab Hadley"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        class="avatar-img rounded-circle"
+                        alt="..."
+                      />
+                    </span>
+                    <span
+                      class="avatar avatar-xs"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Adolfo Hess"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        class="avatar-img rounded-circle"
+                        alt="..."
+                      />
+                    </span>
+                    <span
+                      class="avatar avatar-xs"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Daniela Dewitt"
+                    >
+                      <img
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        class="avatar-img rounded-circle"
+                        alt="..."
+                      />
+                    </span>
+                  </div>
+                </td>
+                <td class="text-right">
+                  <!-- Dropdown -->
+                  <div class="dropdown">
+                    <a
+                      href="#"
+                      class="dropdown-ellipses dropdown-toggle"
+                      role="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="fe fe-more-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <!-- TODO: Maybe add more specific items to list -->
+                      <a href="#!" class="dropdown-item"> Edit </a>
+                      <a href="#!" class="dropdown-item"> Delete </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+          <!-- Pagination (prev) -->
+          <ul
+            class="list-pagination-prev pagination pagination-tabs card-pagination"
+          >
+            <li class="page-item">
+              <a class="page-link pl-0 pr-4 border-right" href="#">
+                <i class="fe fe-arrow-left mr-1"></i> Prev
+              </a>
+            </li>
+          </ul>
+
+          <!-- Pagination -->
+          <ul
+            class="list-pagination pagination pagination-tabs card-pagination"
+          >
+            <li class="active">
+              <a class="page" href="#" data-i="1" data-page="10">1</a>
+            </li>
+            <li><a class="page" href="#" data-i="2" data-page="10">2</a></li>
+            <li><a class="page" href="#" data-i="3" data-page="10">3</a></li>
+          </ul>
+
+          <!-- Pagination (next) -->
+          <ul
+            class="list-pagination-next pagination pagination-tabs card-pagination"
+          >
+            <li class="page-item">
+              <a class="page-link pl-4 pr-0 border-left" href="#">
+                Next <i class="fe fe-arrow-right ml-1"></i>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Alert -->
+          <div
+            class="list-alert alert alert-dark alert-dismissible border fade"
+            role="alert"
+          >
+            <!-- Close -->
+            <button
+              type="button"
+              class="list-alert-close close"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

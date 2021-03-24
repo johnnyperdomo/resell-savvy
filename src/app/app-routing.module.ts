@@ -61,7 +61,7 @@ const routes: Routes = [
   //Settings
   {
     path: 'settings',
-    redirectTo: 'settings/integrations',
+    redirectTo: 'settings/account',
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   }, //redirects to settings/integrations
@@ -72,8 +72,8 @@ const routes: Routes = [
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     children: [
-      { path: 'integrations', component: IntegrationsComponent },
       { path: 'account', component: AccountComponent },
+      { path: 'integrations', component: IntegrationsComponent },
       { path: 'billing', component: BillingComponent },
     ],
   },
