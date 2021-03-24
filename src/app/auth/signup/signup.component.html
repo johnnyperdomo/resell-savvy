@@ -1,1 +1,94 @@
-<p>signup works!</p>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 my-6">
+      <!-- Heading -->
+      <h1 class="display-4 text-center mb-3">Sign up</h1>
+
+      <!-- Subheading -->
+      <p class="text-muted text-center mb-5">
+        Sign up to gain access to ResellSavvy.
+      </p>
+
+      <!-- Form -->
+      <form *ngIf="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            class="form-control"
+            id="name"
+            type="text"
+            required
+            placeholder="Enter Name"
+            formControlName="name"
+          />
+        </div>
+
+        <!-- Email address -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            class="form-control"
+            id="email"
+            type="email"
+            required
+            placeholder="example@email.com"
+            formControlName="email"
+          />
+          <!-- LATER: add error messages -->
+          <!-- <span
+            class="help-block-invalid"
+            *ngIf="!email.valid && email.touched"
+          >
+            Please enter a valid email.</span
+          > -->
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            class="form-control"
+            id="password"
+            type="password"
+            required
+            placeholder="********"
+            formControlName="password"
+          />
+
+          <!-- error messages -->
+          <!-- <span
+            class="help-block-invalid"
+            *ngIf="password.hasError('minlength') && password.touched"
+          >
+            Minimum of 6 characters.</span
+          > -->
+        </div>
+
+        <!-- <div class="help-block-invalid form-group text-center" *ngIf="error">
+          {{ error }}
+        </div> -->
+        <!-- Submit
+        <div *ngIf="isLoading" class="row justify-content-center mb-3">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div> -->
+
+        <button
+          class="btn btn-lg btn-block btn-primary mb-3"
+          type="submit"
+          [disabled]="!signupForm.valid || isLoading === true"
+        >
+          Sign up
+        </button>
+
+        <!-- Link -->
+        <div class="text-center">
+          <small class="text-muted text-center">
+            Already have an account?
+            <a [routerLink]="['/login']"> Log in</a>
+          </small>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

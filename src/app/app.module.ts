@@ -17,17 +17,31 @@ import { AccountComponent } from './settings/account/account.component';
 import { BillingComponent } from './settings/billing/billing.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { SettingsComponent } from './settings/settings.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SignupComponent, DashboardComponent, ItemComponent, PageNotFoundComponent, AccountComponent, BillingComponent, IntegrationsComponent, SettingsComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SignupComponent,
+    DashboardComponent,
+    ItemComponent,
+    PageNotFoundComponent,
+    AccountComponent,
+    BillingComponent,
+    IntegrationsComponent,
+    SettingsComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
