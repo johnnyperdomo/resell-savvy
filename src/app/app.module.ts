@@ -19,6 +19,7 @@ import { IntegrationsComponent } from './settings/integrations/integrations.comp
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
+import { PricingModalComponent } from './misc/pricing-modal/pricing-modal.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -35,6 +36,7 @@ firebase.initializeApp(environment.firebaseConfig);
     IntegrationsComponent,
     SettingsComponent,
     NavbarComponent,
+    PricingModalComponent,
   ],
   imports: [
     BrowserModule,
