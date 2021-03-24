@@ -18,6 +18,7 @@ import { BillingComponent } from './settings/billing/billing.component';
 import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './dashboard/navbar/navbar.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -33,6 +34,7 @@ firebase.initializeApp(environment.firebaseConfig);
     BillingComponent,
     IntegrationsComponent,
     SettingsComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
