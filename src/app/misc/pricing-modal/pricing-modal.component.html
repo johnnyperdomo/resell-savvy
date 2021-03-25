@@ -1,15 +1,24 @@
 <!-- TODO: make this an if not upgraded yet, also make it a yellow alert. -->
 
+<div
+  class="alert alert-secondary mt-2 d-flex justify-content-between align-items-center"
+  role="alert"
+>
+  Make sure to upgrade your account to start listing more items!
+  <div class="text-right">
+    <button
+      type="button"
+      class="btn btn-white"
+      data-toggle="modal"
+      data-target="#exampleModal"
+    >
+      Upgrade
+    </button>
+  </div>
+</div>
+
 <div class="container-fluid">
   <!-- Button trigger modal -->
-  <button
-    type="button"
-    class="btn btn-primary"
-    data-toggle="modal"
-    data-target="#exampleModal"
-  >
-    Upgrade
-  </button>
 
   <!-- Modal -->
   <div
@@ -80,7 +89,7 @@
                         <li
                           class="list-group-item d-flex align-items-center justify-content-between px-0"
                         >
-                          <small>New Listings Per Month</small>
+                          <small>Maximum New Listings Per Month</small>
                           <small>500</small>
                         </li>
                         <li
@@ -106,9 +115,13 @@
                     </div>
 
                     <!-- Button -->
-                    <a href="#!" class="btn btn-block btn-primary">
+                    <button
+                      (click)="onStartProPlan()"
+                      class="btn btn-block btn-primary"
+                      [disabled]="isLoading === true"
+                    >
                       Start with Pro
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -145,7 +158,7 @@
                         <li
                           class="list-group-item d-flex align-items-center justify-content-between px-0"
                         >
-                          <small>New Listings Per Month</small>
+                          <small>Maximum New Listings Per Month</small>
                           <small>1500</small>
                         </li>
                         <li
@@ -171,9 +184,13 @@
                     </div>
 
                     <!-- Button -->
-                    <a href="#!" class="btn btn-block btn-light">
+                    <button
+                      (click)="onStartBusinessPlan()"
+                      class="btn btn-block btn-light"
+                      [disabled]="isLoading === true"
+                    >
                       Start with Business
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -210,7 +227,7 @@
                         <li
                           class="list-group-item d-flex align-items-center justify-content-between px-0"
                         >
-                          <small>New Listings Per Month</small>
+                          <small>Maximum New Listings Per Month</small>
                           <small>3000</small>
                         </li>
                         <li
@@ -236,9 +253,13 @@
                     </div>
 
                     <!-- Button -->
-                    <a href="#!" class="btn btn-block btn-light">
+                    <button
+                      (click)="onStartEnterprisePlan()"
+                      class="btn btn-block btn-light"
+                      [disabled]="isLoading === true"
+                    >
                       Start with Enterprise
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

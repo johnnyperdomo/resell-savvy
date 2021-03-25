@@ -36,6 +36,7 @@ export class SignupComponent implements OnInit {
   }
 
   async onSubmit() {
+    //LATER: add form option for user to include how did they hear about us
     const firstName = this.signupForm.value.fName;
     const lastName = this.signupForm.value.lName;
     const email = this.signupForm.value.email;
