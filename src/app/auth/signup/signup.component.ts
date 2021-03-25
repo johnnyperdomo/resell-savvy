@@ -28,14 +28,16 @@ export class SignupComponent implements OnInit {
 
   setupSignupForm() {
     this.signupForm = this._formBuilder.group({
-      name: ['', Validators.required],
+      fName: ['', Validators.required],
+      lName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   async onSubmit() {
-    const name = this.signupForm.value.name;
+    const firstName = this.signupForm.value.fName;
+    const lastName = this.signupForm.value.lName;
     const email = this.signupForm.value.email;
     const password = this.signupForm.value.password;
 
@@ -50,7 +52,8 @@ export class SignupComponent implements OnInit {
           await this.db.firestore.collection('users').doc(user.uid).set(
             {
               userID: user.uid,
-              name: name,
+              firstName: firstName,
+              lastName: lastName,
               created: firebase.default.firestore.Timestamp.now(),
             },
             { merge: true }
