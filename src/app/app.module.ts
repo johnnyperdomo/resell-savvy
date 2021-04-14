@@ -10,16 +10,16 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { InventoryComponent } from './inventory/inventory.component';
 import { ItemComponent } from './item/item.component';
 import { PageNotFoundComponent } from './misc/page-not-found/page-not-found.component';
 import { AccountComponent } from './settings/account/account.component';
 import { BillingComponent } from './settings/billing/billing.component';
-import { IntegrationsComponent } from './settings/integrations/integrations.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PricingModalComponent } from './misc/pricing-modal/pricing-modal.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -28,15 +28,15 @@ firebase.initializeApp(environment.firebaseConfig);
     AppComponent,
     LoginComponent,
     SignupComponent,
-    DashboardComponent,
+    InventoryComponent,
     ItemComponent,
     PageNotFoundComponent,
     AccountComponent,
     BillingComponent,
-    IntegrationsComponent,
     SettingsComponent,
     NavbarComponent,
     PricingModalComponent,
+    GettingStartedComponent,
   ],
   imports: [
     BrowserModule,

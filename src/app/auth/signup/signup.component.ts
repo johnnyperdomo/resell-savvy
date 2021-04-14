@@ -60,7 +60,7 @@ export class SignupComponent implements OnInit {
             { merge: true }
           );
 
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/inventory']);
           this.isLoading = false;
         }
       });

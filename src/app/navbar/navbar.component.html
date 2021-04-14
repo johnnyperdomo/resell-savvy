@@ -18,7 +18,7 @@
 
     <!-- Brand -->
     <!-- FIX: add brand image, not working -->
-    <a class="navbar-brand" [routerLink]="['/dashboard']">
+    <a class="navbar-brand" [routerLink]="['/inventory']">
       <img
         src="/Users/johnnyperdomo/Desktop/Programming/Web_Dev/Apps/reseller-savvy/src/assets/square-color-bgtransparent.png"
         class="navbar-brand-img mx-auto"
@@ -79,7 +79,7 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            [routerLink]="['/dashboard']"
+            [routerLink]="['/inventory']"
             data-bs-toggle="collapse"
             role="button"
             aria-expanded="false"
@@ -91,13 +91,13 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            [routerLink]="['/settings/integrations']"
+            [routerLink]="['/getting-started']"
             data-bs-toggle="collapse"
             role="button"
             aria-expanded="false"
             aria-controls="sidebarAuth"
           >
-            <i class="fe fe-zap"></i> Integrations
+            <i class="fe fe-book"></i> Getting Started
           </a>
         </li>
         <li class="nav-item">
@@ -118,11 +118,6 @@
       <div class="mt-auto"></div>
 
       <!-- Customize -->
-      <div class="text-center mb-3">
-        <a href="#">
-          <u><i class=""></i> Watch Get Started Video </u>
-        </a>
-      </div>
 
       <div>
         <a

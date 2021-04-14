@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
 
       this.auth.onAuthStateChanged(async (user) => {
         if (user) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/inventory']);
           this.isLoading = false;
         }
       });
