@@ -163,7 +163,8 @@
                       <!-- Title -->
                       <!-- LATER: make this more responsive -->
                       <h4 class="font-weight-normal mb-1" style="width: 200px">
-                        {{ item.title }}
+                        <!-- TODO: Link to row id -->
+                        <a href="http://">{{ item.title }}</a>
                       </h4>
 
                       <!-- SKU -->
@@ -191,22 +192,22 @@
                 <td>${{ item.cost }}</td>
                 <!-- Date -->
                 <td>{{ item.date }}</td>
-                <!-- LATER: add tooltip -->
                 <td class="text-left">
                   <div class="avatar-group">
                     <span
+                      *ngFor="let marketplace of item.marketplaces"
                       class="avatar avatar-xs"
                       data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
+                      data-placement="top"
+                      title="{{ marketplace }}"
                     >
                       <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        src="assets/marketplace-logos/{{ marketplace }}.png"
                         class="avatar-img rounded-circle"
-                        alt="..."
+                        alt="{{ marketplace }}"
                       />
                     </span>
-                    <span
+                    <!-- <span
                       class="avatar avatar-xs"
                       data-toggle="tooltip"
                       title=""
@@ -301,8 +302,8 @@
                         src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
                         class="avatar-img rounded-circle"
                         alt="..."
-                      />
-                    </span>
+                      /> -->
+                    <!-- </span> -->
                   </div>
                 </td>
                 <td class="text-right">

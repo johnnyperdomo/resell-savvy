@@ -9,7 +9,8 @@ import * as currency from 'currency.js';
 export class InventoryComponent implements OnInit {
   //LATER: paginate data so we don't pull all the items at once, as this can cause alot of reads which can become expensive later on; if i do this i have to add custom elastic search functionality, I also have to queryable data most likely from google bigquery to get 'stats' values
   //TODO: make sure to manipulate date values
-  //LATER: make sure that currencies are parsed correctly before manipulating: 17 => $17.00
+  //LATER: users can add their inventory to the dashboard directly(this would mean that i hve to store the images)
+  //LATER: allow users to filter the table/search by price, status, dates, marketplaces, etc...
   items = [
     {
       itemId: 'item123',
@@ -21,7 +22,7 @@ export class InventoryComponent implements OnInit {
       price: '15.76',
       cost: '4.56',
       date: 'Jan 18, 2020',
-      marketplaces: ['poshmark', 'mercari', 'etsy', 'tradesy'],
+      marketplaces: ['etsy', 'facebook', 'kidizen'],
     },
     {
       itemId: 'item1234',
@@ -33,7 +34,17 @@ export class InventoryComponent implements OnInit {
       price: '17',
       cost: '2',
       date: 'Jan 17, 2020',
-      marketplaces: ['poshmark', 'mercari', 'etsy', 'grailed'],
+      marketplaces: [
+        'ebay',
+        'mercari',
+        'etsy',
+        'tradesy',
+        'facebook',
+        'grailed',
+        'depop',
+        'poshmark',
+        'kidizen',
+      ],
     },
     {
       itemId: 'item1235',
@@ -45,7 +56,7 @@ export class InventoryComponent implements OnInit {
       price: '234.76',
       cost: '56.56',
       date: 'Jan 19, 2020',
-      marketplaces: ['poshmark', 'etsy', 'tradesy'],
+      marketplaces: ['depop'],
     },
   ];
 
