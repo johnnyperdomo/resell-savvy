@@ -24,9 +24,92 @@
         </div>
       </div>
     </div>
+
+    <!-- Stats Overview -->
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">
+                  Items In Inventory
+                </h6>
+
+                <!-- Heading -->
+                <span class="h2 mb-0"> {{ itemsInInventory }} </span>
+              </div>
+
+              <div class="col-auto">
+                <span class="h2 fe fe-shopping-cart text-muted mb-0"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">Active Listings</h6>
+
+                <!-- Heading -->
+                <span class="h2 mb-0"> {{ activeListings }} </span>
+              </div>
+
+              <div class="col-auto">
+                <span class="h2 fe fe-check-circle text-muted mb-0"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">Sold Items</h6>
+
+                <!-- Heading -->
+                <span class="h2 mb-0"> {{ soldItems }} </span>
+              </div>
+
+              <div class="col-auto">
+                <span class="h2 fe fe-shopping-bag text-muted mb-0"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h6 class="text-uppercase text-muted mb-2">Total Sales</h6>
+
+                <!-- Heading -->
+                <span class="h2 mb-0">${{ totalSales }} </span>
+              </div>
+
+              <div class="col-auto">
+                <span class="h2 fe fe-dollar-sign text-muted mb-0"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- List -->
 
-    <div class="">
+    <div class="mt-3">
       <!-- Products -->
       <div class="card">
         <!-- Card Header -->
