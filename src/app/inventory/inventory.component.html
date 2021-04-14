@@ -63,40 +63,50 @@
               </tr>
             </thead>
             <tbody class="list">
-              <tr>
+              <tr *ngFor="let item of items">
                 <td class="products-product">
                   <div class="d-flex align-items-center">
                     <!-- Image -->
                     <div class="avatar">
                       <img
                         class="avatar-img rounded mr-3"
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                        src="{{ item.imageUrl }}"
                         alt="..."
                       />
                     </div>
 
                     <div class="ml-3">
-                      <!-- Heading -->
+                      <!-- Title -->
                       <!-- LATER: make this more responsive -->
                       <h4 class="font-weight-normal mb-1" style="width: 200px">
-                        Tshirt black XL Nike
+                        {{ item.title }}
                       </h4>
 
-                      <!-- Text -->
-                      <small class="text-muted">SKU: JKLOh4</small>
+                      <!-- SKU -->
+                      <small *ngIf="item.sku" class="text-muted"
+                        >SKU: {{ item.sku }}</small
+                      >
                     </div>
                   </div>
                 </td>
 
+                <!-- Status -->
                 <td>
-                  <span class="badge badge-soft-primary font-weight-bold"
-                    >Sold</span
+                  <span
+                    class="badge font-weight-bold text-capitalize"
+                    [ngClass]="{
+                      'badge-soft-primary': item.status === 'sold',
+                      'badge-soft-success': item.status === 'active'
+                    }"
+                    >{{ item.status }}</span
                   >
                 </td>
-                <td class="font-weight-bold">$15.87</td>
-                <td>$2.79</td>
-
-                <td>Jan 17, 2021</td>
+                <!-- Price -->
+                <td class="font-weight-bold">${{ item.price }}</td>
+                <!-- Cost -->
+                <td>${{ item.cost }}</td>
+                <!-- Date -->
+                <td>{{ item.date }}</td>
                 <!-- LATER: add tooltip -->
                 <td class="text-left">
                   <div class="avatar-group">

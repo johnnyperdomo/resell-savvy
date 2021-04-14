@@ -60,7 +60,8 @@ export class SignupComponent implements OnInit {
             { merge: true }
           );
 
-          this.router.navigate(['/inventory']);
+          //since it's first time here, route to getting started page
+          this.router.navigate(['/getting-started']);
           this.isLoading = false;
         }
       });
