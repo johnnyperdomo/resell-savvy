@@ -43,7 +43,8 @@
                   <input
                     class="list-search form-control"
                     type="search"
-                    placeholder="Search"
+                    placeholder="Search by Title"
+                    (keyup)="onSearchKey($event)"
                   />
                 </div>
               </form>
@@ -63,7 +64,7 @@
               </tr>
             </thead>
             <tbody class="list">
-              <tr *ngFor="let item of items">
+              <tr *ngFor="let item of filteredItems">
                 <td class="products-product">
                   <div class="d-flex align-items-center">
                     <!-- Image -->

@@ -46,7 +46,25 @@ export class InventoryComponent implements OnInit {
       marketplaces: ['poshmark', 'etsy', 'tradesy'],
     },
   ];
-  constructor() {}
+
+  filteredItems: any;
+
+  constructor() {
+    this.filteredItems = this.items;
+  }
 
   ngOnInit(): void {}
+
+  onSearchKey(event) {
+    const titleInput = event.target.value.toLowerCase();
+
+    if (titleInput == '') {
+      this.filteredItems = this.items;
+    } else {
+      //filter items by title
+      this.filteredItems = this.items.filter((item) => {
+        return item.title.toLowerCase().includes(titleInput);
+      });
+    }
+  }
 }
