@@ -35,8 +35,8 @@ export class InventoryComponent implements OnInit {
       cost: '2',
       date: 'Jan 17, 2020',
       marketplaces: [
-        'ebay',
         'mercari',
+        'ebay',
         'etsy',
         'tradesy',
         'facebook',

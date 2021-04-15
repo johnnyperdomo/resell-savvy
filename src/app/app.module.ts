@@ -14,7 +14,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { ItemComponent } from './item/item.component';
 import { PageNotFoundComponent } from './misc/page-not-found/page-not-found.component';
 import { AccountComponent } from './settings/account/account.component';
-import { BillingComponent } from './settings/billing/billing.component';
+import { SubscriptionComponent } from './settings/subscription/subscription.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -32,7 +32,7 @@ firebase.initializeApp(environment.firebaseConfig);
     ItemComponent,
     PageNotFoundComponent,
     AccountComponent,
-    BillingComponent,
+    SubscriptionComponent,
     SettingsComponent,
     NavbarComponent,
     PricingModalComponent,

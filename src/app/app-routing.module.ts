@@ -6,7 +6,7 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { ItemComponent } from './item/item.component';
 import { PageNotFoundComponent } from './misc/page-not-found/page-not-found.component';
 import { AccountComponent } from './settings/account/account.component';
-import { BillingComponent } from './settings/billing/billing.component';
+import { SubscriptionComponent } from './settings/subscription/subscription.component';
 import { SettingsComponent } from './settings/settings.component';
 import {
   AngularFireAuthGuard,
@@ -80,7 +80,7 @@ const routes: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
     children: [
       { path: 'account', component: AccountComponent },
-      { path: 'billing', component: BillingComponent },
+      { path: 'subscription', component: SubscriptionComponent },
     ],
   },
 
