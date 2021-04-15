@@ -52,7 +52,7 @@ export class InventoryComponent implements OnInit {
       sku: null,
       imageUrl:
         'https://dashkit.goodthemes.co/assets/img/avatars/products/product-2.jpg',
-      status: 'sold',
+      status: 'draft',
       price: '234.76',
       cost: '56.56',
       date: 'Jan 19, 2020',

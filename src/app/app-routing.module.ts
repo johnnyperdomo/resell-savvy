@@ -51,15 +51,15 @@ const routes: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
 
-  {
-    path: 'item/new',
-    component: ItemComponent,
-    canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: redirectUnauthorizedToLogin },
-  }, //new item
+  // {
+  //   path: 'item/new',
+  //   component: ItemComponent,
+  //   canActivate: [AngularFireAuthGuard],
+  //   data: { authGuardPipe: redirectUnauthorizedToLogin },
+  // }, //new item
 
   {
-    path: 'item/:id/edit',
+    path: 'item/:id/',
     component: ItemComponent,
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },

@@ -19,6 +19,10 @@
                 <!-- Title -->
                 <h1 class="header-title">Inventory</h1>
               </div>
+              <div class="col-auto">
+                <!-- Button -->
+                <a href="#!" class="btn btn-primary lift"> New Item </a>
+              </div>
             </div>
           </div>
         </div>
@@ -181,6 +185,7 @@
                     class="badge font-weight-bold text-capitalize"
                     [ngClass]="{
                       'badge-soft-primary': item.status === 'sold',
+                      'badge-soft-secondary': item.status === 'draft',
                       'badge-soft-success': item.status === 'active'
                     }"
                     >{{ item.status }}</span
@@ -321,6 +326,19 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                       <!-- TODO: Maybe add more specific items to list -->
+                      <!-- TODO: ngif, mark as sold/unmark as sold based on status -->
+
+                      <a
+                        href="#!"
+                        class="dropdown-item"
+                        *ngIf="item.status != 'sold'; else unMarkSold"
+                      >
+                        Mark as sold
+                      </a>
+                      <ng-template #unMarkSold>
+                        <a href="#!" class="dropdown-item"> Unmark as sold </a>
+                      </ng-template>
+
                       <a href="#!" class="dropdown-item"> Edit </a>
                       <a href="#!" class="dropdown-item"> Delete </a>
                     </div>
