@@ -50,13 +50,12 @@ export class InventoryComponent implements OnInit {
       itemId: 'item1235',
       title: 'Gymshark Pants Gym Blue Limited Edition ',
       sku: null,
-      imageUrl:
-        'https://dashkit.goodthemes.co/assets/img/avatars/products/product-2.jpg',
+      imageUrl: null,
       status: 'draft',
       price: '234.76',
       cost: '56.56',
       date: 'Jan 19, 2020',
-      marketplaces: ['depop'],
+      marketplaces: [],
     },
   ];
 

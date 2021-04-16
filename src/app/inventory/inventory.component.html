@@ -21,7 +21,10 @@
               </div>
               <div class="col-auto">
                 <!-- Button -->
-                <a href="#!" class="btn btn-primary lift"> New Item </a>
+                <!-- TODO: make this generic -->
+                <a [routerLink]="['/item/123']" class="btn btn-primary lift">
+                  New Item
+                </a>
               </div>
             </div>
           </div>
@@ -157,10 +160,17 @@
                     <!-- Image -->
                     <div class="avatar">
                       <img
+                        *ngIf="item.imageUrl; else imagePlaceholder"
                         class="avatar-img rounded mr-3"
                         src="{{ item.imageUrl }}"
-                        alt="..."
                       />
+
+                      <ng-template #imagePlaceholder>
+                        <img
+                          class="avatar-img rounded mr-3"
+                          src="assets/image-placeholder.png"
+                        />
+                      </ng-template>
                     </div>
 
                     <div class="ml-3">
@@ -168,7 +178,7 @@
                       <!-- LATER: make this more responsive -->
                       <h4 class="font-weight-normal mb-1" style="width: 200px">
                         <!-- TODO: Link to row id -->
-                        <a href="http://">{{ item.title }}</a>
+                        <a href="!">{{ item.title }}</a>
                       </h4>
 
                       <!-- SKU -->
@@ -194,6 +204,7 @@
                 <!-- Price -->
                 <td class="font-weight-bold">${{ item.price }}</td>
                 <!-- Cost -->
+                <!-- TODO: add optional binding with value '0' if null, chimpcharge has a good example of this. so try it out -->
                 <td>${{ item.cost }}</td>
                 <!-- Date -->
                 <td>{{ item.date }}</td>
@@ -212,103 +223,6 @@
                         alt="{{ marketplace }}"
                       />
                     </span>
-                    <!-- <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Dianna Smiley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Ab Hadley"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Adolfo Hess"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      />
-                    </span>
-                    <span
-                      class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      title=""
-                      data-original-title="Daniela Dewitt"
-                    >
-                      <img
-                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dHNoaXJ0fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                        class="avatar-img rounded-circle"
-                        alt="..."
-                      /> -->
-                    <!-- </span> -->
                   </div>
                 </td>
                 <td class="text-right">

@@ -59,7 +59,7 @@ const routes: Routes = [
   // }, //new item
 
   {
-    path: 'item/:id/',
+    path: 'item/:id',
     component: ItemComponent,
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
