@@ -160,9 +160,9 @@
                     <!-- Image -->
                     <div class="avatar">
                       <img
-                        *ngIf="item.imageUrl; else imagePlaceholder"
+                        *ngIf="item.imageUrls.length > 0; else imagePlaceholder"
                         class="avatar-img rounded mr-3"
-                        src="{{ item.imageUrl }}"
+                        src="{{ item.imageUrls[0] }}"
                       />
 
                       <ng-template #imagePlaceholder>

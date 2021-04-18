@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as currency from 'currency.js';
+import { Item } from '../shared/models/item.model';
 
 @Component({
   selector: 'app-inventory',
@@ -11,18 +12,31 @@ export class InventoryComponent implements OnInit {
   //TODO: make sure to manipulate date values
   //LATER: users can add their inventory to the dashboard directly(this would mean that i hve to store the images)
   //LATER: allow users to filter the table/search by price, status, dates, marketplaces, etc...
+
+  //TODO: when getting marketplaces, if string is empty, don't show. That means there isn't a listing url for that marketplace, meaning there isn't any url associated with that marketplace.
+  //TODO: make of type 'ITEM'
   items = [
     {
-      itemId: 'item123',
+      id: 'item123',
       title: 'NIKE Black Tshirt XL Premium',
       sku: '7684JJ',
-      imageUrl:
+      imageUrls: [
         'https://dashkit.goodthemes.co/assets/img/avatars/products/product-3.jpg',
+      ],
       status: 'sold',
-      price: '15.76',
-      cost: '4.56',
-      date: 'Jan 18, 2020',
-      marketplaces: ['etsy', 'facebook', 'kidizen'],
+      price: 15,
+      cost: 2,
+      marketplaces: {
+        ebay: '',
+        mercari: '',
+        poshmark: 'https://',
+        etsy: '',
+        kidizen: '',
+        depop: '',
+        facebook: '',
+        tradesy: '',
+        grailed: '',
+      },
     },
     {
       itemId: 'item1234',
@@ -84,11 +98,12 @@ export class InventoryComponent implements OnInit {
     this.items.map((item) => {
       if (item.price) {
         //parse prices currencies: 17 => 17.00
-        item.price = currency(item.price).toString();
+        //TODO: value or type 0
+        item.price = Number(currency(item.price).toString());
       }
       if (item.cost) {
         //parse cost currencies: 17 => 17.00
-        item.cost = currency(item.cost).toString();
+        item.cost = Number(currency(item.cost).toString());
       }
     });
   }

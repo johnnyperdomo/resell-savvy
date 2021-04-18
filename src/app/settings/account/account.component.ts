@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
-import { User } from 'src/app/shared/models/users.model';
+import { User } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-account',
