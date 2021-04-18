@@ -25,6 +25,7 @@
     "@uppy/core": "^1.17.0",
     "@uppy/file-input": "^1.4.25",
     "bootstrap": "^4.6.0",
+    "compressorjs": "^1.0.7",
     "currency.js": "^2.0.3",
     "firebase": "^7.0 || ^8.0",
     "nanoid": "^3.1.22",

@@ -5,6 +5,7 @@ import * as Uppy from '@uppy/core';
 import { nanoid } from 'nanoid';
 import * as FileInput from '@uppy/file-input';
 import { environment } from 'src/environments/environment';
+import * as Compressor from 'compressorjs';
 
 @Component({
   selector: 'app-item',
@@ -13,6 +14,7 @@ import { environment } from 'src/environments/environment';
 })
 
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
+//LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
 export class ItemComponent implements OnInit {
   //TODO: change status here; if they have no active listing urls, automatically mark as draft.
   //dont mark as draft even if they dfont have a listing url, only on the situation where iit is marked as 'sold', since sold will have its own sell location. ({sold, {marketplace: 'poshmark'}})
@@ -33,7 +35,7 @@ export class ItemComponent implements OnInit {
       autoProceed: false,
       restrictions: {
         allowedFileTypes: ['image/*'],
-        maxFileSize: 2097152, //this is 2MB //LATER: make this clearer to read in the future //LATER: allow users to upload 4MB size, if we have image optimization installed anyways. to allow them creative freedom. compress images something like (tiny png)
+        maxFileSize: 2097152, //TODO: make 8mb //this is 2MB //LATER: make this clearer to read in the future
       },
     });
 
@@ -46,12 +48,25 @@ export class ItemComponent implements OnInit {
       // this.getUploadSignature(file);
       console.log('Added file', file);
       this.uploadFile(file);
-      // TODO: compress image
+    });
+
+    this.uppy.on('error', (err) => {
+      alert(err);
+    });
+
+    this.uppy.on('restriction-failed', (file, error) => {
+      //LATER: prettier solution
+      alert(error);
     });
   }
 
   async uploadFile(file: Uppy.UppyFile) {
     try {
+      const compressedImage: any = await this.compressImage(file.data);
+
+      console.log('compressed image size ' + compressedImage.size);
+      console.log('real size, ' + file.size);
+
       const customKey = `${nanoid()}_${file.name}`;
       const signature = await this.getUploadSas(customKey);
 
@@ -66,10 +81,10 @@ export class ItemComponent implements OnInit {
       const blockBlobClient = containerClient.getBlockBlobClient(customKey);
       console.log(blockBlobClient);
 
-      await blockBlobClient.upload(file.data, file.data.size, {
+      await blockBlobClient.upload(compressedImage, compressedImage.size, {
         onProgress: (progressEvent) => {
           const progressCounter = Math.round(
-            (progressEvent.loadedBytes / file.data.size) * 100
+            (progressEvent.loadedBytes / compressedImage.size) * 100
           );
 
           if (progressCounter == 100) {
@@ -84,7 +99,7 @@ export class ItemComponent implements OnInit {
         },
 
         blobHTTPHeaders: {
-          blobContentType: file.data.type,
+          blobContentType: compressedImage.type,
         },
       });
 
@@ -96,6 +111,20 @@ export class ItemComponent implements OnInit {
       alert(error);
       console.log(error);
     }
+  }
+
+  async compressImage(file: File | Blob) {
+    const result = await new Promise((resolve, reject) => {
+      new Compressor.default(file, {
+        quality: 0.5,
+        success: resolve,
+        error: reject,
+      });
+    });
+
+    //LATER: hard test these compressions more, i don't think this compresses every image
+
+    return result;
   }
 
   //Azure blob access token
