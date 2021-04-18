@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import * as Azure from '@azure/storage-blob';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-item',
@@ -14,4 +16,22 @@ export class ItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  //Azure blob access token
+  async getUploadSas() {
+    const uploadSignature = firebase.default
+      .functions()
+      .httpsCallable('uploadSignature');
+
+    try {
+      let secureSignature = await uploadSignature({
+        key: '123', //blob name //TODO: dynamic
+      });
+
+      console.log(secureSignature.data);
+      console.log('got access token');
+    } catch (error) {
+      console.log(error);
+    }
+  } //TODO
 }
