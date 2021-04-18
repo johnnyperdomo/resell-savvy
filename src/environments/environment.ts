@@ -12,6 +12,10 @@ export const environment = {
     messagingSenderId: '51437845156',
     appId: '1:51437845156:web:561cc5e2d812ad808f8431',
   },
+  azure: {
+    itemImages: 'item-images',
+    accountName: 'resellsavvydev',
+  },
 };
 
 /*
