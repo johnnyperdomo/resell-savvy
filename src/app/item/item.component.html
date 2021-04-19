@@ -29,7 +29,7 @@
           </div>
         </div>
 
-        <form class="mb-4">
+        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="mb-4">
           <!-- Images -->
           <div class="form-group">
             <label> Images </label>
@@ -55,8 +55,6 @@
               </div>
             </div>
 
-            <!-- TODO: upload images -->
-
             <div id="upload-images"></div>
           </div>
 
@@ -70,6 +68,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Item Title"
+                  formControlName="title"
                 />
               </div>
             </div>
@@ -83,6 +82,7 @@
                   <input
                     type="number"
                     class="form-control form-control-prepended"
+                    formControlName="price"
                   />
                   <div class="input-group-prepend">
                     <div class="input-group-text">
@@ -117,6 +117,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Item Brand"
+                  formControlName="brand"
                 />
               </div>
             </div>
@@ -126,8 +127,12 @@
               <div class="form-group">
                 <label> Condition </label>
 
-                <select class="custom-select" id="condition">
-                  <option selected>Choose Item Condition</option>
+                <select
+                  class="custom-select"
+                  id="condition"
+                  formControlName="condition"
+                >
+                  <option value="" selected>Choose Item Condition</option>
                   <option value="nwt">New with tag / box</option>
                   <option value="nwot">New without tag / box</option>
                   <option value="good">Good (gently used / minor flaws)</option>
@@ -150,6 +155,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Sm, Xs, Lg"
+                  formControlName="size"
                 />
               </div>
             </div>
@@ -160,8 +166,12 @@
               <div class="form-group">
                 <label> Primary Color (Optional) </label>
 
-                <select class="custom-select" id="primaryColor">
-                  <option selected>Choose Primary Color</option>
+                <select
+                  class="custom-select"
+                  id="primaryColor"
+                  formControlName="primaryColor"
+                >
+                  <option value="" selected>Choose Primary Color</option>
                   <option value="black">Black</option>
                   <option value="blue">Blue</option>
                   <option value="brown">Brown</option>
@@ -190,7 +200,11 @@
               <div class="form-group">
                 <label> Item Tags (Optional)</label>
 
-                <input type="text" class="form-control" placeholder="" />
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="itemTags"
+                />
                 <small class="form-text text-muted mt-2">
                   Separate item tags with a comma ','
                 </small>
@@ -202,7 +216,7 @@
               <div class="form-group">
                 <label> SKU (Optional)</label>
 
-                <input type="text" class="form-control" placeholder="" />
+                <input type="text" class="form-control" formControlName="sku" />
                 <small class="form-text text-muted mt-2">
                   Used for inventory management
                 </small>
@@ -225,6 +239,7 @@
                 <input
                   type="number"
                   class="form-control form-control-appended"
+                  formControlName="packagePound"
                 />
                 <div class="input-group-append">
                   <div class="input-group-text">
@@ -236,6 +251,7 @@
                 <input
                   type="number"
                   class="ml-3 form-control form-control-appended"
+                  formControlName="packageOunce"
                 />
                 <div class="input-group-append">
                   <div class="input-group-text">
@@ -256,7 +272,11 @@
 
             <!-- Length -->
             <div class="input-group input-group-merge">
-              <input type="number" class="form-control form-control-appended" />
+              <input
+                type="number"
+                class="form-control form-control-appended"
+                formControlName="packageLength"
+              />
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span>in</span>
@@ -267,6 +287,7 @@
               <input
                 type="number"
                 class="ml-3 form-control form-control-appended"
+                formControlName="packageWidth"
               />
               <div class="input-group-append">
                 <div class="input-group-text">
@@ -278,6 +299,7 @@
               <input
                 type="number"
                 class="ml-3 form-control form-control-appended"
+                formControlName="packageHeight"
               />
               <div class="input-group-append">
                 <div class="input-group-text">
@@ -298,7 +320,8 @@
             <input
               type="number"
               class="form-control"
-              placeholder="5 digit zip-code"
+              placeholder="Enter zip-code"
+              formControlName="zipCode"
             />
             <small class="form-text text-muted mt-2">
               Used to calculate shipping
@@ -321,6 +344,7 @@
               <input
                 type="number"
                 class="form-control form-control-prepended"
+                formControlName="cost"
               />
               <div class="input-group-prepend">
                 <div class="input-group-text">
@@ -384,6 +408,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Ebay listing url"
+                    formControlName="ebay"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">
@@ -405,6 +430,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Poshmark listing url"
+                    formControlName="poshmark"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-light" type="button">
@@ -427,6 +453,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Mercari listing url"
+                    formControlName="mercari"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">
@@ -448,6 +475,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Facebook Marketplace listing url"
+                    formControlName="facebook"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-light" type="button">
@@ -470,6 +498,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Etsy listing url"
+                    formControlName="etsy"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">
@@ -491,6 +520,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Tradesy listing url"
+                    formControlName="tradesy"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-light" type="button">
@@ -514,6 +544,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Grailed listing url"
+                    formControlName="grailed"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">
@@ -535,6 +566,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Depop listing url"
+                    formControlName="depop"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-light" type="button">
@@ -557,6 +589,7 @@
                     type="text"
                     class="form-control form-control-appended"
                     placeholder="Kidizen listing url"
+                    formControlName="kidizen"
                   />
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button">

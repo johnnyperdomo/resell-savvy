@@ -6,6 +6,11 @@ import { nanoid } from 'nanoid';
 import * as FileInput from '@uppy/file-input';
 import { environment } from 'src/environments/environment';
 import * as Compressor from 'compressorjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Item } from '../shared/models/item.model';
+import { Subscription } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-item',
@@ -21,12 +26,91 @@ export class ItemComponent implements OnInit {
 
   //TODO: if an item is clicked to be listed, then automatically save the item before opening chrome extension
 
+  itemForm: FormGroup;
+
+  item: Item;
+  itemSub: Subscription;
+
+  routeSub: Subscription;
+
   uppy: Uppy.Uppy<Uppy.TypeChecking>;
 
-  constructor() {}
+  constructor(
+    private db: AngularFirestore,
+    private route: ActivatedRoute,
+    private _formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this.setupItemForm();
     this.initializeFileUploader();
+
+    this.routeSub = this.route.paramMap.subscribe((params) => {
+      this.getItem(params.get('item-id'));
+    });
+  }
+
+  setupItemForm() {
+    //LATER: have price/number validator
+    this.itemForm = this._formBuilder.group({
+      title: [''],
+      description: [''],
+      price: [null],
+      brand: [''],
+      condition: [''],
+      size: [''],
+      primaryColor: [''],
+      itemTags: [''],
+      sku: [''],
+      packagePound: [null],
+      packageOunce: [null],
+      packageLength: [null],
+      packageWidth: [null],
+      packageHeight: [null],
+      zipCode: [],
+      cost: [null],
+      notes: [''],
+      ebay: [''],
+      poshmark: [''],
+      mercari: [''],
+      facebook: [''],
+      etsy: [''],
+      tradesy: [''],
+      grailed: [''],
+      depop: [''],
+      kidizen: [''],
+    });
+  }
+
+  patchItemForm(item: Item) {
+    this.itemForm.patchValue({
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      brand: item.brand,
+      condition: item.condition,
+      size: item.size,
+      primaryColor: item.color,
+      itemTags: item.tags,
+      sku: item.sku,
+      packagePound: item.packageWeight.pounds,
+      packageOunce: item.packageWeight.ounces,
+      packageLength: item.packageDimensions.length,
+      packageWidth: item.packageDimensions.width,
+      packageHeight: item.packageDimensions.height,
+      zipCode: item.zipCode,
+      cost: item.zipCode,
+      notes: item.notes,
+      ebay: item.marketplaces.ebay,
+      poshmark: item.marketplaces.poshmark,
+      mercari: item.marketplaces.mercari,
+      facebook: item.marketplaces.facebook,
+      etsy: item.marketplaces.etsy,
+      tradesy: item.marketplaces.tradesy,
+      grailed: item.marketplaces.grailed,
+      depop: item.marketplaces.depop,
+      kidizen: item.marketplaces.kidizen,
+    });
   }
 
   initializeFileUploader() {
@@ -145,5 +229,29 @@ export class ItemComponent implements OnInit {
     } catch (error) {
       console.log(error);
     }
-  } //TODO
+  }
+
+  getItem(itemID: string) {
+    //TODO: get from db
+    console.log(itemID + ' is the item id');
+  }
+
+  saveItem() {
+    //TODO: save firebase items
+  }
+
+  //save btn pressed //TODO
+  onSubmit() {
+    //TODO: save item func
+  }
+
+  ngOnDestroy() {
+    if (this.itemSub) {
+      this.itemSub.unsubscribe();
+    }
+
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
+  }
 }
