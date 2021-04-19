@@ -33,6 +33,7 @@ export class Item {
   }; //save listing urls here, or leave empty if delisted or null: ''
   public sold?: {
     marketplace: string;
+    fees?: number; //any marketplace fees
     date: firebase.default.firestore.Timestamp;
   }; //if sold => where, and what date did it sell on?
   public created: firebase.default.firestore.Timestamp;

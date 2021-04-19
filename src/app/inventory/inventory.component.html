@@ -213,8 +213,8 @@
                 <!-- Cost -->
                 <!-- TODO: add optional binding with value '0' if null, chimpcharge has a good example of this. so try it out -->
                 <td>${{ item.cost || 0 }}</td>
-                <!-- Date -->
-                <td>{{ item.modified }}</td>
+                <!-- Date; with pipe modifier; converts unix seconds to Date -->
+                <td>{{ item.modified.seconds * 1000 | date }}</td>
                 <td class="text-left">
                   <div class="avatar-group">
                     <span
