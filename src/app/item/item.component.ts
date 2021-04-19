@@ -239,6 +239,7 @@ export class ItemComponent implements OnInit {
   saveItem() {
     //TODO: save firebase items
   }
+  //TODO: truncate white spaces
 
   //save btn pressed //TODO
   onSubmit() {
