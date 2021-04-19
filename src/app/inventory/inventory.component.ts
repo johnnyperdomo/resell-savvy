@@ -126,8 +126,6 @@ export class InventoryComponent implements OnInit {
           .subscribe((data) => {
             //TODO: does this just push the objects, or wait till objects finish mapping before pushing, check later with multiple items in array, we dont want the push effect, we want the wait effect
             this.items = data.map((i) => {
-              console.log(i);
-
               //loop over listed marketplaces
               this.iterateMarketplaces(i);
               return new Item(i);
@@ -155,7 +153,6 @@ export class InventoryComponent implements OnInit {
       }
     }
     this.listedMarketplaces[item.id] = array;
-    console.log(this.listedMarketplaces);
   }
 
   getActiveListings() {
@@ -198,13 +195,30 @@ export class InventoryComponent implements OnInit {
   onDeleteItem(itemID: string) {
     //LATER: add confirmation step
     //TODO: firebase delete item
+
+    this.auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          await this.db
+            .collection('users')
+            .doc(user.uid)
+            .collection('items')
+            .doc(itemID)
+            .delete();
+
+          console.log('deleted item');
+        } catch (error) {
+          alert(error);
+        }
+      }
+    });
   }
 
-  onMarkItemSold() {
+  onMarkItemSold(itemID: string) {
     // TODO: modal
   }
 
-  onUnmarkItemSold() {
+  onUnmarkItemSold(itemID: string) {
     //TODO: modal
   }
 

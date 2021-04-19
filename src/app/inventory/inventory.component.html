@@ -249,15 +249,20 @@
                       <!-- TODO: Maybe add more specific items to list -->
                       <!-- TODO: ngif, mark as sold/unmark as sold based on status -->
 
-                      <a
-                        href="#!"
+                      <button
+                        (click)="onMarkItemSold(item.id)"
                         class="dropdown-item"
                         *ngIf="item.status != 'sold'; else unMarkSold"
                       >
                         Mark as sold
-                      </a>
+                      </button>
                       <ng-template #unMarkSold>
-                        <a href="#!" class="dropdown-item"> Unmark as sold </a>
+                        <button
+                          (click)="onUnmarkItemSold(item.id)"
+                          class="dropdown-item"
+                        >
+                          Unmark as sold
+                        </button>
                       </ng-template>
 
                       <a
@@ -266,7 +271,12 @@
                       >
                         Edit
                       </a>
-                      <a href="#!" class="dropdown-item"> Delete </a>
+                      <button
+                        (click)="onDeleteItem(item.id)"
+                        class="dropdown-item"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </td>
