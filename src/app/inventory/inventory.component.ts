@@ -65,8 +65,8 @@ export class InventoryComponent implements OnInit {
             brand: '',
             condition: '',
             size: '',
-            primaryColor: '',
-            itemTags: '',
+            color: '',
+            tags: '',
             sku: '',
             packageWeight: { pounds: null, ounces: null },
             packageDimensions: {

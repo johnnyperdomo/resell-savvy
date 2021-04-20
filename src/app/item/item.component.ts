@@ -11,6 +11,7 @@ import { Item } from '../shared/models/item.model';
 import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-item',
@@ -37,6 +38,7 @@ export class ItemComponent implements OnInit {
 
   constructor(
     private db: AngularFirestore,
+    private auth: AngularFireAuth,
     private route: ActivatedRoute,
     private _formBuilder: FormBuilder
   ) {}
@@ -99,7 +101,7 @@ export class ItemComponent implements OnInit {
       packageWidth: item.packageDimensions.width,
       packageHeight: item.packageDimensions.height,
       zipCode: item.zipCode,
-      cost: item.zipCode,
+      cost: item.cost,
       notes: item.notes,
       ebay: item.marketplaces.ebay,
       poshmark: item.marketplaces.poshmark,
@@ -233,6 +235,23 @@ export class ItemComponent implements OnInit {
 
   getItem(itemID: string) {
     //TODO: get from db
+
+    this.auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        this.itemSub = this.db
+          .collection('users')
+          .doc(user.uid)
+          .collection<Item>('items')
+          .doc(itemID)
+          .valueChanges()
+          .subscribe((data) => {
+            console.log(data);
+
+            this.patchItemForm(data);
+          });
+      }
+    });
+
     console.log(itemID + ' is the item id');
   }
 
