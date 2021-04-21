@@ -71,12 +71,13 @@
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
               </div>
 
+              <!-- TODO: hiding and showing isn't working correctly on the following divs -->
               <div
-                [hidden]="item && item.images.length >= 16"
+                [hidden]="item && item.images && item.images.length >= 16"
                 id="upload-images"
               ></div>
 
-              <div [hidden]="item && item.images.length < 16">
+              <div [hidden]="item && item.images && item.images.length < 16">
                 <p class="small text-muted">
                   Maximum images reached. To add more images, clear up space by
                   removing an image.

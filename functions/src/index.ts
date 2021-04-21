@@ -9,3 +9,5 @@
 // });
 
 export { uploadSignature } from './azure/sas';
+export { deleteAllItemImages } from './item.triggers';
+export { deleteIndividualItemImages } from './item.triggers';
