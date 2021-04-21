@@ -42,7 +42,7 @@
           <div class="form-group">
             <label> Images </label>
             <small class="form-text text-muted">
-              Select up to 16 images to showcase your items. (max 8mb file size)
+              Select up to 16 images to showcase your items. (max 6mb file size)
             </small>
 
             <div *ngIf="item">
@@ -66,7 +66,23 @@
 
             <!-- [hidden]="item && item.imageUrls.length != 0" -->
 
-            <div id="upload-images"></div>
+            <div>
+              <div [hidden]="isUploading == false" class="mb-4">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+
+              <div
+                [hidden]="item && item.images.length >= 16"
+                id="upload-images"
+              ></div>
+
+              <div [hidden]="item && item.images.length < 16">
+                <p class="small text-muted">
+                  Maximum images reached. To add more images, clear up space by
+                  removing an image.
+                </p>
+              </div>
+            </div>
           </div>
 
           <!-- Title -->

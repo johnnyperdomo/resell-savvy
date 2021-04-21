@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import * as FileInput from '@uppy/file-input';
 import { environment } from 'src/environments/environment';
 import * as Compressor from 'compressorjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Item } from '../shared/models/item.model';
 import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -22,7 +22,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
 //LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
 //LATER: see how you can download images with cdn path, to reduce bandwidth
-//LATER: show progress bar
+//LATER: load html after data input, since the transition looks kind of ugly (bad ux)
 export class ItemComponent implements OnInit {
   itemForm: FormGroup;
 
@@ -34,6 +34,8 @@ export class ItemComponent implements OnInit {
   storagePath: string = environment.azure.storagePath; //azure storage url for hosted images
 
   uppy: Uppy.Uppy<Uppy.TypeChecking>;
+
+  isUploading: boolean = false; //image upload state
 
   constructor(
     private db: AngularFirestore,
@@ -121,7 +123,7 @@ export class ItemComponent implements OnInit {
       autoProceed: false,
       restrictions: {
         allowedFileTypes: ['image/*'],
-        maxFileSize: 2097152, //TODO: make 8mb //this is 2MB //LATER: make this clearer to read in the future
+        maxFileSize: 6291456, //6mb
       },
     });
 
@@ -148,6 +150,8 @@ export class ItemComponent implements OnInit {
 
   async uploadFile(file: Uppy.UppyFile) {
     try {
+      this.isUploading = true;
+
       const compressedImage: any = await this.compressImage(file.data);
 
       console.log('compressed image size ' + compressedImage.size);
@@ -207,15 +211,19 @@ export class ItemComponent implements OnInit {
                 }),
               });
 
-            console.log('finished uploading to azure');
+            this.isUploading = false;
+
+            console.log('complete');
           } catch (error) {
+            this.isUploading = false;
             alert(error.message);
           }
         }
       });
-      console.log('finished uploading to azure outside');
     } catch (error) {
       //LATER: prettier solutio
+      this.isUploading = false;
+
       alert(error);
       console.log(error);
     }
@@ -246,9 +254,6 @@ export class ItemComponent implements OnInit {
         key: key, //blob name
       });
 
-      console.log(secureSignature.data);
-      console.log('got access token');
-
       return secureSignature.data;
     } catch (error) {
       console.log(error);
@@ -265,8 +270,6 @@ export class ItemComponent implements OnInit {
           .doc(itemID)
           .valueChanges()
           .subscribe((data) => {
-            console.log(data);
-
             this.item = data;
 
             this.patchItemForm(data);

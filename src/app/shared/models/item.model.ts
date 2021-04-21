@@ -10,7 +10,7 @@ export class Item {
       blobID: string; //unique id of blob in Azure
       blobContainer: string; //container of blob; should be 'item-images'
       imageName: string;
-      imageSize: number; //in bytes //8mb file size max
+      imageSize: number; //in bytes //6mb file size max
     }
   ];
   public price?: number; //value or 0 when fetching property

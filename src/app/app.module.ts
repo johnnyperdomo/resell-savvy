@@ -22,6 +22,8 @@ import { PricingModalComponent } from './misc/pricing-modal/pricing-modal.compon
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -50,6 +52,7 @@ firebase.initializeApp(environment.firebaseConfig);
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatGridListModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],
