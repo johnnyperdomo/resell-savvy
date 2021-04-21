@@ -23,13 +23,13 @@
                 <a [routerLink]="['/inventory']" class="btn btn-white mr-3">
                   Cancel
                 </a>
-                <a href="#!" class="btn btn-primary"> Save </a>
+                <button type="button" (click)="onSubmit()" class="btn btn-primary">Save</button>
               </div>
             </div>
           </div>
         </div>
 
-        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="mb-4">
+        <form [formGroup]="itemForm"  class="mb-4">
           <!-- Images -->
           <div class="form-group">
             <label> Images </label>

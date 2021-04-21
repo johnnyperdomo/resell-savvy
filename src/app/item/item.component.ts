@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Item } from '../shared/models/item.model';
 import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
@@ -40,6 +40,7 @@ export class ItemComponent implements OnInit {
     private db: AngularFirestore,
     private auth: AngularFireAuth,
     private route: ActivatedRoute,
+    private router: Router,
     private _formBuilder: FormBuilder
   ) {}
 
@@ -247,6 +248,8 @@ export class ItemComponent implements OnInit {
           .subscribe((data) => {
             console.log(data);
 
+            this.item = data;
+
             this.patchItemForm(data);
           });
       }
@@ -256,13 +259,130 @@ export class ItemComponent implements OnInit {
   }
 
   saveItem() {
-    //TODO: save firebase items
-  }
-  //TODO: truncate white spaces
+    const formValue = this.itemForm.value;
 
-  //save btn pressed //TODO
+    const title = this.trimStr(formValue.title);
+    const description = this.trimStr(formValue.description);
+    const price = formValue.price;
+    const brand = this.trimStr(formValue.brand);
+    const condition = this.trimStr(formValue.condition);
+    const size = this.trimStr(formValue.size);
+    const primaryColor = this.trimStr(formValue.primaryColor);
+    const itemTags = this.trimStr(formValue.itemTags);
+    const sku = this.trimStr(formValue.sku);
+    const packagePound = formValue.packagePound;
+    const packageOunce = formValue.packageOunce;
+    const packageLength = formValue.packageLength;
+    const packageWidth = formValue.packageWidth;
+    const packageHeight = formValue.packageHeight;
+    const zipcode = formValue.zipCode;
+    const cost = formValue.cost;
+    const notes = this.trimStr(formValue.notes);
+    const ebay = this.trimStr(formValue.ebay);
+    const poshmark = this.trimStr(formValue.poshmark);
+    const mercari = this.trimStr(formValue.mercari);
+    const facebook = this.trimStr(formValue.facebook);
+    const etsy = this.trimStr(formValue.etsy);
+    const tradesy = this.trimStr(formValue.tradesy);
+    const grailed = this.trimStr(formValue.grailed);
+    const depop = this.trimStr(formValue.depop);
+    const kidizen = this.trimStr(formValue.kidizen);
+
+    const status = this.setItemStatus([
+      ebay,
+      poshmark,
+      mercari,
+      facebook,
+      etsy,
+      tradesy,
+      grailed,
+      depop,
+      kidizen,
+    ]);
+
+    this.auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          await this.db.firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('items')
+            .doc(this.item.id)
+            .update({
+              title: title,
+              description: description,
+              status: status,
+              price: price,
+              brand: brand,
+              condition: condition,
+              size: size,
+              color: primaryColor,
+              tags: itemTags,
+              sku: sku,
+              packageWeight: { pounds: packagePound, ounces: packageOunce },
+              packageDimensions: {
+                length: packageLength,
+                width: packageWidth,
+                height: packageHeight,
+              },
+              zipCode: zipcode,
+              cost: cost,
+              notes: notes,
+              marketplaces: {
+                ebay: ebay,
+                poshmark: poshmark,
+                mercari: mercari,
+                facebook: facebook,
+                etsy: etsy,
+                tradesy: tradesy,
+                grailed: grailed,
+                depop: depop,
+                kidizen: kidizen,
+              },
+              modified: firebase.default.firestore.Timestamp.now(),
+            });
+        } catch (error) {
+          alert(error);
+        }
+      }
+    });
+  }
+
   onSubmit() {
-    //TODO: save item func
+    this.saveItem();
+    this.router.navigate(['/inventory']);
+  }
+
+  //trim string value
+  trimStr(str: string) {
+    return str.trim();
+  }
+
+  //based if they have a listing url or not
+  setItemStatus(marketplaceValues: string[]) {
+    if (this.item.sold) {
+      console.log('item status sold');
+
+      return 'sold';
+    }
+
+    console.log(this.item);
+
+    const urls = marketplaceValues.filter((listingURLS) => {
+      return listingURLS != '';
+    });
+
+    console.log(urls.length);
+    console.log('urls, ' + urls);
+
+    if (urls.length > 0) {
+      console.log('item status is active');
+      return 'active';
+    }
+
+    console.log('item status is draft');
+
+    return 'draft';
   }
 
   ngOnDestroy() {
