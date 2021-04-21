@@ -43,7 +43,7 @@ export class SignupComponent implements OnInit {
     const password = this.signupForm.value.password;
 
     try {
-      //TODO: loading, disable button
+      //LATER: loading, disable button
       this.isLoading = true;
 
       await this.auth.createUserWithEmailAndPassword(email, password);

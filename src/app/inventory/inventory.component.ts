@@ -15,12 +15,9 @@ import { Subscription } from 'rxjs';
 })
 export class InventoryComponent implements OnInit {
   //LATER: paginate data so we don't pull all the items at once, as this can cause alot of reads which can become expensive later on; if i do this i have to add custom elastic search functionality, I also have to queryable data most likely from google bigquery to get 'stats' values
-  //TODO: make sure to manipulate date values
   //LATER: users can add their inventory to the dashboard directly(this would mean that i hve to store the images)
   //LATER: allow users to filter the table/search by price, status, dates, marketplaces, etc...
 
-  //TODO: when getting marketplaces, if string is empty, don't show. That means there isn't a listing url for that marketplace, meaning there isn't any url associated with that marketplace.
-  //TODO: make of type 'ITEM'
   items: Item[];
 
   listedMarketplaces: string[][] = []; //iterated property
@@ -42,6 +39,7 @@ export class InventoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    //LATER: get and sort items by default based on newest first(modification date)
     this.getItems();
   }
 
@@ -105,7 +103,6 @@ export class InventoryComponent implements OnInit {
     this.items.map((item) => {
       if (item.price) {
         //parse prices currencies: 17 => 17.00
-        //TODO: value or type 0
         item.price = Number(currency(item.price).toString());
       }
       if (item.cost) {
@@ -124,7 +121,7 @@ export class InventoryComponent implements OnInit {
           .collection<Item>('items')
           .valueChanges()
           .subscribe((data) => {
-            //TODO: does this just push the objects, or wait till objects finish mapping before pushing, check later with multiple items in array, we dont want the push effect, we want the wait effect
+            //LATER: does this just push the objects, or wait till objects finish mapping before pushing, check later with multiple items in array, we dont want the push effect, we want the wait effect
             this.items = data.map((i) => {
               //loop over listed marketplaces
               this.iterateMarketplaces(i);

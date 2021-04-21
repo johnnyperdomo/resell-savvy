@@ -18,7 +18,6 @@ import { GettingStartedComponent } from './getting-started/getting-started.compo
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']); //if no logged in, restrict access
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['inventory']); //if logged in, block auth
 
-//TODO: add pipe guards for logged in states
 const routes: Routes = [
   //Main
   { path: '', redirectTo: '/inventory', pathMatch: 'full' },

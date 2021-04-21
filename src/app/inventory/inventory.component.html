@@ -21,7 +21,6 @@
               </div>
               <div class="col-auto">
                 <!-- Button -->
-                <!-- TODO: make this generic -->
                 <button (click)="onNewItem()" class="btn btn-primary lift">
                   New Item
                 </button>
@@ -211,7 +210,7 @@
                 <!-- Price -->
                 <td class="font-weight-bold">${{ item.price || 0 }}</td>
                 <!-- Cost -->
-                <!-- TODO: add optional binding with value '0' if null, chimpcharge has a good example of this. so try it out -->
+                
                 <td>${{ item.cost || 0 }}</td>
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
                 <td>{{ item.modified.seconds * 1000 | date }}</td>
@@ -246,7 +245,6 @@
                       <i class="fe fe-more-vertical"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <!-- TODO: Maybe add more specific items to list -->
                       <!-- TODO: ngif, mark as sold/unmark as sold based on status -->
 
                       <button

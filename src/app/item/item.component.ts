@@ -22,11 +22,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
 //LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
 export class ItemComponent implements OnInit {
-  //TODO: change status here; if they have no active listing urls, automatically mark as draft.
-  //dont mark as draft even if they dfont have a listing url, only on the situation where iit is marked as 'sold', since sold will have its own sell location. ({sold, {marketplace: 'poshmark'}})
-
-  //TODO: if an item is clicked to be listed, then automatically save the item before opening chrome extension
-
   itemForm: FormGroup;
 
   item: Item;
@@ -190,8 +185,6 @@ export class ItemComponent implements OnInit {
         },
       });
 
-      //TODO: save response to firebase
-
       console.log('finished uploading to azure');
     } catch (error) {
       //LATER: prettier solutio
@@ -222,7 +215,7 @@ export class ItemComponent implements OnInit {
 
     try {
       let secureSignature = await uploadSignature({
-        key: key, //blob name //TODO: dynamic
+        key: key, //blob name
       });
 
       console.log(secureSignature.data);
@@ -235,8 +228,6 @@ export class ItemComponent implements OnInit {
   }
 
   getItem(itemID: string) {
-    //TODO: get from db
-
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
         this.itemSub = this.db
@@ -254,8 +245,6 @@ export class ItemComponent implements OnInit {
           });
       }
     });
-
-    console.log(itemID + ' is the item id');
   }
 
   saveItem() {
@@ -358,29 +347,41 @@ export class ItemComponent implements OnInit {
     return str.trim();
   }
 
+  goToLink(link: string) {
+    const externalURL = link.match(/^http[s]?:\/\//) ? link : 'http://' + link;
+
+    window.open(externalURL, '_blank');
+  }
+
+  onListItem() {
+    //TODO: chrome extension should list this item
+    //TODO: disable if no chrome extension present
+    console.log('list item');
+
+    this.saveItem();
+  }
+
+  onDelistItem() {
+    console.log('delist item');
+
+    this.saveItem();
+    //TODO: chrome extension should list this item
+    //TODO: disable if no chrome extension present
+  }
+
   //based if they have a listing url or not
   setItemStatus(marketplaceValues: string[]) {
     if (this.item.sold) {
-      console.log('item status sold');
-
       return 'sold';
     }
-
-    console.log(this.item);
 
     const urls = marketplaceValues.filter((listingURLS) => {
       return listingURLS != '';
     });
 
-    console.log(urls.length);
-    console.log('urls, ' + urls);
-
     if (urls.length > 0) {
-      console.log('item status is active');
       return 'active';
     }
-
-    console.log('item status is draft');
 
     return 'draft';
   }
