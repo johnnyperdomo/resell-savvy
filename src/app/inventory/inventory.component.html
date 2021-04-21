@@ -159,10 +159,14 @@
                     <!-- Image -->
                     <div class="avatar">
                       <img
-                        *ngIf="item.imageUrls.length > 0; else imagePlaceholder"
+                        *ngIf="
+                          item.images && item.images.length > 0;
+                          else imagePlaceholder
+                        "
                         class="avatar-img rounded mr-3"
-                        src="{{ item.imageUrls[0] }}"
+                        src="{{ storagePath }}{{ item.images[0].blobID }}"
                       />
+                      <!-- TODO: update image url path -->
 
                       <ng-template #imagePlaceholder>
                         <img
@@ -210,7 +214,7 @@
                 <!-- Price -->
                 <td class="font-weight-bold">${{ item.price || 0 }}</td>
                 <!-- Cost -->
-                
+
                 <td>${{ item.cost || 0 }}</td>
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
                 <td>{{ item.modified.seconds * 1000 | date }}</td>

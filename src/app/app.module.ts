@@ -20,6 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PricingModalComponent } from './misc/pricing-modal/pricing-modal.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -46,6 +48,8 @@ firebase.initializeApp(environment.firebaseConfig);
     AngularFirestoreModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatGridListModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

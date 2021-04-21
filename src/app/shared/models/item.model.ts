@@ -4,7 +4,15 @@ export class Item {
   public title: string;
   public description: string;
   public status: string; //draft, sold, active
-  public imageUrls: [string];
+  public images: [
+    {
+      uploadDate: firebase.default.firestore.Timestamp;
+      blobID: string; //unique id of blob in Azure
+      blobContainer: string; //container of blob; should be 'item-images'
+      imageName: string;
+      imageSize: number; //in bytes //8mb file size max
+    }
+  ];
   public price?: number; //value or 0 when fetching property
   public cost?: number;
   public color: string;

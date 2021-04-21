@@ -15,6 +15,7 @@ export const environment = {
   azure: {
     itemImages: 'item-images',
     accountName: 'resellsavvydev',
+    storagePath: 'https://resellsavvydev.blob.core.windows.net/item-images/',
   },
 };
 

@@ -7,6 +7,7 @@ import { Item } from '../shared/models/item.model';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-inventory',
@@ -23,6 +24,8 @@ export class InventoryComponent implements OnInit {
   listedMarketplaces: string[][] = []; //iterated property
 
   filteredItems: any;
+
+  storagePath: string = environment.azure.storagePath; //azure storage url for hosted images
 
   //stats
   itemsInInventory: number;
@@ -58,7 +61,7 @@ export class InventoryComponent implements OnInit {
             title: '',
             description: '',
             status: 'draft',
-            imageUrls: [],
+            images: [],
             price: null,
             brand: '',
             condition: '',
@@ -122,6 +125,7 @@ export class InventoryComponent implements OnInit {
           .valueChanges()
           .subscribe((data) => {
             //LATER: does this just push the objects, or wait till objects finish mapping before pushing, check later with multiple items in array, we dont want the push effect, we want the wait effect
+
             this.items = data.map((i) => {
               //loop over listed marketplaces
               this.iterateMarketplaces(i);

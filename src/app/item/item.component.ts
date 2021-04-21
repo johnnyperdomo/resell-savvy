@@ -21,6 +21,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
 //LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
+//LATER: see how you can download images with cdn path, to reduce bandwidth
+//LATER: show progress bar
 export class ItemComponent implements OnInit {
   itemForm: FormGroup;
 
@@ -28,6 +30,8 @@ export class ItemComponent implements OnInit {
   itemSub: Subscription;
 
   routeSub: Subscription;
+
+  storagePath: string = environment.azure.storagePath; //azure storage url for hosted images
 
   uppy: Uppy.Uppy<Uppy.TypeChecking>;
 
@@ -185,7 +189,31 @@ export class ItemComponent implements OnInit {
         },
       });
 
-      console.log('finished uploading to azure');
+      this.auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          try {
+            await this.db.firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('items')
+              .doc(this.item.id)
+              .update({
+                images: firebase.default.firestore.FieldValue.arrayUnion({
+                  uploadDate: firebase.default.firestore.Timestamp.now(),
+                  blobID: customKey,
+                  blobContainer: environment.azure.itemImages,
+                  imageName: file.name,
+                  imageSize: file.size,
+                }),
+              });
+
+            console.log('finished uploading to azure');
+          } catch (error) {
+            alert(error.message);
+          }
+        }
+      });
+      console.log('finished uploading to azure outside');
     } catch (error) {
       //LATER: prettier solutio
       alert(error);
