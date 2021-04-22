@@ -278,6 +278,29 @@ export class ItemComponent implements OnInit {
     });
   }
 
+  onDeleteImage(imageImage: any) {
+    //LATER: add confirmation if they want to delete image
+    this.auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          await this.db.firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('items')
+            .doc(this.item.id)
+            .update({
+              images: firebase.default.firestore.FieldValue.arrayRemove(
+                imageImage
+              ),
+            });
+        } catch (error) {
+          this.isUploading = false;
+          alert(error.message);
+        }
+      }
+    });
+  }
+
   saveItem() {
     const formValue = this.itemForm.value;
 
