@@ -73,20 +73,17 @@
               </mat-grid-list>
             </div>
 
-            <!-- TODO: Whatever images are uploaded with the url, showcase them in a grid -->
-
-            <!-- [hidden]="item && item.imageUrls.length != 0" -->
-
             <div>
               <div [hidden]="isUploading == false" class="mb-4">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
               </div>
 
-              <!-- TODO: hiding and showing isn't working correctly on the following divs -->
-              <div
-                [hidden]="item && item.images && item.images.length >= 16"
-                id="upload-images"
-              ></div>
+              <div [hidden]="!item">
+                <div
+                  [hidden]="item && item.images && item.images.length >= 16"
+                  id="upload-images"
+                ></div>
+              </div>
 
               <div [hidden]="item && item.images && item.images.length < 16">
                 <p class="small text-muted">
@@ -432,7 +429,6 @@
               <div class="form-group">
                 <label>Ebay</label>
 
-                <!-- TODO: ngif only if item is listed, link to listing url so they cna view if they want -->
                 <button
                   *ngIf="item && item.marketplaces.ebay != ''"
                   class="text-muted btn btn-link"
