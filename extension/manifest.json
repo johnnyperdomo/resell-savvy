@@ -1,0 +1,45 @@
+{
+  "name": "ResellSavvy - Crosslisting tool for sellers",
+  "version": "0.01",
+  "description": "Crosslisting tool for sellers",
+  "permissions": [
+    "storage",
+    "declarativeContent",
+    "activeTab",
+    "background",
+    "tabs",
+    "management",
+    "cookies",
+    "*://*.resellsavvy.com/*",
+    "*://*.ebay.com/*",
+    "*://*.etsy.com/*",
+    "*://*.etsy.com/*",
+    "*://*.depop.com/*",
+    "*://*.kidizen.com/*",
+    "*://*.facebook.com/*",
+    "*://*.mercari.com/*",
+    "*://*.grailed.com/*",
+    "*://*.poshmark.com/*",
+    "*://*.tradesy.com/*"
+  ],
+
+  "background": {
+    "page": "background/background.html",
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/mercari.js"],
+      "matches": ["*://www.mercari.com/*"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "browser_action": {
+    "default_popup": "popup/popup.html"
+  },
+
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+}
