@@ -65,17 +65,8 @@ export class InventoryComponent implements OnInit {
             price: null,
             brand: '',
             condition: '',
-            size: '',
             color: '',
-            tags: '',
             sku: '',
-            packageWeight: { pounds: null, ounces: null },
-            packageDimensions: {
-              length: null,
-              width: null,
-              height: null,
-            },
-            zipCode: null,
             cost: null,
             notes: '',
             marketplaces: {

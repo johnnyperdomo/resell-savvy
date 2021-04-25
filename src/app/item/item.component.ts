@@ -63,7 +63,7 @@ export class ItemComponent implements OnInit {
       brand: [''],
       condition: [''],
       size: [''],
-      primaryColor: [''],
+      color: [''],
       itemTags: [''],
       sku: [''],
       packagePound: [null],
@@ -93,16 +93,8 @@ export class ItemComponent implements OnInit {
       price: item.price,
       brand: item.brand,
       condition: item.condition,
-      size: item.size,
-      primaryColor: item.color,
-      itemTags: item.tags,
+      color: item.color,
       sku: item.sku,
-      packagePound: item.packageWeight.pounds,
-      packageOunce: item.packageWeight.ounces,
-      packageLength: item.packageDimensions.length,
-      packageWidth: item.packageDimensions.width,
-      packageHeight: item.packageDimensions.height,
-      zipCode: item.zipCode,
       cost: item.cost,
       notes: item.notes,
       ebay: item.marketplaces.ebay,
@@ -279,6 +271,8 @@ export class ItemComponent implements OnInit {
   }
 
   onDeleteImage(imageImage: any) {
+    console.log('delete');
+
     //LATER: add confirmation if they want to delete image
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -302,6 +296,8 @@ export class ItemComponent implements OnInit {
   }
 
   saveItem() {
+    console.log('save');
+
     const formValue = this.itemForm.value;
 
     const title = this.trimStr(formValue.title);
@@ -309,16 +305,8 @@ export class ItemComponent implements OnInit {
     const price = formValue.price;
     const brand = this.trimStr(formValue.brand);
     const condition = this.trimStr(formValue.condition);
-    const size = this.trimStr(formValue.size);
-    const primaryColor = this.trimStr(formValue.primaryColor);
-    const itemTags = this.trimStr(formValue.itemTags);
+    const color = this.trimStr(formValue.color);
     const sku = this.trimStr(formValue.sku);
-    const packagePound = formValue.packagePound;
-    const packageOunce = formValue.packageOunce;
-    const packageLength = formValue.packageLength;
-    const packageWidth = formValue.packageWidth;
-    const packageHeight = formValue.packageHeight;
-    const zipcode = formValue.zipCode;
     const cost = formValue.cost;
     const notes = this.trimStr(formValue.notes);
     const ebay = this.trimStr(formValue.ebay);
@@ -358,17 +346,8 @@ export class ItemComponent implements OnInit {
               price: price,
               brand: brand,
               condition: condition,
-              size: size,
-              color: primaryColor,
-              tags: itemTags,
+              color: color,
               sku: sku,
-              packageWeight: { pounds: packagePound, ounces: packageOunce },
-              packageDimensions: {
-                length: packageLength,
-                width: packageWidth,
-                height: packageHeight,
-              },
-              zipCode: zipcode,
               cost: cost,
               notes: notes,
               marketplaces: {

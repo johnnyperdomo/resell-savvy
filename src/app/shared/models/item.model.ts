@@ -16,17 +16,8 @@ export class Item {
   public price?: number; //value or 0 when fetching property
   public cost?: number;
   public color: string;
-  public size: string; //can be anything
   public brand: string;
-  public tags: string; //separated by commas (,)
   public condition: string; //nwt, nwot, good, pre-owned, poor
-  public zipCode?: number;
-  public packageWeight: { pounds?: number; ounces?: number };
-  public packageDimensions: {
-    length?: number;
-    width?: number;
-    height?: number;
-  }; //measured in inches
   public notes: string; //these are internal notes
   public marketplaces: {
     ebay: string;
@@ -51,3 +42,5 @@ export class Item {
     Object.assign(this, init);
   }
 }
+
+//Note: we won't have specifics such as packaging details, sizes, or tags. (mostly because inputing them on form fields is very complex since there are so many different use cases/variables when it comes to categories/Brands. also they require special dropdown and native browser elements to pull off, which can get very complex. Also, depending on what the user is reselling, different items have different requirements. So just keep it generic.)
