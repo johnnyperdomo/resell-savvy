@@ -3,6 +3,7 @@
 //Manifest.json ---- comments
 //    //TODO: add script for resellsavvy
 //TODO: move around scripts so it doesn't look copied
+//LATER: i need to add 4 more marketplaces like (tradesy, depop, grailed, kidizen)
 
 // document.getElementById("openMercari").addEventListener("click", function () {
 //   chrome.runtime.sendMessage({ name: "message" }, (response) => {

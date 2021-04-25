@@ -33,6 +33,11 @@
       "js": ["jquery-3.6.0.min.js", "marketplaces/mercari.js"],
       "matches": ["*://www.mercari.com/*"],
       "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
+      "matches": ["*://poshmark.com/*"],
+      "run_at": "document_start"
     }
   ],
 

@@ -4,7 +4,7 @@ if (
   alert("this is an alert for the closet");
 }
 
-async function fillOutMercariForms() {
+async function fillOutMercariForm() {
   let title = document.getElementById("sellName");
   let description = document.getElementById("sellDescription");
 

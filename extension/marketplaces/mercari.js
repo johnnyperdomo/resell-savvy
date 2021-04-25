@@ -26,16 +26,37 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForDomReady() {
-  //TODO: wait for document to be ready
-  document.addEventListener("DOMContentLoaded", function (event) {
-    return new Promise((resolve) => {
-      resolve(true);
-    });
-  });
+function waitForElementToDisplay(
+  selector,
+  callback,
+  checkFrequencyInMs,
+  timeoutInMs
+) {
+  var startTimeInMs = Date.now();
+  (function loopSearch() {
+    if (document.querySelector(selector) != null) {
+      callback();
+      return;
+    } else {
+      setTimeout(function () {
+        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+        loopSearch();
+      }, checkFrequencyInMs);
+    }
+  })();
 }
 
-async function fillOutMercariForms(
+//TODO: call code from postMessage request
+waitForElementToDisplay(
+  "#sellName",
+  function () {
+    readyToInsertFields();
+  },
+  100,
+  100000000000000
+);
+
+async function fillOutMercariForm(
   imageUrls,
   title,
   description,
@@ -65,8 +86,6 @@ async function fillOutMercariForms(
 
   fillInputValue(mercari_title, title);
   fillTextAreaValue(mercari_description, description);
-
-  //TODO: Split tags by comma
 
   if (tags) {
     let tagsArray = tags.split(",");
@@ -168,7 +187,7 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function readyToInsertFields() {
-  fillOutMercariForms(
+  fillOutMercariForm(
     [],
     "Nike xl premium shirt",
     "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
@@ -179,34 +198,4 @@ function readyToInsertFields() {
     54365,
     54
   );
-}
-
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "#sellName",
-  function () {
-    readyToInsertFields();
-  },
-  100,
-  100000000000000
-);
-
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
 }
