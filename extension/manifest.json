@@ -38,6 +38,18 @@
       "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
       "matches": ["*://poshmark.com/*"],
       "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/ebay.js"],
+      "matches": [
+        "*://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&&DraftURL=*"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/facebook.js"],
+      "matches": ["*://www.facebook.com/*"],
+      "run_at": "document_start"
     }
   ],
 

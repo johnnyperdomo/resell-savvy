@@ -60,7 +60,6 @@ async function fillOutMercariForm(
   imageUrls,
   title,
   description,
-  tags,
   brand,
   condition,
   color,
@@ -75,41 +74,16 @@ async function fillOutMercariForm(
   let mercari_description = document.querySelector(
     'textarea[data-testid="Description"]'
   );
-  let mercari_tag1 = document.querySelector('input[data-testid="Tag1"]');
-  let mercari_tag2 = document.querySelector('input[data-testid="Tag2"]');
-  let mercari_tag3 = document.querySelector('input[data-testid="Tag3"]');
+
   let mercari_brand = document.querySelector('input[data-testid="Brand"]');
-  let mercari_zipCode = document.querySelector(
-    'input[data-testid="ShipsFrom"]'
-  );
+
   let mercari_price = document.querySelector('input[data-testid="Price"]');
 
   fillInputValue(mercari_title, title);
   fillTextAreaValue(mercari_description, description);
 
-  if (tags) {
-    let tagsArray = tags.split(",");
-
-    //tag 1
-    if (tagsArray[0]) {
-      console.log("tag array 1 exists, " + tagsArray[0]);
-      fillInputValue(mercari_tag1, tagsArray[0]);
-    }
-
-    //tag 2
-    if (tagsArray[1]) {
-      console.log("tag array 2 exists, " + tagsArray[1]);
-      fillInputValue(mercari_tag2, tagsArray[1]);
-    }
-
-    //tag 3
-    if (tagsArray[2]) {
-      console.log("tag array 3 exists, " + tagsArray[2]);
-      fillInputValue(mercari_tag3, tagsArray[2]);
-    }
-  }
-
   //LATER: brand isn't always going to work, because it's a drop down. Later in the help docs let the user know that you will try your best to aggregate data if data fields are acceptable, but can't guarantee perfect synchronization bcuz every platform is different.
+  //TODO: try to match first item, if first item in list matches, then select, if not, don't select
   fillInputValue(mercari_brand, brand);
 
   if (condition != "") {
@@ -123,8 +97,6 @@ async function fillOutMercariForm(
     //TODO: click color
     //TODO: match color
   }
-
-  fillInputValue(mercari_zipCode, zipCode);
 
   //TODO: any number if available, round up, bcuz mercari doesn't accept decimals
   fillInputValue(mercari_price, price);
@@ -191,7 +163,6 @@ function readyToInsertFields() {
     [],
     "Nike xl premium shirt",
     "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    "breath of fresh air, classic, vintage",
     "Adidas",
     "nwot",
     "black",

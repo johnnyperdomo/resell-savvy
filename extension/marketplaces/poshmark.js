@@ -63,7 +63,6 @@ async function fillOutPoshmarkForm(
   imageUrls,
   title,
   description,
-  tags,
   brand,
   condition,
   color,
@@ -90,10 +89,6 @@ async function fillOutPoshmarkForm(
     'input[data-vv-name="costPriceAmount"]'
   );
 
-  let poshmark_tag_input = document.querySelector(
-    'input[data-vv-name="style-tag-input"]'
-  );
-
   fillInputValue(poshmark_title, title);
   fillTextAreaValue(poshmark_description, description);
 
@@ -103,32 +98,6 @@ async function fillOutPoshmarkForm(
   fillInputValue(poshmark_listingPrice, listPrice);
   fillInputValue(poshmark_sku, sku);
   fillInputValue(poshmark_costPrice, costPrice);
-
-  if (tags) {
-    //TODO: you need to press enter after this, but for some reason, placing a comma also seems to work
-    //https://www.geeksforgeeks.org/trigger-a-keypress-keydown-keyup-event-in-js-jquery/ TODO: this might work
-    //TODO: sometimes this throws errors
-    //   let tagsArray = tags.split(",");
-    //   waitForElementToLoad(poshmark_tag_input);
-    //   fillInputValue(poshmark_tag_input, "cool, dad, bro");
-    //   //tag 1
-    //   if (tagsArray[0]) {
-    //     console.log("tag array 1 exists, " + tagsArray[0]);
-    //     fillInputValue(poshmark_tag1, tagsArray[0]);
-    //   }
-    //   //tag 2
-    //   if (tagsArray[1]) {
-    //     console.log("tag array 2 exists, " + tagsArray[1]);
-    //     fillInputValue(poshmark_tag2, tagsArray[1]);
-    //   }
-    //   //tag 3
-    //   if (tagsArray[2]) {
-    //     console.log("tag array 3 exists, " + tagsArray[2]);
-    //     fillInputValue(poshmark_tag3, tagsArray[2]);
-    //   }
-  }
-
-  //LATER: size if available, but this won't always be available right away.
 
   if (condition != "") {
     let conditionValue = matchCondition(condition);
@@ -196,7 +165,6 @@ function readyToInsertFields() {
     [],
     "Nike xl premium shirt",
     "This is a good nike shirt made from the nike store lit!!!1",
-    "abc, ide, fed",
     "Adidas",
     "poor",
     "Blue",
