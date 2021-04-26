@@ -76,14 +76,13 @@ async function fillOutMercariForm(
   );
 
   let mercari_brand = document.querySelector('input[data-testid="Brand"]');
-
   let mercari_price = document.querySelector('input[data-testid="Price"]');
 
   fillInputValue(mercari_title, title);
   fillTextAreaValue(mercari_description, description);
 
   //LATER: brand isn't always going to work, because it's a drop down. Later in the help docs let the user know that you will try your best to aggregate data if data fields are acceptable, but can't guarantee perfect synchronization bcuz every platform is different.
-  //TODO: try to match first item, if first item in list matches, then select, if not, don't select
+  //TODO: try to match first item, if first item in list matches, then select brand, if not, don't select
   fillInputValue(mercari_brand, brand);
 
   if (condition != "") {
