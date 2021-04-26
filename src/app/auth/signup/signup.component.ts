@@ -60,8 +60,8 @@ export class SignupComponent implements OnInit {
             { merge: true }
           );
 
-          //since it's first time here, route to getting started page
-          this.router.navigate(['/getting-started']);
+          //since it's first time here, route to paywall
+          this.router.navigate(['/paywall']);
           this.isLoading = false;
         }
       });

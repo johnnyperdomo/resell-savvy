@@ -18,12 +18,11 @@ import { SubscriptionComponent } from './settings/subscription/subscription.comp
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
-import { PricingModalComponent } from './misc/pricing-modal/pricing-modal.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PaywallComponent } from './shared/paywall/paywall.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -39,8 +38,8 @@ firebase.initializeApp(environment.firebaseConfig);
     SubscriptionComponent,
     SettingsComponent,
     NavbarComponent,
-    PricingModalComponent,
     GettingStartedComponent,
+    PaywallComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +51,7 @@ firebase.initializeApp(environment.firebaseConfig);
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatGridListModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -7,4 +7,5 @@ export const environment = {
   },
 };
 
+//TODO: production stripe keys/price-ids
 //TODO: create production version of firebase

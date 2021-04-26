@@ -14,6 +14,7 @@ import {
   redirectUnauthorizedTo,
 } from '@angular/fire/auth-guard';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { PaywallComponent } from './shared/paywall/paywall.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']); //if no logged in, restrict access
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['inventory']); //if logged in, block auth
@@ -50,19 +51,20 @@ const routes: Routes = [
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
 
-  // {
-  //   path: 'item/new',
-  //   component: ItemComponent,
-  //   canActivate: [AngularFireAuthGuard],
-  //   data: { authGuardPipe: redirectUnauthorizedToLogin },
-  // }, //new item
-
   {
     path: 'item/:item-id',
     component: ItemComponent,
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin },
   }, //edit item
+
+  //Paywall
+  {
+    path: 'paywall',
+    component: PaywallComponent,
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin },
+  }, //
 
   //Settings
   {

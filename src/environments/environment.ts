@@ -17,6 +17,11 @@ export const environment = {
     accountName: 'resellsavvydev',
     storagePath: 'https://resellsavvydev.blob.core.windows.net/item-images/',
   },
+  stripe: {
+    publishableKey:
+      'pk_test_51HtaF3KWbAZBgyTQXKMAp5h3nc1kmAWbi5vBcp14AmrqXR8XWYKXwIPhSZoOPiZBKRkl9Id6wi6nHi8p5NApRR0000oRMZr5Zl',
+    priceId: 'price_1IYFIdKWbAZBgyTQ0EqAaGuB',
+  },
 };
 
 /*
