@@ -8,6 +8,8 @@ import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { SoldDialogComponent } from '../shared/sold-dialog/sold-dialog.component';
 
 @Component({
   selector: 'app-inventory',
@@ -18,6 +20,7 @@ export class InventoryComponent implements OnInit {
   //LATER: paginate data so we don't pull all the items at once, as this can cause alot of reads which can become expensive later on; if i do this i have to add custom elastic search functionality, I also have to queryable data most likely from google bigquery to get 'stats' values
   //LATER: users can add their inventory to the dashboard directly(this would mean that i hve to store the images)
   //LATER: allow users to filter the table/search by price, status, dates, marketplaces, etc...
+  //LATER: be more transparent and share the sold details on the item page, stating fees, etc... and maybe they can edit. This will be more apparent later on when they will need sales reports
 
   items: Item[];
 
@@ -34,11 +37,13 @@ export class InventoryComponent implements OnInit {
   totalSales: number;
 
   itemSub: Subscription;
+  soldDialogSub: Subscription;
 
   constructor(
     private db: AngularFirestore,
     private auth: AngularFireAuth,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -206,12 +211,32 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  onMarkItemSold(itemID: string) {
+  onMarkItemSold(item: Item) {
+    //LATER: delist items automatically later
     // TODO: modal
+
+    this.dialog.open(SoldDialogComponent, {
+      data: { item: item },
+    });
   }
 
   onUnmarkItemSold(itemID: string) {
-    //TODO: modal
+    this.auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          await this.db.firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('items')
+            .doc(itemID)
+            .update({
+              sold: null,
+            });
+        } catch (error) {
+          alert(error);
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -219,6 +244,10 @@ export class InventoryComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     if (this.itemSub) {
       this.itemSub.unsubscribe();
+    }
+
+    if (this.soldDialogSub) {
+      this.soldDialogSub.unsubscribe();
     }
   }
 }

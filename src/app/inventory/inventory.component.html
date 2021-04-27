@@ -147,7 +147,8 @@
                 <th scope="col">Price</th>
                 <th scope="col">Cost</th>
                 <th scope="col">Date</th>
-                <th colspan="2" scope="col  text-right ">Marketplaces</th>
+                <th scope="col">Sold On</th>
+                <th colspan="2" scope="col  text-right ">Listed On</th>
               </tr>
             </thead>
             <tbody class="list">
@@ -200,14 +201,22 @@
                 <!-- Status -->
                 <td>
                   <span
-                    class="badge font-weight-bold text-capitalize"
-                    [ngClass]="{
-                      'badge-soft-primary': item.status === 'sold',
-                      'badge-soft-secondary': item.status === 'draft',
-                      'badge-soft-success': item.status === 'active'
-                    }"
-                    >{{ item.status }}</span
+                    *ngIf="item.sold; else showStatus"
+                    class="badge badge-soft-primary font-weight-bold text-capitalize"
                   >
+                    Sold
+                  </span>
+
+                  <ng-template #showStatus>
+                    <span
+                      class="badge font-weight-bold text-capitalize"
+                      [ngClass]="{
+                        'badge-soft-secondary': item.status === 'draft',
+                        'badge-soft-success': item.status === 'active'
+                      }"
+                      >{{ item.status }}</span
+                    >
+                  </ng-template>
                 </td>
                 <!-- Price -->
                 <td class="font-weight-bold">${{ item.price || 0 }}</td>
@@ -216,6 +225,23 @@
                 <td>${{ item.cost || 0 }}</td>
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
                 <td>{{ item.modified.seconds * 1000 | date }}</td>
+                <td>
+                  <span
+                    *ngIf="item.sold"
+                    class="avatar avatar-xs text-center"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ item.marketplace }}"
+                  >
+                    <img
+                      src="assets/marketplace-logos/{{
+                        item.sold.marketplace
+                      }}.png"
+                      class="avatar-img rounded-circle"
+                      alt="{{ item.marketplace }}"
+                    />
+                  </span>
+                </td>
                 <td class="text-left">
                   <div class="avatar-group">
                     <span
@@ -250,18 +276,18 @@
                       <!-- TODO: ngif, mark as sold/unmark as sold based on status -->
 
                       <button
-                        (click)="onMarkItemSold(item.id)"
+                        (click)="onUnmarkItemSold(item.id)"
                         class="dropdown-item"
-                        *ngIf="item.status != 'sold'; else unMarkSold"
+                        *ngIf="item.sold; else markSold"
                       >
-                        Mark as sold
+                        Unmark as sold
                       </button>
-                      <ng-template #unMarkSold>
+                      <ng-template #markSold>
                         <button
-                          (click)="onUnmarkItemSold(item.id)"
                           class="dropdown-item"
+                          (click)="onMarkItemSold(item)"
                         >
-                          Unmark as sold
+                          Mark as sold
                         </button>
                       </ng-template>
 

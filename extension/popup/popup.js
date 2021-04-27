@@ -1,5 +1,7 @@
 //NOTE: Data transfer, only works on chrome and firefox. Other browsers wouldn't allow this
 
+//LATER: webpack code, so that you make it hard as hell for someone to copy you
+
 //Manifest.json ---- comments
 //    //TODO: add script for resellsavvy
 //TODO: move around scripts so it doesn't look copied

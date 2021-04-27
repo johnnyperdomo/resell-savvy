@@ -23,6 +23,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PaywallComponent } from './shared/paywall/paywall.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SoldDialogComponent } from './shared/sold-dialog/sold-dialog.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -40,6 +42,7 @@ firebase.initializeApp(environment.firebaseConfig);
     NavbarComponent,
     GettingStartedComponent,
     PaywallComponent,
+    SoldDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ firebase.initializeApp(environment.firebaseConfig);
     BrowserAnimationsModule,
     MatGridListModule,
     MatProgressBarModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

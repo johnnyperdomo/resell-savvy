@@ -3,7 +3,7 @@ export class Item {
   public sku: string; //user generated
   public title: string;
   public description: string;
-  public status: string; //draft, sold, active
+  public status: string; //draft, active. sold status is set based on sold object below
   public images: [
     {
       uploadDate: firebase.default.firestore.Timestamp;

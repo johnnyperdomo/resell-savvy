@@ -59,8 +59,6 @@ export class PaywallComponent implements OnInit {
   onStripeCheckout(useCoupon: boolean) {
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
-        //TODO: detect if user needs a trial or a resubscribe, and then show on ui
-
         let docRef: any;
 
         try {
@@ -89,6 +87,8 @@ export class PaywallComponent implements OnInit {
                   success_url: `${window.location.origin}/getting-started`,
                   cancel_url: `${window.location.origin}/paywall`,
                   allow_promotion_codes: false,
+                  //don't use item trial here, because we are offering 30 day trial coupons, and stripe checkout doesn't let me extend trial, so to avoid 14 + 30 day trial. I just eliminate the trial, and just do the 30 day trial.
+                  //LATER: when i make custom paywall with custom checkout, i can custom coupon configuration more.
                 });
             }
           } else {
@@ -100,7 +100,7 @@ export class PaywallComponent implements OnInit {
                 .doc(user.uid)
                 .collection('checkout_sessions')
                 .add({
-                  price: environment.stripe.priceId, //Free trial  //TODO: test
+                  price: environment.stripe.priceId,
                   success_url: `${window.location.origin}/getting-started`,
                   cancel_url: `${window.location.origin}/paywall`,
                   allow_promotion_codes: true,
@@ -112,7 +112,7 @@ export class PaywallComponent implements OnInit {
                 .doc(user.uid)
                 .collection('checkout_sessions')
                 .add({
-                  price: environment.stripe.priceId, //Free trial  //TODO: test
+                  price: environment.stripe.priceId,
                   success_url: `${window.location.origin}/getting-started`,
                   cancel_url: `${window.location.origin}/paywall`,
                   allow_promotion_codes: false,
