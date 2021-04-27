@@ -25,6 +25,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PaywallComponent } from './shared/paywall/paywall.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SoldDialogComponent } from './shared/sold-dialog/sold-dialog.component';
+import { CouponDialogComponent } from './shared/coupon-dialog/coupon-dialog.component';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -43,6 +44,7 @@ firebase.initializeApp(environment.firebaseConfig);
     GettingStartedComponent,
     PaywallComponent,
     SoldDialogComponent,
+    CouponDialogComponent,
   ],
   imports: [
     BrowserModule,

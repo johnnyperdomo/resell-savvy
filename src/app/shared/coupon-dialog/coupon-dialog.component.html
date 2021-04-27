@@ -1,0 +1,27 @@
+<form [formGroup]="couponForm" (keydown.enter)="$event.preventDefault()">
+  <div class="form-group">
+    <label> Enter Coupon Code </label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="couponCode"
+      [(ngModel)]="data.couponCode"
+      required
+    />
+  </div>
+
+  <div class="text-center">
+    <button class="btn btn-white mr-4" mat-dialog-close type="button">
+      Cancel
+    </button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      [mat-dialog-close]="data.couponCode"
+      [disabled]="!couponForm.valid"
+    >
+      Apply
+    </button>
+  </div>
+</form>

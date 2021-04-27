@@ -1,6 +1,5 @@
 <form
   [formGroup]="soldForm"
-  class=""
   (keydown.enter)="$event.preventDefault()"
   (ngSubmit)="onSubmit()"
 >
@@ -75,7 +74,7 @@
   </div>
 
   <div class="text-right">
-    <button class="btn btn-white mr-4" (click)="onCancel()" type="button">
+    <button class="btn btn-white mr-4" mat-dialog-close type="button">
       Cancel
     </button>
     <button class="btn btn-primary" type="submit" [disabled]="!soldForm.valid">

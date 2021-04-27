@@ -24,7 +24,6 @@ export class SoldDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupSoldForm();
-    console.log('dialog opened ', this.data.item.id);
   }
 
   setupSoldForm() {
@@ -33,11 +32,6 @@ export class SoldDialogComponent implements OnInit {
       sellPrice: [this.data.item.price],
       fees: [null],
     });
-  }
-
-  onCancel() {
-    this.matDialog.closeAll();
-    console.log('canceled pressed');
   }
 
   async onSubmit() {

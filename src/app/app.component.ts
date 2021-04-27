@@ -40,7 +40,6 @@ export class AppComponent {
           .then(async (snap) => {
             if (snap.docs.length === 0) {
               //completely new user
-              console.log('new user');
               this.router.navigate(['/paywall']);
             } else {
               const trialingSubs = await subs.ref
@@ -54,14 +53,10 @@ export class AppComponent {
                 //active subscription
 
                 if (this.router.url === '/paywall') {
-                  //TODO: enable
                   this.router.navigate(['/inventory']);
                 }
-
-                console.log('active sub');
               } else {
                 //needs to resubscribe
-                console.log('needs to subscribe');
                 this.router.navigate(['/paywall']);
               }
             }

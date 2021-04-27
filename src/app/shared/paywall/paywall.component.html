@@ -16,7 +16,7 @@
 
             <div
               *ngIf="
-                subscriptionStatus && subscriptionStatus == 'resubscribe';
+                subscriptionStatus && subscriptionStatus == 'canceled';
                 else headerText
               "
             >
@@ -52,17 +52,26 @@
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
           <!-- Card -->
 
-          <div class="text-center" *ngIf="subscriptionStatus != 'resubscribe'">
+          <div class="text-center" *ngIf="subscriptionStatus != 'canceled'">
             <p class="text-muted text-center mb-1">
               Your card won't be charged during your free trial.
             </p>
           </div>
           <div class="card">
             <div class="card-body">
-              <div>
+              <div *ngIf="couponCode; else defaultCardHeader">
+                <h2 class="text-center text-xl font-bold text-gray-900">
+                  {{ couponCode.displayText }}
+                </h2>
+                <p class="mt-1 text-center text-sm text-gray-900 max-w">
+                  then just <b>$29/month.</b>
+                </p>
+              </div>
+
+              <ng-template #defaultCardHeader>
                 <div
                   *ngIf="
-                    subscriptionStatus && subscriptionStatus == 'resubscribe';
+                    subscriptionStatus && subscriptionStatus == 'canceled';
                     else cardHeader
                   "
                 >
@@ -73,18 +82,19 @@
                     just <b>$29/month.</b>
                   </p>
                 </div>
-
-                <ng-template #cardHeader>
-                  <div>
-                    <h2 class="text-center text-xl font-bold text-gray-900">
-                      Start Your 14 Day Free-Trial
-                    </h2>
-                    <p class="mt-1 text-center text-sm text-gray-900 max-w">
-                      then just <b>$29/month.</b>
-                    </p>
-                  </div>
-                </ng-template>
-              </div>
+                <div>
+                  <ng-template #cardHeader>
+                    <div>
+                      <h2 class="text-center text-xl font-bold text-gray-900">
+                        Start Your 14 Day Free-Trial
+                      </h2>
+                      <p class="mt-1 text-center text-sm text-gray-900 max-w">
+                        then just <b>$29/month.</b>
+                      </p>
+                    </div>
+                  </ng-template>
+                </div>
+              </ng-template>
 
               <!-- Features -->
               <div class="mb-3">
@@ -126,29 +136,42 @@
               <!-- Button -->
               <div class="text-center">
                 <!-- LATER: loading spinner -->
+
                 <button
-                  (click)="onStripeCheckout(false)"
+                  (click)="onStripeCheckout()"
                   class="btn btn-block btn-primary"
                 >
-                  <span
-                    *ngIf="
-                      subscriptionStatus && subscriptionStatus == 'resubscribe';
-                      else buttonText
-                    "
-                  >
-                    Resubscribe for $29
+                  <span *ngIf="couponCode; else defaultButtonText">
+                    {{ couponCode.displayText }}
                   </span>
 
-                  <ng-template #buttonText>
-                    <span> Start 14 day free-trial </span>
+                  <ng-template #defaultButtonText>
+                    <span
+                      *ngIf="
+                        subscriptionStatus && subscriptionStatus == 'canceled';
+                        else buttonText
+                      "
+                    >
+                      Resubscribe for $29
+                    </span>
+
+                    <ng-template #buttonText>
+                      <span> Start 14 day free-trial </span>
+                    </ng-template>
                   </ng-template>
                 </button>
                 <button
-                  (click)="onStripeCheckout(true)"
+                  (click)="onEnterCoupon()"
                   class="btn btn-link text-center"
                 >
                   Enter Coupon Code
                 </button>
+              </div>
+
+              <div class="text-center">
+                <small *ngIf="couponCode" class="text-success mt-4">
+                  Coupon Applied: {{ couponCode.id }}
+                </small>
               </div>
             </div>
           </div>
