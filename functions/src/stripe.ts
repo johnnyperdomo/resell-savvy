@@ -63,6 +63,26 @@ export const createCheckoutSession = functions.https.onCall(
         );
       }
 
+      if (data.coupon && data.coupon.source === 'firebase') {
+        //increment firebase coupon redemption count
+        const increment = admin.firestore.FieldValue.increment(1);
+        const codeRef = db.collection('codes').doc(data.coupon.id);
+
+        await codeRef.update({ redemptions: increment });
+
+        const redemptionRef = codeRef
+          .collection('redemptions')
+          .doc(context.auth.uid);
+
+        await redemptionRef.set(
+          {
+            userID: context.auth.uid,
+            date: admin.firestore.Timestamp.now(),
+          },
+          { merge: true }
+        );
+      }
+
       if (data.trialLength) {
         const checkoutSession = await stripe.checkout.sessions.create({
           customer: stripeCustomerID,

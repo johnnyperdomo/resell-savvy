@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { CouponDialogComponent } from '../coupon-dialog/coupon-dialog.component';
 import { Coupon } from '../models/coupon.model';
 import * as firebase from 'firebase';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-paywall',
@@ -18,6 +19,8 @@ export class PaywallComponent implements OnInit {
 
   //LATER: for now, only get coupons from fb database, but later get coupons from stripe as well. So check if coupon exists in fb, if not exist, check in strip, if not exist, then show errors, unless one of them has an error.
   stripe = loadStripe(environment.stripe.publishableKey);
+
+  user: firebase.default.User;
 
   subscriptionStatus: 'new' | 'canceled' | 'active';
   couponCode: Coupon;
@@ -85,6 +88,7 @@ export class PaywallComponent implements OnInit {
           priceid: environment.stripe.priceId,
           successUrl: `${window.location.origin}/getting-started`,
           cancelUrl: `${window.location.origin}/paywall`,
+          coupon: null,
         });
 
         const sessionId = checkoutSession.data.id;
@@ -100,6 +104,7 @@ export class PaywallComponent implements OnInit {
             priceid: environment.stripe.priceId,
             successUrl: `${window.location.origin}/getting-started`,
             cancelUrl: `${window.location.origin}/paywall`,
+            coupon: null,
           });
 
           const sessionId = checkoutSession.data.id;
@@ -121,6 +126,7 @@ export class PaywallComponent implements OnInit {
                 priceid: environment.stripe.priceId,
                 successUrl: `${window.location.origin}/getting-started`,
                 cancelUrl: `${window.location.origin}/paywall`,
+                coupon: { source: 'firebase', id: this.couponCode.id },
               });
 
               const sessionId = checkoutSession.data.id;
@@ -132,83 +138,6 @@ export class PaywallComponent implements OnInit {
           }
         }
       }
-
-      // if (this.subscriptionStatus == 'new') {
-      //   //new trial
-
-      //   if (useCoupon === true) {
-      //     docRef = await this.db
-      //       .collection('users')
-      //       .doc(user.uid)
-      //       .collection('checkout_sessions')
-      //       .add({
-      //         price: environment.stripe.priceId,
-      //         success_url: `${window.location.origin}/getting-started`,
-      //         cancel_url: `${window.location.origin}/paywall`,
-      //         allow_promotion_codes: true,
-      //         trial_from_plan: false,
-      //       });
-      //   } else {
-      //     docRef = await this.db
-      //       .collection('users')
-      //       .doc(user.uid)
-      //       .collection('checkout_sessions')
-      //       .add({
-      //         price: environment.stripe.priceId,
-      //         success_url: `${window.location.origin}/getting-started`,
-      //         cancel_url: `${window.location.origin}/paywall`,
-      //         allow_promotion_codes: false,
-      //         //don't use item trial here, because we are offering 30 day trial coupons, and stripe checkout doesn't let me extend trial, so to avoid 14 + 30 day trial. I just eliminate the trial, and just do the 30 day trial.
-      //         //LATER: when i make custom paywall with custom checkout, i can custom coupon configuration more.
-      //       });
-      //   }
-      // } else {
-      //   //resubscribe
-
-      //   if (useCoupon === true) {
-      //     docRef = await this.db
-      //       .collection('users')
-      //       .doc(user.uid)
-      //       .collection('checkout_sessions')
-      //       .add({
-      //         price: environment.stripe.priceId,
-      //         success_url: `${window.location.origin}/getting-started`,
-      //         cancel_url: `${window.location.origin}/paywall`,
-      //         allow_promotion_codes: true,
-      //         trial_from_plan: false,
-      //       });
-      //   } else {
-      //     docRef = await this.db
-      //       .collection('users')
-      //       .doc(user.uid)
-      //       .collection('checkout_sessions')
-      //       .add({
-      //         price: environment.stripe.priceId,
-      //         success_url: `${window.location.origin}/getting-started`,
-      //         cancel_url: `${window.location.origin}/paywall`,
-      //         allow_promotion_codes: false,
-      //         trial_from_plan: false,
-      //       });
-      //   }
-      // }
-
-      // Wait for the CheckoutSession to get attached by the extension
-      // docRef.onSnapshot(async (snap) => {
-      //   const { error, sessionId } = snap.data();
-      //   if (error) {
-      //     // Show an error to your customer and
-      //     // inspect your Cloud Function logs in the Firebase console.
-      //     alert(`An error occured: ${error.message}`);
-      //   }
-
-      //   if (sessionId) {
-      //     // We have a session, let's redirect to Checkout
-      //     // Init Stripe
-      //     console.log('session id exists');
-
-      //     (await this.stripe).redirectToCheckout({ sessionId });
-      //   }
-      // });
     } catch (error) {
       alert(error);
     }
@@ -247,8 +176,28 @@ export class PaywallComponent implements OnInit {
       if (code.newCustomersOnly === true && this.subscriptionStatus != 'new') {
         throw Error('Expired Code');
       }
+      //success
 
       this.couponCode = code;
+
+      // //increment code redemptions so we have an idea how many users used code, not completely accurate but it's close.
+      // const increment = firebase.default.firestore.FieldValue.increment(1);
+
+      // const codeRef = this.db.collection('codes').doc(couponCode);
+
+      // await codeRef.update({ redemptions: increment });
+
+      // const redemptionRef = codeRef
+      //   .collection('redemptions')
+      //   .doc(this.user.uid);
+
+      // await redemptionRef.set(
+      //   {
+      //     userID: this.user.uid,
+      //     date: firebase.default.firestore.Timestamp.now(),
+      //   },
+      //   { merge: true }
+      // );
     } catch (error) {
       alert(error);
     }
