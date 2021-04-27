@@ -55,6 +55,7 @@ export class SoldDialogComponent implements OnInit {
             .doc(this.data.item.id)
             .update({
               price: sellPrice,
+              modified: firebase.default.firestore.Timestamp.now(),
               sold: {
                 marketplace: marketplace,
                 fees: fees,

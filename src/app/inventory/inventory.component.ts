@@ -154,19 +154,19 @@ export class InventoryComponent implements OnInit {
 
   getActiveListings() {
     return this.items.filter((item) => {
-      return item.status == 'active';
+      return !item.sold && item.status == 'active'; //technically still counted as active cuz its listed on a platform, but it's marked as sold.
     }).length;
   }
 
   getSoldItems() {
     return this.items.filter((item) => {
-      return item.status == 'sold';
+      return item.sold;
     }).length;
   }
 
   getTotalSales() {
     const soldItems = this.items.filter((item) => {
-      return item.status == 'sold';
+      return item.sold;
     });
 
     return soldItems.reduce((n, { price }) => {
@@ -230,6 +230,7 @@ export class InventoryComponent implements OnInit {
             .collection('items')
             .doc(itemID)
             .update({
+              modified: firebase.default.firestore.Timestamp.now(),
               sold: null,
             });
         } catch (error) {

@@ -404,10 +404,6 @@ export class ItemComponent implements OnInit {
 
   //based if they have a listing url or not
   setItemStatus(marketplaceValues: string[]) {
-    if (this.item.sold) {
-      return 'sold';
-    }
-
     const urls = marketplaceValues.filter((listingURLS) => {
       return listingURLS != '';
     });

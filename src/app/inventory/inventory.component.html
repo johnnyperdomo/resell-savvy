@@ -222,6 +222,7 @@
                 <td class="font-weight-bold">${{ item.price || 0 }}</td>
                 <!-- Cost -->
 
+                <!-- LATER: maybe let user know about the item.sold.fees -->
                 <td>${{ item.cost || 0 }}</td>
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
                 <td>{{ item.modified.seconds * 1000 | date }}</td>
