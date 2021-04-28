@@ -109,8 +109,15 @@ async function fillOutPoshmarkForm(
     //TODO: color opening but 'a' link not pressing
     //TODO: click color
     //TODO: match color
-    $(`div[data-et-name="color"]`).trigger("click");
+    color = capitalize(color);
 
+    // $(`div[data-et-name="color"]`).trigger("click");
+
+    let searchColor = await waitForElementToLoad(`li:contains('${color}')`);
+
+    searchColor.trigger("click");
+
+    console.log(searchColor);
     // $('a:contains("This One")')
     //   .filter(function (index) {
     //     return $(this).text() === "This One";
@@ -120,6 +127,11 @@ async function fillOutPoshmarkForm(
     // console.log($(`a:contains("Red")`).parent());
   }
 }
+
+const capitalize = (s) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 function matchCondition(condition) {
   //return poshmark condition value from our condition value
@@ -167,7 +179,7 @@ function readyToInsertFields() {
     "This is a good nike shirt made from the nike store lit!!!1",
     "Adidas",
     "poor",
-    "Blue",
+    "white",
     6,
     19,
     "001Jke"

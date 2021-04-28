@@ -1,7 +1,5 @@
-console.log("hi from poshmark");
-
 //LATER: create files by pages to make code cleaner
-//LATER: make elements fail safely if not found, just skip instead of failing the entire function
+console.log("hola kids");
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
@@ -51,7 +49,7 @@ function waitForElementToDisplay(
 
 //TODO: call code from postMessage request
 waitForElementToDisplay(
-  "label[aria-label='Title']",
+  "#description",
   function () {
     readyToInsertFields();
   },
@@ -59,68 +57,76 @@ waitForElementToDisplay(
   100000000000000
 );
 
-async function fillOutFacebookForm(
+async function fillOutDepopForm(
   imageUrls,
-  title,
   description,
   condition,
+  color,
   price
 ) {
   console.log("waiting on form filler");
 
   await waitForElementToLoad("form");
   console.log("called form filler");
-  let facebook_title = document.querySelector(
-    "label[aria-label='Title'] input"
+  let depop_description = document.querySelector(
+    'textarea[data-testid="description__input"]'
   );
-  let facebook_price = document.querySelector(
-    "label[aria-label='Price'] input"
+  let depop_price = document.querySelector('input[data-testid="price__input"]');
+  let depop_condition = document.querySelector(
+    'div[data-testid="listingSelect__listing__condition"] input'
   );
-  let facebook_description = document.querySelector(
-    "label[aria-label='Description'] textarea"
-  );
+  let depop_color = document.querySelector("#listing__colour__select");
 
-  fillInputValue(facebook_title, title);
-  fillInputValue(facebook_price, price);
+  fillTextAreaValue(depop_description, description);
 
   if (condition != "") {
     let conditionValue = matchCondition(condition);
 
-    //LATER: condition needs to click value
+    console.log(conditionValue);
 
-    //matches exact text
-    $.expr[":"].textEquals = $.expr.createPseudo(function (arg) {
-      return function (elem) {
-        return $(elem)
-          .text()
-          .match("^" + arg + "$");
-      };
-    });
-
-    $(`label[aria-label="Condition"]`).trigger("click");
-    let searchCondition = await waitForElementToLoad(
-      `span:textEquals('${conditionValue}')`
+    fillInputValue(depop_condition, conditionValue);
+    let conditionList = await waitForElementToLoad(
+      ".listingSelect__menu-list > div"
     );
-    searchCondition.trigger("click");
+
+    if (conditionList.length) {
+      conditionList.eq(0).trigger("click");
+    }
   }
 
-  fillTextAreaValue(facebook_description, description);
+  if (color != "") {
+    //LATER: gray or grey should both match
+    fillInputValue(depop_color, color);
+
+    let searchColor = await waitForElementToLoad(
+      `div[value*=${color}][class*=ColourSelectstyles__Colour]`
+    );
+    //closet traverses up the dom to find the closest element in the parent
+    searchColor.closest(".listingSelect__option").trigger("click");
+  }
+
+  fillInputValue(depop_price, price);
+
+  //LATER: price validation
 }
 
 function matchCondition(condition) {
-  //return poshmark condition value from our condition value
+  //return depop condition value from our condition value
   switch (condition) {
     case "nwt":
-      return "New";
+      return "Brand new";
 
     case "nwot":
-      return "Used - Like New";
+      return "Like new";
 
     case "good":
-      return "Used - Good";
+      return "Excellent";
 
-    case ("preowned", "poor"):
-      return "Used - Fair";
+    case "preowned":
+      return "Good";
+
+    case "poor":
+      return "Fair";
 
     default:
       return "";
@@ -154,13 +160,12 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function readyToInsertFields() {
-  console.log("ready to insert fields is called from poshmark");
-
-  fillOutFacebookForm(
+  console.log("yeahhhhhh description found");
+  fillOutDepopForm(
     [],
-    "Nike xl premium shirt",
-    "This is a good nike shirt made from the nike store lit!!!1",
-    "good",
-    19
+    "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
+    "poor",
+    "blue",
+    54
   );
 }

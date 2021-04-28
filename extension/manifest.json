@@ -19,8 +19,7 @@
     "*://*.facebook.com/*",
     "*://*.mercari.com/*",
     "*://*.grailed.com/*",
-    "*://*.poshmark.com/*",
-    "*://*.tradesy.com/*"
+    "*://*.poshmark.com/*"
   ],
 
   "background": {
@@ -49,6 +48,11 @@
     {
       "js": ["jquery-3.6.0.min.js", "marketplaces/facebook.js"],
       "matches": ["*://www.facebook.com/*"],
+      "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/depop.js"],
+      "matches": ["*://www.depop.com/*"],
       "run_at": "document_start"
     }
   ],
