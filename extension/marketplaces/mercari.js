@@ -63,7 +63,6 @@ async function fillOutMercariForm(
   brand,
   condition,
   color,
-  zipCode,
   price
 ) {
   console.log("waiting on form filler");
@@ -78,27 +77,49 @@ async function fillOutMercariForm(
   let mercari_brand = document.querySelector('input[data-testid="Brand"]');
   let mercari_price = document.querySelector('input[data-testid="Price"]');
 
+  let mercari_color = document.querySelector('button[data-testid="Color"]');
+
   fillInputValue(mercari_title, title);
+
   fillTextAreaValue(mercari_description, description);
 
-  //LATER: brand isn't always going to work, because it's a drop down. Later in the help docs let the user know that you will try your best to aggregate data if data fields are acceptable, but can't guarantee perfect synchronization bcuz every platform is different.
-  //TODO: try to match first item, if first item in list matches, then select brand, if not, don't select
-  fillInputValue(mercari_brand, brand);
+  if (brand != "") {
+    fillInputValue(mercari_brand, brand);
+
+    let brandList = await waitForElementToLoad(
+      'div[data-testid="BrandDropdown"] > div > div',
+      5000
+    );
+
+    //TODO: handle waitfor element errors, if not found. This brand should not work, but it should still continue running the other code. We should do like a wait for element, but time out after a few seconds. If not it just continues looping forever and blocks the next inputs
+
+    if (brandList.length) {
+      brandList.eq(0).trigger("click");
+    }
+  }
 
   if (condition != "") {
     let conditionValue = matchCondition(condition);
 
-    console.log(conditionValue);
     $(`label[data-testid="${conditionValue}"]`).trigger("click");
   }
 
   if (color != "") {
-    //TODO: click color
-    //TODO: match color
+    $(mercari_color).trigger("click");
+
+    color = capitalize(color);
+
+    let searchColor = await waitForElementToLoad(`li:contains('${color}')`);
+
+    searchColor.trigger("click");
   }
 
-  //TODO: any number if available, round up, bcuz mercari doesn't accept decimals
+  //LATER: any number if available, round up, bcuz mercari doesn't accept decimals
   fillInputValue(mercari_price, price);
+
+  //TODO: you need to simulate user inputs for it to validate the inputs before submiting //focus
+  $(mercari_title).trigger("focus").trigger("blur");
+  $(mercari_description).trigger("focus").trigger("blur");
 
   //   $('button[data-testid="PhotoUploadButton"]').trigger("click");
   // $("#categoryId").trigger("click");
@@ -107,6 +128,11 @@ async function fillOutMercariForm(
 
   // console.log("clicked the option 7");
 }
+
+const capitalize = (s) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 function matchCondition(condition) {
   //return mercari condition value from our condition value
@@ -162,10 +188,9 @@ function readyToInsertFields() {
     [],
     "Nike xl premium shirt",
     "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    "Adidas",
-    "nwot",
-    "black",
-    54365,
+    "Nike",
+    "preowned",
+    "red",
     54
   );
 }

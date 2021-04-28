@@ -106,9 +106,6 @@ async function fillOutPoshmarkForm(
   }
 
   if (color != "") {
-    //TODO: color opening but 'a' link not pressing
-    //TODO: click color
-    //TODO: match color
     color = capitalize(color);
 
     // $(`div[data-et-name="color"]`).trigger("click");
