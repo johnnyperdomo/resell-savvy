@@ -1,5 +1,4 @@
 //LATER: create files by pages to make code cleaner
-console.log("hola kids");
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
@@ -160,7 +159,6 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function readyToInsertFields() {
-  console.log("yeahhhhhh description found");
   fillOutDepopForm(
     [],
     "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
