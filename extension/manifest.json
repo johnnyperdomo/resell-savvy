@@ -59,6 +59,11 @@
       "js": ["jquery-3.6.0.min.js", "marketplaces/kidizen.js"],
       "matches": ["*://www.kidizen.com/*"],
       "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/grailed.js"],
+      "matches": ["*://www.grailed.com/*"],
+      "run_at": "document_start"
     }
   ],
 

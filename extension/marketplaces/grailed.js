@@ -1,4 +1,4 @@
-//you have to select category first before having access to the other drop downs. Just default to 'kids clothing'
+console.log("hi from grailed");
 
 //LATER: create files by pages to make code cleaner
 
@@ -50,7 +50,7 @@ function waitForElementToDisplay(
 
 //TODO: call code from postMessage request
 waitForElementToDisplay(
-  "#item_title",
+  "input[name='title']",
   function () {
     readyToInsertFields();
   },
@@ -58,10 +58,11 @@ waitForElementToDisplay(
   100000000000000
 );
 
-async function fillOutKidizenForm(
+async function fillOutGrailedForm(
   imageUrls,
   title,
   description,
+  color,
   condition,
   brand,
   price
@@ -71,87 +72,73 @@ async function fillOutKidizenForm(
   await waitForElementToLoad("form");
   console.log("called form filler");
 
-  let kidizen_title = document.querySelector("#item_title");
-  let kidizen_description = document.querySelector("#item_description");
-  let kidizen_price = document.querySelector("#item_list_price");
-
-  let kidizen_brand_button = document.querySelector(
-    ".DropdownTrigger--required"
+  let grailed_title = document.querySelector("input[name='title']");
+  let grailed_description = document.querySelector(
+    "textarea[name='description']"
   );
+  let grailed_color = document.querySelector("input[name='color']");
+  let grailed_brand = document.querySelector("#designer-autocomplete"); //designer
+  let grailed_condition = document.querySelector("select[name='condition']");
+  let grailed_price = document.querySelector("input[name='price']");
 
-  fillInputValue(kidizen_title, title);
-  fillTextAreaValue(kidizen_description, description);
-
-  //set default category item
-  $("span:contains('Category')")
-    .closest(".DropdownTrigger--required")
-    .trigger("click");
-  const kidDropDownItem = await waitForElementToLoad(
-    "div:contains('Kid Clothing')"
-  );
-  kidDropDownItem.trigger("click");
+  fillInputValue(grailed_title, title);
 
   if (brand != "") {
-    const brandEl = $("span:contains('Brand')").closest(
-      ".DropdownTrigger--required"
-    );
+    fillInputValue(grailed_brand, brand);
 
-    brandEl.trigger("click");
+    const brandList = await waitForElementToLoad("ul.autocomplete > li");
 
-    console.log(brandEl.parent().parent().find("div"));
-
-    const dropDown = await waitForElementToLoad(
-      ".Dropdown",
-      100000000,
-      brandEl.parent().parent()
-    );
-
-    const searchBarInput = dropDown.find('input[placeholder="Search"]');
-    fillInputValue(searchBarInput[0], brand);
-
-    //wait half a second for dom to rerender
-    setTimeout(() => {
-      const brandList = dropDown.find(" .Dropdown-item");
-
-      if (brandList.length) {
-        brandList.eq(0).trigger("click");
-      }
-    }, 500);
+    if (brandList.length) {
+      //LATER: this is not clicking
+      brandList.eq(0).trigger("click");
+    }
   }
 
+  if (color != "") {
+    color = capitalize(color);
+    fillInputValue(grailed_color, color);
+  }
+
+  grailed_condition.selecl;
+  $(grailed_condition).trigger("click");
   if (condition != "") {
-    const conditionVal = matchCondition(condition);
-
-    $("span:contains('Condition')")
-      .closest(".DropdownTrigger--required")
-      .trigger("click");
-    const conditionDropDownItem = await waitForElementToLoad(
-      `div:contains('${conditionVal}')`
-    );
-    conditionDropDownItem.trigger("click");
+    //TODO: this is not selecting
+    console.log($(grailed_condition).val());
+    console.log("condition");
+    $(grailed_condition).val("is_used");
+    $(grailed_condition).trigger("change");
+    // $('select[name="condition"] option[value="is_used"]').attr(
+    // //   "selected",
+    // //   "selected"
+    // // );
+    console.log($(grailed_condition).val());
   }
+
+  fillTextAreaValue(grailed_description, description);
 
   //LATER: currency/price validation
-  fillInputValue(kidizen_price, price);
+  fillInputValue(grailed_price, price);
 }
 
-function matchCondition(condition) {
-  //return kidizen condition value from our condition value
-  switch (condition) {
-    case "nwt":
-      return "New with tag";
+const capitalize = (s) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
-    case "nwot":
-      return "New without tag";
+function matchCondition(condition) {
+  //return grailed condition value from our condition value
+  switch (condition) {
+    case ("nwt", "nwot"):
+      return "is_new";
 
     case "good":
-      return "Very good used condition";
+      return "is_gently_used";
 
     case "preowned":
-      return "Good used condition";
+      return "is_used";
 
     case "poor":
-      return "Play condition";
+      return "is_worn";
 
     default:
       return "";
@@ -185,11 +172,12 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function readyToInsertFields() {
-  console.log("yeahhhhhh description found");
-  fillOutKidizenForm(
+  console.log("yeahhhhhh title found");
+  fillOutGrailedForm(
     [],
     "Nike Premium Shirt",
     "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
+    "blue",
     "nwt",
     "Nike",
     54.28
