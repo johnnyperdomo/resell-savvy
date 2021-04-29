@@ -64,6 +64,11 @@
       "js": ["jquery-3.6.0.min.js", "marketplaces/grailed.js"],
       "matches": ["*://www.grailed.com/*"],
       "run_at": "document_start"
+    },
+    {
+      "js": ["jquery-3.6.0.min.js", "marketplaces/etsy.js"],
+      "matches": ["*://www.etsy.com/*"],
+      "run_at": "document_start"
     }
   ],
 

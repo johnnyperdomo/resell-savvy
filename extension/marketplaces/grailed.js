@@ -72,6 +72,10 @@ async function fillOutGrailedForm(
   await waitForElementToLoad("form");
   console.log("called form filler");
 
+  const inputFiles = $('input[type="file"]');
+
+  console.log("input files, ", inputFiles);
+
   let grailed_title = document.querySelector("input[name='title']");
   let grailed_description = document.querySelector(
     "textarea[name='description']"
@@ -99,10 +103,15 @@ async function fillOutGrailedForm(
     fillInputValue(grailed_color, color);
   }
 
+  //   const dataTransfer = new DataTransfer();
+  //   dataTransfer.items.add(new File(["hello world"], "This_Works.txt"));
+
+  //   console.log("data transfer, " + dataTransfer);
+
   grailed_condition.selecl;
   $(grailed_condition).trigger("click");
   if (condition != "") {
-    //TODO: this is not selecting
+    //TODO: this is not selecting value
     console.log($(grailed_condition).val());
     console.log("condition");
     $(grailed_condition).val("is_used");
