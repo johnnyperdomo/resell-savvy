@@ -23,8 +23,7 @@
   ],
 
   "background": {
-    "page": "background/background.html",
-    "persistent": false
+    "page": "background/background.html"
   },
 
   "content_scripts": [

@@ -1,9 +1,4 @@
-//Listen for messages
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  if (msg.name == "message") {
-    alert("hi");
-  }
-});
+//TODO: on installed, redirect user to signup page on webapp, so they could go through the onboarding process there.
 
 chrome.management.get(chrome.runtime.id, function (extensionInfo) {
   if (extensionInfo.installType === "development") {

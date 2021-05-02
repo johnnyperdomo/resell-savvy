@@ -1,117 +1,100 @@
 //NOTE: Data transfer, only works on chrome and firefox. Other browsers wouldn't allow this
 
-//LATER: webpack code, so that you make it hard as hell for someone to copy you
+//LATER: webpack(obfuscate) code, so that you make it hard as hell for someone to copy you
+//LATER: have loading spinner while fetching auth states for better ux
 
-//Manifest.json ---- comments
-//    //TODO: add script for resellsavvy
-//TODO: move around scripts so it doesn't look copied
-//LATER: i need to add 4 more marketplaces like (tradesy, depop, grailed, kidizen)
+//LATER: have forgot password button
 
-// document.getElementById("openMercari").addEventListener("click", function () {
-//   chrome.runtime.sendMessage({ name: "message" }, (response) => {
-//     alert(response.text);
-//   });
-// });
+//TODO: add script for resellsavvy
 
-document.getElementById("createTab").addEventListener("click", function () {
-  chrome.tabs.create(
-    { url: "https://www.mercari.com/sell/" },
-    function (tab) {}
+let loggedIn = false;
+let isSubscriptionValid = true;
+
+//Logged out state ----->
+
+const loggedOutDiv = document.querySelector("#rs-logged-out");
+const signinBtn = document.querySelector("#rs-sign-in-btn");
+const emailInput = document.querySelector("#rs-email");
+const passwordInput = document.querySelector("#rs-password");
+
+if (signinBtn) {
+  signinBtn.addEventListener("click", signin);
+}
+
+function signin() {
+  chrome.runtime.sendMessage(
+    {
+      command: "signin-auth",
+      data: { email: emailInput.value, password: passwordInput.value },
+    },
+    (response) => {
+      if (response.status == "error") {
+        alert(response.message.message);
+
+        loggedIn = false;
+        validateAuth();
+      } else if (response.status == "success") {
+        loggedIn = true;
+        validateAuth();
+      }
+    }
   );
-});
+}
 
-document.getElementById("openMercari").addEventListener("click", function () {
-  chrome.tabs.create({ url: "https://www.mercari.com/sell/" }, (tab) => {
-    run(tab.id);
-  });
-  //   chrome.tabs.executeScript(
-  //     {
-  //       file: `jquery-3.6.0.min.js`,
-  //     },
-  //     function () {
-  //       chrome.tabs.executeScript({
-  //         file: "background/injector.js",
-  //       });
-  //     }
+//Logged in state --------->
 
-  // )
-});
+const loggedInDiv = document.querySelector("#rs-logged-in");
+const subscriptionAlert = document.querySelector("#rs-subscription-alert");
+const logoutBtn = document.querySelector("#rs-logout-btn");
 
-function run(tabId) {
-  alert(tabId);
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", logout);
+}
 
-  chrome.tabs.onUpdated.addListener(function (tabId, info, tab) {
-    alert("new tab id is: " + tabId);
-
-    // if (info.status && info.status == "complete") {
-    //   alert("complete");
-    //   document.body.innerHTML = "";
-    // }
+function logout() {
+  chrome.runtime.sendMessage({ command: "logout-auth" }, (response) => {
+    if (response.status == "success") {
+      loggedIn = false;
+      validateAuth();
+    }
   });
 }
 
-// "content_scripts": [
-//     {
-//       "js": ["poshmarkScript.js"],
-//       "matches": ["*://poshmark.com/*"]
-//     },
-//     {
-//       "js": ["mercariScript.js"],
-//       "matches": ["*://www.mercari.com/*"]
-//     },
-//     {
-//       "js": ["ebayScript.js"],
-//       "matches": ["*://www.ebay.com/*"]
-//     },
-//     {
-//       "all_frames": true,
-//       "run_at": "document_start",
-//       "js": ["ebayBulkSellScript.js"],
-//       "matches": [
-//         "*://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&&DraftURL=*"
-//       ]
-//     },
-//     {
-//       "all_frames": true,
-//       "run_at": "document_start",
-//       "js": ["bulkEditScript.js"],
-//       "matches": ["*://bulkedit.ebay.com/*"]
-//     },
-//     {
-//       "all_frames": true,
-//       "run_at": "document_start",
-//       "js": ["ebayPicupload.js"],
-//       "matches": ["*://www.picupload.ebay.com/*"]
-//     },
-//     {
-//       "js": ["grailedScript.js"],
-//       "matches": ["*://www.grailed.com/*"]
-//     },
-//     {
-//       "js": ["facebookScript.js"],
-//       "matches": ["*://www.facebook.com/*"]
-//     },
-//     {
-//       "js": ["depopScript.js"],
-//       "matches": ["*://www.depop.com/*"]
-//     },
-//     {
-//       "js": ["etsyScript.js"],
-//       "matches": ["*://www.etsy.com/*"]
-//     },
-//     {
-//       "js": ["tradesyScript.js"],
-//       "matches": ["*://www.tradesy.com/*"]
-//     }
-//   ],
-//   "web_accessible_resources": [
-//     "poshmarkCloset.js",
-//     "mercariCloset.js",
-//     "ebayCloset.js",
-//     "grailedCloset.js",
-//     "facebookCloset.js",
-//     "depopCloset.js",
-//     "etsyCloset.js",
-//     "ebayBulkSellCloset.js",
-//     "tradesyCloset.js"
-//   ],
+//Functions ------->
+
+//TODO: validate fb auth and based on response toggle ui states
+
+function checkAuthentication() {
+  chrome.runtime.sendMessage({ command: "check-auth" }, (response) => {
+    if (response.status == "success") {
+      loggedIn = true;
+      validateAuth();
+    } else {
+      loggedIn = false;
+      validateAuth();
+    }
+  });
+}
+
+function validateAuth() {
+  if (loggedIn == true) {
+    loggedInDiv.style.display = "block";
+    loggedOutDiv.style.display = "none";
+
+    validateSubscription();
+  } else {
+    loggedInDiv.style.display = "none";
+    loggedOutDiv.style.display = "block";
+  }
+}
+
+function validateSubscription() {
+  //TODO: get state from firestore
+  if (isSubscriptionValid == true) {
+    subscriptionAlert.style.display = "none";
+  } else {
+    subscriptionAlert.style.display = "block";
+  }
+}
+
+checkAuthentication();

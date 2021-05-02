@@ -6,29 +6,107 @@
     <style>
       html,
       body {
-        height: 200px;
-        width: 300px;
+        width: 350px;
       }
     </style>
   </head>
   <body>
-    <!-- <div class="main">
-      <h2 class="text-muted mt-4 text-center">ResellSavvy</h2>
+    <div class="main my-2">
+      <!-- Logged Out State -->
+      <div id="rs-logged-out">
+        <!-- Header -->
+        <div class="text-center">
+          <h4 class="mt-2 text-center">Sign In to ResellSavvy</h4>
+
+          <p class="text-muted">
+            Or Create An Account
+            <a href="http://localhost:4200/signup" target="_blank">Here</a>
+          </p>
+        </div>
+
+        <!-- Form -->
+        <div class="mx-3 mt-4">
+          <form>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="rs-email"
+                placeholder="Enter email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="text"
+                class="form-control"
+                id="rs-password"
+                placeholder="Password"
+              />
+            </div>
+          </form>
+
+          <button class="btn btn-primary btn-block" id="rs-sign-in-btn">
+            Sign in
+          </button>
+        </div>
+      </div>
+
+      <!-- Logged In State -->
+      <div id="rs-logged-in">
+        <!-- Header -->
+        <div class="mx-2">
+          <div
+            class="text-center"
+            style="display: none"
+            id="rs-subscription-alert"
+          >
+            <div
+              class="alert alert-danger text-center"
+              role="alert"
+              style="margin-bottom: 0"
+            >
+              <a
+                href="localhost:4200/paywall"
+                target="_blank"
+                class="alert-link"
+                >Click here</a
+              >
+              to activate subcription.
+            </div>
+
+            <small class="text-muted">
+              Crosslisting only works with an active subscription
+            </small>
+          </div>
+
+          <h4 class="mt-2 text-center">ResellSavvy</h4>
+        </div>
+
+        <div class="text-center mt-4 mx-4">
+          <!-- Dashboard Button -->
+          <!-- TODO: connect this to app in production -->
+          <div>
+            <a
+              href="localhost:4200/inventory"
+              target="_blank"
+              class="btn btn-primary btn-block"
+            >
+              Visit Dashboard
+            </a>
+          </div>
+
+          <div class="mt-4">
+            <button class="btn btn-outline-dark btn-sm" id="rs-logout-btn">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <button>View Dashboard</button> -->
-
-    <button id="createTab" class="btn btn-primary">Create Tab</button>
-
-    <button id="openMercari">Open Mercari and fill</button>
-    <button id="fillMercari">just fill mercari</button>
-    <button id="redMercari">make mercari red</button>
-
-    <button id="openEbay">Open Ebay</button>
-    <button id="openPoshmark">Open Poshmark</button>
-    <button id="openAll">Open All Marketplaces</button>
 
     <script src="popup.js"></script>
     <script src="../bootstrap.min.js"></script>
-    <button>Logout</button>
   </body>
 </html>
