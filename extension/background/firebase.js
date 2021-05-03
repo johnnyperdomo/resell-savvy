@@ -58,5 +58,58 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       );
   }
 
+  if (msg.command == "check-subscription") {
+    //LATER: handle errors
+    let user = firebase.auth().currentUser;
+
+    if (user) {
+      let subs = firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("subscriptions");
+
+      subs.get().then((snap) => {
+        if (snap.docs.length === 0) {
+          //completely new user - subscription inactive
+          response({
+            type: "subscription",
+            status: "in-active",
+            message: false,
+          });
+        } else {
+          //users who had or have a current subscription
+          let totalSubscriptions = snap.docs.map((doc) => {
+            return doc.data();
+          });
+
+          let trialingSubs = totalSubscriptions.filter(
+            (doc) => doc.status == "trialing"
+          );
+
+          let activeSubs = totalSubscriptions.filter(
+            (doc) => doc.status == "active"
+          );
+
+          if (trialingSubs.length > 0 || activeSubs.length > 0) {
+            //active sub
+            response({
+              type: "subscription",
+              status: "active",
+              message: true,
+            });
+          } else {
+            //inactive sub
+            response({
+              type: "subscription",
+              status: "in-active",
+              message: false,
+            });
+          }
+        }
+      });
+    }
+  }
+
   return true;
 });

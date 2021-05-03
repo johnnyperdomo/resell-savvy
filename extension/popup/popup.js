@@ -66,6 +66,7 @@ function logout() {
 
 function checkAuthentication() {
   chrome.runtime.sendMessage({ command: "check-auth" }, (response) => {
+    console.log("check auth");
     if (response.status == "success") {
       loggedIn = true;
       validateAuth();
@@ -81,11 +82,23 @@ function validateAuth() {
     loggedInDiv.style.display = "block";
     loggedOutDiv.style.display = "none";
 
-    validateSubscription();
+    checkSubscription();
   } else {
     loggedInDiv.style.display = "none";
     loggedOutDiv.style.display = "block";
   }
+}
+
+function checkSubscription() {
+  chrome.runtime.sendMessage({ command: "check-subscription" }, (response) => {
+    if (response.status == "active") {
+      isSubscriptionValid = true;
+      validateSubscription();
+    } else {
+      isSubscriptionValid = false;
+      validateSubscription();
+    }
+  });
 }
 
 function validateSubscription() {
