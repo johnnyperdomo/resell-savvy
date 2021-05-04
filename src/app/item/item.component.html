@@ -291,6 +291,8 @@
             manually.
           </small>
 
+          <!-- FIX: input heights are different on delist inputs -->
+
           <!-- Ebay Listing url -->
           <div class="row mt-4">
             <div class="col-12 col-md-6">
@@ -315,28 +317,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.ebay == '';
-                        else delistEbay
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.ebay != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistEbay>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -365,28 +353,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.poshmark == '';
-                        else delistPoshmark
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.poshmark != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistPoshmark>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -417,28 +391,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.mercari == '';
-                        else delistMercari
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.mercari != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistMercari>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -467,28 +427,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.facebook == '';
-                        else delistFacebook
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.facebook != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistFacebook>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -519,42 +465,28 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.etsy == '';
-                        else delistEtsy
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.etsy != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistEtsy>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Tradesy Listing Url -->
+            <!-- Kidizen Listing Url -->
             <div class="col-12 col-md-6">
               <div class="form-group">
-                <label>Tradesy</label>
+                <label>Kidizen</label>
 
                 <button
-                  *ngIf="item && item.marketplaces.tradesy != ''"
+                  *ngIf="item && item.marketplaces.kidizen != ''"
                   class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.tradesy)"
+                  (click)="goToLink(item.marketplaces.kidizen)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
@@ -564,33 +496,19 @@
                   <input
                     type="text"
                     class="form-control form-control-appended"
-                    placeholder="Tradesy listing url"
-                    formControlName="tradesy"
+                    placeholder="Kidizen listing url"
+                    formControlName="kidizen"
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.tradesy == '';
-                        else delistTradesy
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.kidizen != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistTradesy>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -622,28 +540,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.grailed == '';
-                        else delistGrailed
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.grailed != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistGrailed>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -672,80 +576,14 @@
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="
-                        item && item.marketplaces.depop == '';
-                        else delistDepop
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
+                      *ngIf="item && item.marketplaces.depop != ''"
+                      class="btn btn-light"
                       type="button"
+                      (click)="onDelistItem()"
                     >
                       <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
+                      Delist Item
                     </button>
-
-                    <ng-template #delistDepop>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Kidizen Listing Url -->
-          <div class="row">
-            <div class="col-12 col-md-6">
-              <div class="form-group">
-                <label>Kidizen</label>
-
-                <button
-                  *ngIf="item && item.marketplaces.kidizen != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.kidizen)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button>
-
-                <div class="input-group input-group-merge">
-                  <input
-                    type="text"
-                    class="form-control form-control-appended"
-                    placeholder="Kidizen listing url"
-                    formControlName="kidizen"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      *ngIf="
-                        item && item.marketplaces.kidizen == '';
-                        else delistKidizen
-                      "
-                      class="btn btn-primary"
-                      (click)="onListItem()"
-                      type="button"
-                    >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      List Item
-                    </button>
-
-                    <ng-template #delistKidizen>
-                      <button
-                        class="btn btn-light"
-                        type="button"
-                        (click)="onDelistItem()"
-                      >
-                        <!-- TODO: list/delist, based on if url is empty or not -->
-                        Delist Item
-                      </button>
-                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -753,14 +591,14 @@
           </div>
 
           <!-- Bulk List -->
-          <!-- //LATER: ability to bulk list items -->
-          <!-- <div class="mt-4">
-            <button class="btn btn-block btn-primary">Bulk List Items</button>
+          <div class="mt-4">
+            <button (click)="onListItems()" class="btn btn-block btn-primary">
+              List Items
+            </button>
             <small class="form-text text-muted mt-2 text-center">
-              This will open up multiple tabs of marketplaces that haven't been
-              listed
+              This will open up the listing preview
             </small>
-          </div> -->
+          </div>
         </form>
       </div>
     </div>

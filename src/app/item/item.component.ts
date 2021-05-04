@@ -71,10 +71,10 @@ export class ItemComponent implements OnInit {
       mercari: [''],
       facebook: [''],
       etsy: [''],
-      tradesy: [''],
       grailed: [''],
       depop: [''],
       kidizen: [''],
+      // tradesy: [''],
     });
   }
 
@@ -94,10 +94,11 @@ export class ItemComponent implements OnInit {
       mercari: item.marketplaces.mercari,
       facebook: item.marketplaces.facebook,
       etsy: item.marketplaces.etsy,
-      tradesy: item.marketplaces.tradesy,
       grailed: item.marketplaces.grailed,
       depop: item.marketplaces.depop,
       kidizen: item.marketplaces.kidizen,
+
+      // tradesy: item.marketplaces.tradesy,
     });
   }
 
@@ -306,7 +307,7 @@ export class ItemComponent implements OnInit {
     const mercari = this.trimStr(formValue.mercari);
     const facebook = this.trimStr(formValue.facebook);
     const etsy = this.trimStr(formValue.etsy);
-    const tradesy = this.trimStr(formValue.tradesy);
+    // const tradesy = this.trimStr(formValue.tradesy);
     const grailed = this.trimStr(formValue.grailed);
     const depop = this.trimStr(formValue.depop);
     const kidizen = this.trimStr(formValue.kidizen);
@@ -317,10 +318,10 @@ export class ItemComponent implements OnInit {
       mercari,
       facebook,
       etsy,
-      tradesy,
       grailed,
       depop,
       kidizen,
+      // tradesy,
     ]);
 
     this.auth.onAuthStateChanged(async (user) => {
@@ -348,10 +349,10 @@ export class ItemComponent implements OnInit {
                 mercari: mercari,
                 facebook: facebook,
                 etsy: etsy,
-                tradesy: tradesy,
                 grailed: grailed,
                 depop: depop,
                 kidizen: kidizen,
+                // tradesy: tradesy,
               },
               modified: firebase.default.firestore.Timestamp.now(),
             });
@@ -383,6 +384,16 @@ export class ItemComponent implements OnInit {
     //TODO: disable if no chrome extension present
     console.log('list item');
 
+    this.saveItem();
+  }
+
+  onListItems() {
+    //TODO: chrome extension should list this item
+    //TODO: disable if no chrome extension present
+
+    //Ope modal
+
+    console.log('list item');
     this.saveItem();
   }
 

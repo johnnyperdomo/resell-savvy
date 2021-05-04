@@ -23,12 +23,12 @@ export class Item {
     ebay: string;
     etsy: string;
     poshmark: string;
-    tradesy: string;
     grailed: string;
     depop: string;
     kidizen: string;
     facebook: string;
     mercari: string;
+    // tradesy: string;
   }; //save listing urls here, or leave empty if delisted or null: ''
   public sold?: {
     marketplace: string;
