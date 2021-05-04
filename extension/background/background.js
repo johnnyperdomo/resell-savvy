@@ -9,18 +9,19 @@ chrome.runtime.onInstalled.addListener((reason) => {
   }
 });
 
-chrome.chrome.management.get(chrome.runtime.id, function (extensionInfo) {
-  if (extensionInfo.installType === "development") {
-    console.log("developer modeeee");
-    key = "dev";
-    //TODO: set dev variables here
-    // perform dev mode action here
-    // alert("dev");
-  }
+//TODO: get dev/prod state
+// chrome.chrome.management.get(chrome.runtime.id, function (extensionInfo) {
+//   if (extensionInfo.installType === "development") {
+//     console.log("developer modeeee");
+//     key = "dev";
+//     //TODO: set dev variables here
+//     // perform dev mode action here
+//     // alert("dev");
+//   }
 
-  if (extensionInfo.installType === "production") {
-    key = "prod";
-    console.log("production mode");
-    //perform prod action here
-  }
-});
+//   if (extensionInfo.installType === "production") {
+//     key = "prod";
+//     console.log("production mode");
+//     //perform prod action here
+//   }
+// });

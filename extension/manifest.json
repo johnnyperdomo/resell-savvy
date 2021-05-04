@@ -26,7 +26,22 @@
     "page": "background/background.html"
   },
 
-  "content_scripts": [],
+  "content_scripts": [
+    {
+      "js": ["jquery-3.6.0.min.js"],
+      "matches": [
+        "*://*.etsy.com/*",
+        "*://*.etsy.com/*",
+        "*://*.depop.com/*",
+        "*://*.kidizen.com/*",
+        "*://*.facebook.com/*",
+        "*://*.mercari.com/*",
+        "*://*.grailed.com/*",
+        "*://*.poshmark.com/*"
+      ],
+      "run_at": "document_start"
+    }
+  ],
 
   "browser_action": {
     "default_popup": "popup/popup.html"

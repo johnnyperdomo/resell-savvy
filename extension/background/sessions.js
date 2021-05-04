@@ -154,13 +154,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       (tab) => {
         const itemData = {
           imageUrls: [],
-          title: "nike shirt premium",
+          title: "adidas pants",
           description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
+            "This is the coolest adidas you have to get it, it's brand new my guy. Check it out.",
           price: 29,
           brand: "Adidas",
-          condition: "nwt",
-          color: "red",
+          condition: "nwot",
+          color: "green",
           sku: "",
           cost: 5,
         };
