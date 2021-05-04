@@ -1,5 +1,3 @@
-console.log("hi from etsy");
-
 //LATER: create files by pages to make code cleaner
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
@@ -52,7 +50,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "input[name='title']",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -137,10 +136,10 @@ function fillTextAreaValue(textArea, value) {
 function readyToInsertFields() {
   console.log("yeahhhhhh title found");
   fillOutEtsyForm(
-    [],
-    "Nike Premium Shirt",
-    "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    54.97,
-    "11109"
+    itemData.imageUrls,
+    itemData.title,
+    itemData.description,
+    itemData.price,
+    itemData.sku
   );
 }

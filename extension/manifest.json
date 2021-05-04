@@ -26,50 +26,7 @@
     "page": "background/background.html"
   },
 
-  "content_scripts": [
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/mercari.js"],
-      "matches": ["*://www.mercari.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
-      "matches": ["*://poshmark.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/ebay.js"],
-      "matches": [
-        "*://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&&DraftURL=*"
-      ],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/facebook.js"],
-      "matches": ["*://www.facebook.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/depop.js"],
-      "matches": ["*://www.depop.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/kidizen.js"],
-      "matches": ["*://www.kidizen.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/grailed.js"],
-      "matches": ["*://www.grailed.com/*"],
-      "run_at": "document_start"
-    },
-    {
-      "js": ["jquery-3.6.0.min.js", "marketplaces/etsy.js"],
-      "matches": ["*://www.etsy.com/*"],
-      "run_at": "document_start"
-    }
-  ],
+  "content_scripts": [],
 
   "browser_action": {
     "default_popup": "popup/popup.html"

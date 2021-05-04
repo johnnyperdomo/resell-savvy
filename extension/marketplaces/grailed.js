@@ -52,7 +52,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "input[name='title']",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -180,15 +181,15 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
+function readyToInsertFields(itemData) {
   console.log("yeahhhhhh title found");
   fillOutGrailedForm(
-    [],
-    "Nike Premium Shirt",
-    "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    "blue",
-    "nwt",
-    "Nike",
-    54.28
+    itemData.imageUrls,
+    itemData.title,
+    itemData.description,
+    itemData.color,
+    itemData.condition,
+    itemData.brand,
+    itemData.price
   );
 }

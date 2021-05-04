@@ -1,5 +1,3 @@
-console.log("hi from poshmark");
-
 //LATER: create files by pages to make code cleaner
 //LATER: make elements fail safely if not found, just skip instead of failing the entire function
 
@@ -53,7 +51,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "label[aria-label='Title']",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -153,14 +152,14 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
+function readyToInsertFields(itemData) {
   console.log("ready to insert fields is called from poshmark");
 
   fillOutFacebookForm(
-    [],
-    "Nike xl premium shirt",
-    "This is a good nike shirt made from the nike store lit!!!1",
-    "good",
-    19
+    itemData.imageUrls,
+    itemData.title,
+    itemData.description,
+    itemData.condition,
+    itemData.price
   );
 }

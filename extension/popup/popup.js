@@ -62,8 +62,6 @@ function logout() {
 
 //Functions ------->
 
-//TODO: validate fb auth and based on response toggle ui states
-
 function checkAuthentication() {
   chrome.runtime.sendMessage({ command: "check-auth" }, (response) => {
     console.log("check auth");
@@ -102,7 +100,6 @@ function checkSubscription() {
 }
 
 function validateSubscription() {
-  //TODO: get state from firestore
   if (isSubscriptionValid == true) {
     subscriptionAlert.style.display = "none";
   } else {
@@ -148,3 +145,159 @@ if (
     }
   });
 }
+
+//TODO: this is just for testing, delete only when you finish testing all copy/pasting
+
+const depopBtn = document.querySelector("#post-to-depop");
+
+if (depopBtn) {
+  depopBtn.addEventListener("click", postToDepop);
+}
+
+function postToDepop() {
+  console.log("depop");
+
+  chrome.runtime.sendMessage({ command: "create-depop-item" });
+}
+
+//
+//TODO: ebay
+// const depopBtn = document.querySelector("#post-to-depop");
+
+// if (depopBtn) {
+//   depopBtn.addEventListener("click", postToDepop);
+// }
+
+// function postToDepop() {
+//   console.log("depop");
+
+//   chrome.runtime.sendMessage({ command: "create-depop-item" });
+// }
+
+//
+
+const etsyBtn = document.querySelector("#post-to-etsy");
+
+if (etsyBtn) {
+  etsyBtn.addEventListener("click", postToEtsy);
+}
+
+function postToEtsy() {
+  console.log("etsy");
+
+  chrome.runtime.sendMessage({ command: "create-etsy-item" });
+}
+
+//
+
+const facebookBtn = document.querySelector("#post-to-facebook");
+
+if (facebookBtn) {
+  facebookBtn.addEventListener("click", postToFacebook);
+}
+
+function postToFacebook() {
+  console.log("facebook");
+
+  chrome.runtime.sendMessage({ command: "create-facebook-item" });
+}
+
+//
+
+const grailedBtn = document.querySelector("#post-to-grailed");
+
+if (grailedBtn) {
+  grailedBtn.addEventListener("click", postToGrailed);
+}
+
+function postToGrailed() {
+  console.log("grailed");
+
+  chrome.runtime.sendMessage({ command: "create-grailed-item" });
+}
+
+//
+
+const kidizenBtn = document.querySelector("#post-to-kidizen");
+
+if (kidizenBtn) {
+  kidizenBtn.addEventListener("click", postToKidizen);
+}
+
+function postToKidizen() {
+  console.log("kidizen");
+
+  chrome.runtime.sendMessage({ command: "create-kidizen-item" });
+}
+
+//
+
+const mercariBtn = document.querySelector("#post-to-mercari");
+
+if (mercariBtn) {
+  mercariBtn.addEventListener("click", postToMercari);
+}
+
+function postToMercari() {
+  console.log("mercari");
+
+  chrome.runtime.sendMessage({ command: "create-mercari-item" });
+}
+
+//
+
+//
+
+const poshmarkBtn = document.querySelector("#post-to-poshmark");
+
+if (poshmarkBtn) {
+  poshmarkBtn.addEventListener("click", postToPoshmark);
+}
+
+function postToPoshmark() {
+  console.log("poshmark");
+
+  chrome.runtime.sendMessage({ command: "create-poshmark-item" });
+}
+
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
+//   "matches": ["*://poshmark.com/*"],
+//   "run_at": "document_start"
+// },
+
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/facebook.js"],
+//   "matches": ["*://www.facebook.com/*"],
+//   "run_at": "document_start"
+// },
+
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/kidizen.js"],
+//   "matches": ["*://www.kidizen.com/*"],
+//   "run_at": "document_start"
+// },
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/grailed.js"],
+//   "matches": ["*://www.grailed.com/*"],
+//   "run_at": "document_start"
+// },
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/etsy.js"],
+//   "matches": ["*://www.etsy.com/*"],
+//   "run_at": "document_start"
+// }
+
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/mercari.js"],
+//   "matches": ["*://www.mercari.com/*"],
+//   "run_at": "document_start"
+// },
+
+// {
+//   "js": ["jquery-3.6.0.min.js", "marketplaces/ebay.js"],
+//   "matches": [
+//     "*://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&&DraftURL=*"
+//   ],
+//   "run_at": "document_start"
+// }

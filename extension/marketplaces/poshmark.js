@@ -53,7 +53,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "input[data-vv-name='title']",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -167,18 +168,16 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
-  console.log("ready to insert fields is called from poshmark");
-
+function readyToInsertFields(itemData) {
   fillOutPoshmarkForm(
-    [],
-    "Nike xl premium shirt",
-    "This is a good nike shirt made from the nike store lit!!!1",
-    "Adidas",
-    "poor",
-    "white",
-    6,
-    19,
-    "001Jke"
+    itemData.imageUrls,
+    itemData.title,
+    itemData.description,
+    itemData.brand,
+    itemData.condition,
+    itemData.color,
+    itemData.price,
+    itemData.cost,
+    itemData.sku
   );
 }

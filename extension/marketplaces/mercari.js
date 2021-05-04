@@ -50,7 +50,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "#sellName",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -183,14 +184,14 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
+function readyToInsertFields(itemData) {
   fillOutMercariForm(
-    [],
-    "Nike xl premium shirt",
-    "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    "Nike",
-    "preowned",
-    "red",
-    54
+    itemData.imageUrls,
+    itemData.title,
+    itemData.description,
+    itemData.brand,
+    itemData.condition,
+    itemData.color,
+    itemData.price
   );
 }

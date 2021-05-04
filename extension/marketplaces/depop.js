@@ -1,4 +1,69 @@
 //LATER: create files by pages to make code cleaner
+//LATER: watch for elements that are not yet loaded, and add them when they are actvated by their previous elements. i.e., brand is not available until the category is filled. watch and then fill as soon as it becomes available.
+
+// chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+//   // Handle message.
+//   // In this example, message === 'whatever value; String, object, whatever'
+
+//   if (message == "hi") {
+//     console.log(message, sender);
+//     alert("runtime is , ", message);
+//   }
+// });
+
+// function toDataUrl(url, callback) {
+//   var xhr = new XMLHttpRequest();
+//   xhr.onload = function () {
+//     callback(xhr.response);
+//   };
+//   xhr.open("GET", url);
+//   xhr.responseType = "blob";
+//   xhr.send();
+// }
+
+// function convertImgToBase64URL(url, callback, outputFormat) {
+//   var img = new Image();
+//   img.crossOrigin = "Anonymous";
+//   img.onload = function () {
+//     var canvas = document.createElement("CANVAS"),
+//       ctx = canvas.getContext("2d"),
+//       dataURL;
+//     canvas.height = img.height;
+//     canvas.width = img.width;
+//     ctx.drawImage(img, 0, 0);
+//     dataURL = canvas.toDataURL(outputFormat);
+//     callback(dataURL);
+//     canvas = null;
+//   };
+//   img.src = url;
+// }
+
+// function getBase64Image(img) {
+//   // Create an empty canvas element
+//   var canvas = document.createElement("canvas");
+//   canvas.width = img.width;
+//   canvas.height = img.height;
+
+//   // Copy the image contents to the canvas
+//   var ctx = canvas.getContext("2d");
+//   ctx.drawImage(img, 0, 0);
+
+//   // Get the data-URL formatted image
+//   // Firefox supports PNG and JPEG. You could check img.src to
+//   // guess the original format, but be aware the using "image/jpg"
+//   // will re-encode the image.
+//   var dataURL = canvas.toDataURL("image/png");
+
+//   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+// }
+
+// function datablob(item) {
+//   const dataTransfer = new DataTransfer();
+
+//   dataTransfer.items.add(new File(["hello world"], "This_Works.txt"));
+
+//   return dataTransfer.files;
+// }
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
@@ -50,7 +115,8 @@ function waitForElementToDisplay(
 waitForElementToDisplay(
   "#description",
   function () {
-    readyToInsertFields();
+    //itemData inherited from execute script
+    readyToInsertFields(itemData);
   },
   100,
   100000000000000
@@ -75,6 +141,8 @@ async function fillOutDepopForm(
     'div[data-testid="listingSelect__listing__condition"] input'
   );
   let depop_color = document.querySelector("#listing__colour__select");
+
+  let depop_image_input = document.querySelector("input[type=file]");
 
   fillTextAreaValue(depop_description, description);
 
@@ -157,13 +225,13 @@ function fillTextAreaValue(textArea, value) {
   textArea.dispatchEvent(textAreaEvent);
 }
 
-//LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
+//LATER: do more error checking for fields, example like price/currency validation, splices, and maximum length values
+function readyToInsertFields(itemData) {
   fillOutDepopForm(
-    [],
-    "Nike shirt has only been used once but it is really good condition you cannot go wrong with this.",
-    "poor",
-    "blue",
-    54
+    itemData.imageUrls,
+    itemData.description,
+    itemData.condition,
+    itemData.color,
+    itemData.price
   );
 }
