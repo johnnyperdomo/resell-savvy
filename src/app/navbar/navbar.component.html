@@ -1,23 +1,23 @@
+<!-- LATER: make collapsable navbar a little bit better, a little weird looking just on the left side -->
 <nav
   class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light"
   id="sidebar"
 >
   <div class="container-fluid">
     <!-- Toggler -->
+
     <button
-      class="navbar-toggler"
+      class="navbar-toggler mr-auto"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#sidebarCollapse"
-      aria-controls="sidebarCollapse"
+      data-toggle="collapse"
+      data-target="#navbar"
+      aria-controls="navbar"
       aria-expanded="false"
-      aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Brand -->
-    <!-- FIX: add brand image, not working, add your own logo -->
     <a class="navbar-brand" [routerLink]="['/inventory']">
       <img
         src="assets/resellsavvy-logo-circular.png"
@@ -26,37 +26,8 @@
       />
     </a>
 
-    <!-- User (xs) -->
-    <div class="navbar-user d-md-none">
-      <!-- Dropdown -->
-      <div class="dropdown">
-        <!-- Toggle -->
-        <a
-          href="#"
-          id="sidebarIcon"
-          class="dropdown-toggle"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-        </a>
-
-        <!-- Menu -->
-        <div
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="sidebarIcon"
-        >
-          <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-          <a href="./account-general.html" class="dropdown-item">Settings</a>
-          <hr class="dropdown-divider" />
-          <a href="./sign-in.html" class="dropdown-item">Logout</a>
-        </div>
-      </div>
-    </div>
-
     <!-- Collapse -->
-    <div class="collapse navbar-collapse" id="sidebarCollapse">
+    <div class="collapse navbar-collapse" id="navbar">
       <!-- Navigation -->
 
       <ul class="navbar-nav">
