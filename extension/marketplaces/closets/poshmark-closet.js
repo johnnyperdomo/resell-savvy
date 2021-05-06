@@ -1,3 +1,5 @@
+//TODO: doesn't always render from the manifest json, may need to execute script this bad boy.
+
 function insertModal() {
   //TODO
   var modal = document.createElement("div");
