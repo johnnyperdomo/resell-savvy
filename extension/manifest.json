@@ -40,6 +40,15 @@
         "*://*.poshmark.com/*"
       ],
       "run_at": "document_start"
+    },
+    {
+      "js": ["bootstrap.min.js", "marketplaces/closets/poshmark-closet.js"],
+      "css": [
+        "marketplaces/closets/poshmark-closet.css",
+        "bootstrap.min.css",
+        "font-awesome.css"
+      ],
+      "matches": ["*://*.poshmark.com/closet/*"]
     }
   ],
 

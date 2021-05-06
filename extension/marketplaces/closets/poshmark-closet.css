@@ -1,0 +1,16 @@
+.rs-crosslist-btn {
+  border-radius: 17px;
+  height: 34px;
+  width: 34px;
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  z-index: 99999;
+}
+
+/* center and disable svg click */
+.rs-icon-center {
+  display: block;
+  margin: auto;
+  pointer-events: none;
+}
