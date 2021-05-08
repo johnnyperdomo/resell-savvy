@@ -171,12 +171,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log("updated, ", tabId, changeInfo, tab);
-  //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
+//TODO: nest this inside one of the tabs
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//   console.log("updated, ", tabId, changeInfo, tab);
+//   //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
 
-  //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
-});
+//   //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
+// });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   //TODO: if tab removed, remove this from the process
@@ -207,7 +208,7 @@ function createItemInNewTab(tab, data, marketplace) {
         },
         () => {
           chrome.tabs.executeScript(tab.id, {
-            file: `marketplaces/${marketplace}.js`,
+            file: `marketplaces/new-item/${marketplace}-item.js`,
           });
         }
       );

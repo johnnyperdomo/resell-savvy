@@ -28,10 +28,11 @@
 
   "content_scripts": [
     {
-      "js": ["jquery-3.6.0.min.js"],
+      "js": ["third-party/jquery-3.6.0.min.js", "third-party/bootstrap.min.js"],
+      "css": ["third-party/bootstrap.min.css"],
       "matches": [
         "*://*.etsy.com/*",
-        "*://*.etsy.com/*",
+        "*://*.ebay.com/*",
         "*://*.depop.com/*",
         "*://*.kidizen.com/*",
         "*://*.facebook.com/*",
@@ -42,22 +43,36 @@
       "run_at": "document_start"
     },
     {
-      "js": ["bootstrap.min.js", "marketplaces/closets/poshmark-closet.js"],
-      "css": [
-        "marketplaces/closets/poshmark-closet.css",
-        "bootstrap.min.css",
-        "font-awesome.css"
-      ],
-      "matches": ["*://*.poshmark.com/closet/*"]
+      "css": ["marketplaces/closets/depop-closet.css"],
+      "matches": ["*://*.depop.com/*"]
     },
     {
-      "js": ["bootstrap.min.js", "marketplaces/closets/depop-closet.js"],
-      "css": [
-        "marketplaces/closets/depop-closet.css",
-        "bootstrap.min.css",
-        "font-awesome.css"
-      ],
-      "matches": ["*://*.depop.com/*"]
+      "css": ["marketplaces/closets/ebay-closet.css"],
+      "matches": ["*://*.ebay.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/etsy-closet.css"],
+      "matches": ["*://*.etsy.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/facebook-closet.css"],
+      "matches": ["*://*.facebook.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/grailed-closet.css"],
+      "matches": ["*://*.grailed.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/kidizen-closet.css"],
+      "matches": ["*://*.kidizen.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/mercari-closet.css"],
+      "matches": ["*://*.mercari.com/*"]
+    },
+    {
+      "css": ["marketplaces/closets/poshmark-closet.css"],
+      "matches": ["*://*.poshmark.com/*"]
     }
   ],
 
