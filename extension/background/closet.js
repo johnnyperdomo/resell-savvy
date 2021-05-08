@@ -13,7 +13,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //ebay closet
-  if (tab.url.indexOf("ebay.com/sh/lst") > -1) {
+  //TODO: bulk sell page works so don't worry about it
+  if (tab.url.indexOf("ebay.com/sh/lst/active") > -1) {
     console.log("ebay closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
@@ -32,13 +33,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //facebook closet
-  if (tab.url.indexOf("facebook.com/marketplace/you/selling") > -1) {
-    console.log("facebook closet detected, tab = ", tabId);
+  //LATER: this is a little complex
+  // if (tab.url.indexOf("facebook.com/marketplace/you/selling") > -1) {
+  //   console.log("facebook closet detected, tab = ", tabId);
 
-    chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/facebook-closet.js",
-    });
-  }
+  //   chrome.tabs.executeScript(tab.id, {
+  //     file: "marketplaces/closets/facebook-closet.js",
+  //   });
+  // }
 
   //grailed closet
   if (tab.url.indexOf("grailed.com/users/myitems") > -1) {
@@ -80,11 +82,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
 });
 
+// "*://*.facebook.com/*",
 // {
-//   "js": ["bootstrap.min.js", "marketplaces/closets/poshmark-closet.js"],
-//   "css": [
-//     "marketplaces/closets/poshmark-closet.css",
-//     "bootstrap.min.css",
-//   ],
-//   "matches": ["*://*.poshmark.com/closet/*"]
+//   "css": ["marketplaces/closets/facebook-closet.css"],
+//   "matches": ["*://*.facebook.com/*"]
 // },

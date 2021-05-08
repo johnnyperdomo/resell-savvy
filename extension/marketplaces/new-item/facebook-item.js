@@ -1,5 +1,6 @@
 //LATER: create files by pages to make code cleaner
 //LATER: make elements fail safely if not found, just skip instead of failing the entire function
+//FIX: error with itemData not being recognized
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work

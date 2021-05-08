@@ -28,7 +28,7 @@ export class Item {
     kidizen: string;
     facebook: string;
     mercari: string;
-    // tradesy: string;
+    tradesy: string;
   }; //save listing urls here, or leave empty if delisted or null: ''
   public sold?: {
     marketplace: string;

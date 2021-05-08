@@ -16,7 +16,6 @@
     "*://*.etsy.com/*",
     "*://*.depop.com/*",
     "*://*.kidizen.com/*",
-    "*://*.facebook.com/*",
     "*://*.mercari.com/*",
     "*://*.grailed.com/*",
     "*://*.poshmark.com/*"
@@ -53,10 +52,6 @@
     {
       "css": ["marketplaces/closets/etsy-closet.css"],
       "matches": ["*://*.etsy.com/*"]
-    },
-    {
-      "css": ["marketplaces/closets/facebook-closet.css"],
-      "matches": ["*://*.facebook.com/*"]
     },
     {
       "css": ["marketplaces/closets/grailed-closet.css"],

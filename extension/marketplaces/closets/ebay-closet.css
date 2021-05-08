@@ -31,5 +31,5 @@
   bottom: 20px;
   left: 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 8px;
-  z-index: 100;
+  z-index: 99999;
 }

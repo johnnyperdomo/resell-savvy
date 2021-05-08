@@ -69,12 +69,12 @@ export class ItemComponent implements OnInit {
       ebay: [''],
       poshmark: [''],
       mercari: [''],
-      facebook: [''],
       etsy: [''],
       grailed: [''],
       depop: [''],
       kidizen: [''],
       // tradesy: [''],
+      // facebook: [''],
     });
   }
 
@@ -92,12 +92,11 @@ export class ItemComponent implements OnInit {
       ebay: item.marketplaces.ebay,
       poshmark: item.marketplaces.poshmark,
       mercari: item.marketplaces.mercari,
-      facebook: item.marketplaces.facebook,
       etsy: item.marketplaces.etsy,
       grailed: item.marketplaces.grailed,
       depop: item.marketplaces.depop,
       kidizen: item.marketplaces.kidizen,
-
+      // facebook: item.marketplaces.facebook,
       // tradesy: item.marketplaces.tradesy,
     });
   }
@@ -305,9 +304,9 @@ export class ItemComponent implements OnInit {
     const ebay = this.trimStr(formValue.ebay);
     const poshmark = this.trimStr(formValue.poshmark);
     const mercari = this.trimStr(formValue.mercari);
-    const facebook = this.trimStr(formValue.facebook);
+    // const facebook = this.trimStr(formValue.facebook); //LATER
     const etsy = this.trimStr(formValue.etsy);
-    // const tradesy = this.trimStr(formValue.tradesy);
+    // const tradesy = this.trimStr(formValue.tradesy); //LATER
     const grailed = this.trimStr(formValue.grailed);
     const depop = this.trimStr(formValue.depop);
     const kidizen = this.trimStr(formValue.kidizen);
@@ -316,7 +315,7 @@ export class ItemComponent implements OnInit {
       ebay,
       poshmark,
       mercari,
-      facebook,
+      // facebook,
       etsy,
       grailed,
       depop,
@@ -347,12 +346,12 @@ export class ItemComponent implements OnInit {
                 ebay: ebay,
                 poshmark: poshmark,
                 mercari: mercari,
-                facebook: facebook,
+                facebook: '', //LATER: integrate with facebook, a little challenging
                 etsy: etsy,
                 grailed: grailed,
                 depop: depop,
                 kidizen: kidizen,
-                // tradesy: tradesy,
+                tradesy: '', //LATER: integrate with tradesy
               },
               modified: firebase.default.firestore.Timestamp.now(),
             });

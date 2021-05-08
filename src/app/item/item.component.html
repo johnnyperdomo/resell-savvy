@@ -367,80 +367,6 @@
             </div>
           </div>
 
-          <!-- Mercari Listing Url -->
-          <div class="row">
-            <div class="col-12 col-md-6">
-              <div class="form-group">
-                <label>Mercari</label>
-
-                <button
-                  *ngIf="item && item.marketplaces.mercari != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.mercari)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button>
-
-                <div class="input-group input-group-merge">
-                  <input
-                    type="text"
-                    class="form-control form-control-appended"
-                    placeholder="Mercari listing url"
-                    formControlName="mercari"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      *ngIf="item && item.marketplaces.mercari != ''"
-                      class="btn btn-light"
-                      type="button"
-                      (click)="onDelistItem()"
-                    >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Facebook Marketplace Listing Url -->
-            <div class="col-12 col-md-6">
-              <div class="form-group">
-                <label>Facebook Marketplace</label>
-
-                <button
-                  *ngIf="item && item.marketplaces.facebook != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.facebook)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button>
-
-                <div class="input-group input-group-merge">
-                  <input
-                    type="text"
-                    class="form-control form-control-appended"
-                    placeholder="Facebook Marketplace listing url"
-                    formControlName="facebook"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      *ngIf="item && item.marketplaces.facebook != ''"
-                      class="btn btn-light"
-                      type="button"
-                      (click)="onDelistItem()"
-                    >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Esty Listing Url -->
           <div class="row">
             <div class="col-12 col-md-6">
@@ -588,6 +514,81 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Mercari Listing Url -->
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <div class="form-group">
+                <label>Mercari</label>
+
+                <button
+                  *ngIf="item && item.marketplaces.mercari != ''"
+                  class="text-muted btn btn-link"
+                  (click)="goToLink(item.marketplaces.mercari)"
+                  target="_blank"
+                >
+                  <span class="fe fe-eye"></span>
+                </button>
+
+                <div class="input-group input-group-merge">
+                  <input
+                    type="text"
+                    class="form-control form-control-appended"
+                    placeholder="Mercari listing url"
+                    formControlName="mercari"
+                  />
+                  <div class="input-group-append">
+                    <button
+                      *ngIf="item && item.marketplaces.mercari != ''"
+                      class="btn btn-light"
+                      type="button"
+                      (click)="onDelistItem()"
+                    >
+                      <!-- TODO: list/delist, based on if url is empty or not -->
+                      Delist Item
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Facebook Marketplace Listing Url -->
+            <!-- LATER: add facebook integration -->
+            <!-- <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label>Facebook Marketplace</label>
+        
+                        <button
+                          *ngIf="item && item.marketplaces.facebook != ''"
+                          class="text-muted btn btn-link"
+                          (click)="goToLink(item.marketplaces.facebook)"
+                          target="_blank"
+                        >
+                          <span class="fe fe-eye"></span>
+                        </button>
+        
+                        <div class="input-group input-group-merge">
+                          <input
+                            type="text"
+                            class="form-control form-control-appended"
+                            placeholder="Facebook Marketplace listing url"
+                            formControlName="facebook"
+                          />
+                          <div class="input-group-append">
+                            <button
+                              *ngIf="item && item.marketplaces.facebook != ''"
+                              class="btn btn-light"
+                              type="button"
+                              (click)="onDelistItem()"
+                            > -->
+            <!-- TODO: list/delist, based on if url is empty or not -->
+            <!-- Delist Item -->
+            <!-- </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
           </div>
 
           <!-- Bulk List -->
