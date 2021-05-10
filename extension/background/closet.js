@@ -87,3 +87,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 //   "css": ["marketplaces/closets/facebook-closet.css"],
 //   "matches": ["*://*.facebook.com/*"]
 // },
+
+//LATER: see how you can make your web scraping more robust, since data can change on any given page
+// https://codeburst.io/two-simple-technique-for-web-scraping-pages-with-dynamically-created-css-class-names-72eaca8c1304

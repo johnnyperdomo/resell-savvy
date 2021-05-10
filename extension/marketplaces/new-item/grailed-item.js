@@ -1,5 +1,3 @@
-console.log("hi from grailed");
-
 //LATER: create files by pages to make code cleaner
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
@@ -53,7 +51,7 @@ waitForElementToDisplay(
   "input[name='title']",
   function () {
     //itemData inherited from execute script
-    readyToInsertFields(itemData);
+    getItemDetails(itemData);
   },
   100,
   100000000000000
@@ -135,7 +133,7 @@ const capitalize = (s) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-function matchCondition(condition) {
+function formatCondition(condition) {
   //return grailed condition value from our condition value
   switch (condition) {
     case ("nwt", "nwot"):
@@ -181,7 +179,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields(itemData) {
+function getItemDetails(itemData) {
   console.log("yeahhhhhh title found");
   fillOutGrailedForm(
     itemData.imageUrls,

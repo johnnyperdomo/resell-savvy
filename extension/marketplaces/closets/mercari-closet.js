@@ -1,36 +1,36 @@
-function insertModal() {
-  //TODO
-  var modal = document.createElement("div");
-  modal.classList = "modal fade";
-  modal.id = "rs-crosslist-modal";
-  modal.tabIndex = "-1";
-  modal.innerHTML = `
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>hi my name is johnny what is</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-</div>
-  `;
+// function insertModal() {
+//   //TODO
+//   var modal = document.createElement("div");
+//   modal.classList = "modal fade";
+//   modal.id = "rs-crosslist-modal";
+//   modal.tabIndex = "-1";
+//   modal.innerHTML = `
+//   <div class="modal-dialog" role="document">
+//     <div class="modal-content">
+//       <div class="modal-header">
+//         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+//         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+//           <span aria-hidden="true">&times;</span>
+//         </button>
+//       </div>
+//       <div class="modal-body">
+//         <p>hi my name is johnny what is</p>
+//       </div>
+//       <div class="modal-footer">
+//         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+//         <button type="button" class="btn btn-primary">Save changes</button>
+//       </div>
+//     </div>
+// </div>
+//   `;
 
-  // TODO: modal margins
-  document.body.appendChild(modal);
+//   // TODO: modal margins
+//   document.body.appendChild(modal);
 
-  $("#rs-crosslist-modal").modal({ show: false });
-}
+//   $("#rs-crosslist-modal").modal({ show: false });
+// }
 
-insertModal();
+// insertModal();
 
 function openModal() {
   const cardInfo = getCardInfo();

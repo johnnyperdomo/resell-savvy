@@ -51,7 +51,7 @@ waitForElementToDisplay(
   "#sellName",
   function () {
     //itemData inherited from execute script
-    readyToInsertFields(itemData);
+    getItemDetails(itemData);
   },
   100,
   100000000000000
@@ -184,7 +184,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields(itemData) {
+function getItemDetails(itemData) {
   fillOutMercariForm(
     itemData.imageUrls,
     itemData.title,

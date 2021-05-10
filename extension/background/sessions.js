@@ -3,172 +3,154 @@
 //TODO: save global array to keep track of process
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  //Create listing items =====>
+  //Start Crosspost session
 
-  //depop
-  if (msg.command == "create-depop-item") {
-    chrome.tabs.create(
-      { url: "https://www.depop.com/products/create/" },
-      (tab) => {
-        //TODO: execute script
+  if (msg.command == "start-crosslist-session") {
+    //TODO: close tab id
 
-        //TODO get data from message
+    let tab = msg.data.tab;
+    let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
+    let listingURL = msg.data.listingURL;
+    let itemProperties = msg.data.properties;
 
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
+    console.log("marketplaces, ", copyToMarketplaces);
+    //1. Close Tab
+    chrome.tabs.remove(tab.id);
 
-        createItemInNewTab(tab, itemData, "depop");
-      }
-    );
-    //TODO: save tab info to process array
-  }
+    //TODO: send data request to firebase cloud function api
+    //2. Send Data to firebase cloud function
 
-  //ebay
-  if (msg.command == "create-ebay-item") {
-    //TODO: ebay has some special configuration
-  }
-
-  //etsy
-  if (msg.command == "create-etsy-item") {
-    //'me' is converted into shop name in url
-    chrome.tabs.create(
-      { url: "https://www.etsy.com/your/shops/me/tools/listings/create" },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        createItemInNewTab(tab, itemData, "etsy");
-      }
-    );
-  }
-
-  //facebook
-  if (msg.command == "create-facebook-item") {
-    chrome.tabs.create(
-      { url: "https://www.facebook.com/marketplace/create/item" },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        createItemInNewTab(tab, itemData, "facebook");
-      }
-    );
-  }
-
-  //grailed
-  if (msg.command == "create-grailed-item") {
-    chrome.tabs.create({ url: "https://www.grailed.com/sell" }, (tab) => {
-      const itemData = {
-        imageUrls: [],
-        title: "nike shirt premium",
-        description:
-          "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-        price: 29,
-        brand: "Adidas",
-        condition: "nwt",
-        color: "red",
-        sku: "ID456",
-        cost: 5,
-      };
-
-      createItemInNewTab(tab, itemData, "grailed");
+    //3. Open marketplace for each item in array
+    copyToMarketplaces.forEach((marketplace) => {
+      createItem(itemProperties, marketplace);
     });
+
+    // chrome.tabs.create({ url: "https://www.google.com" });
+    // openTab();
+    // chrome.runtime.sendMessage({ command: "create-kidizen-item" });
+
+    //TODO: open new tabs with marketplaces array
+    console.log("message received: ", msg.data);
   }
 
-  //kidizen
-  if (msg.command == "create-kidizen-item") {
-    chrome.tabs.create({ url: "https://www.kidizen.com/items/new" }, (tab) => {
-      const itemData = {
-        imageUrls: [],
-        title: "nike shirt premium",
-        description:
-          "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-        price: 29,
-        brand: "Adidas",
-        condition: "nwt",
-        color: "red",
-        sku: "ID456",
-        cost: 5,
-      };
+  //get listing data =====>
 
-      createItemInNewTab(tab, itemData, "kidizen");
-    });
-  }
-
-  //mercari
-  if (msg.command == "create-mercari-item") {
-    chrome.tabs.create({ url: "https://www.mercari.com/sell/" }, (tab) => {
-      const itemData = {
-        imageUrls: [],
-        title: "nike shirt premium",
-        description:
-          "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-        price: 29,
-        brand: "Adidas",
-        condition: "nwt",
-        color: "red",
-        sku: "ID456",
-        cost: 5,
-      };
-
-      createItemInNewTab(tab, itemData, "mercari");
-    });
-  }
-
-  //poshmark
-  if (msg.command == "create-poshmark-item") {
-    console.log("poshmark message received");
-
+  if (msg.command == "get-listing-from-depop") {
+    //TODO: set data id
     chrome.tabs.create(
-      { url: "https://poshmark.com/create-listing" },
+      {
+        url:
+          "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/",
+        active: false,
+      },
       (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "adidas pants",
-          description:
-            "This is the coolest adidas you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwot",
-          color: "green",
-          sku: "",
-          cost: 5,
+        let retrievalObject = {
+          copyToMarketplaces: ["poshmark", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
         };
 
-        createItemInNewTab(tab, itemData, "poshmark");
+        getListingDetails(tab, retrievalObject, "depop");
       }
     );
   }
+
+  if (msg.command == "get-listing-from-ebay") {
+    //TODO: check for v1/v2
+  }
+
+  if (msg.command == "get-listing-from-etsy") {
+    //TODO: set data id
+    chrome.tabs.create(
+      {
+        url: "https://www.etsy.com/your/shops/me/tools/listings/1013280995",
+      },
+      (tab) => {
+        let retrievalObject = {
+          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "etsy");
+      }
+    );
+  }
+
+  if (msg.command == "get-listing-from-grailed") {
+    //TODO: set data id
+    chrome.tabs.create(
+      {
+        url: "https://www.grailed.com/listings/21859004/edit",
+        active: false,
+      },
+      (tab) => {
+        let retrievalObject = {
+          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "grailed");
+      }
+    );
+  }
+
+  if (msg.command == "get-listing-from-kidizen") {
+    //TODO: set data id
+    chrome.tabs.create(
+      {
+        url: "https://www.kidizen.com/items/lightning-bolt-8383962/edit",
+      },
+      (tab) => {
+        let retrievalObject = {
+          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "kidizen");
+      }
+    );
+  }
+
+  if (msg.command == "get-listing-from-mercari") {
+    //TODO: set data id
+    chrome.tabs.create(
+      {
+        url: "https://www.mercari.com/sell/edit/m51684724871/",
+      },
+      (tab) => {
+        let retrievalObject = {
+          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "mercari");
+      }
+    );
+  }
+
+  if (msg.command == "get-listing-from-poshmark") {
+    //TODO: set data id
+    chrome.tabs.create(
+      {
+        url: "https://poshmark.com/edit-listing/608042cbfdcbf63ef23959f6",
+      },
+      (tab) => {
+        let retrievalObject = {
+          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "poshmark");
+      }
+    );
+  }
+
+  //LATER: wait for listing data to be retrieved successfully, that way we can tell the client that it is processing, and show them different progress states
 });
 
 //TODO: nest this inside one of the tabs
@@ -190,13 +172,183 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 // },
 
 //Functions ====>
-function createItemInNewTab(tab, data, marketplace) {
+
+function createItem(properties, marketplace) {
+  if (marketplace == "depop") {
+    //FIX: doesn't work if tab active set to false? Could it be bcuz we're waiting for element display function?
+    chrome.tabs.create(
+      { url: "https://www.depop.com/products/create/" },
+      (tab) => {
+        //TODO: execute script
+
+        //TODO get data from message
+
+        openItemInNewTab(tab, properties, "depop");
+      }
+    );
+    //TODO: save tab info to process array
+  }
+
+  //ebay
+  if (marketplace == "ebay") {
+    //TODO: ebay has some special configuration
+  }
+
+  //etsy
+  if (marketplace == "etsy") {
+    //'me' is converted into shop name in url
+    chrome.tabs.create(
+      {
+        url: "https://www.etsy.com/your/shops/me/tools/listings/create",
+        active: false,
+      },
+      (tab) => {
+        const itemData = {
+          imageUrls: properties.imageUrls,
+          title: properties.title,
+          description: properties.description,
+          price: properties.price,
+          brand: properties.brand,
+          condition: properties.condition,
+          color: properties.color,
+          sku: properties.sku,
+          cost: properties.cost,
+        };
+
+        openItemInNewTab(tab, properties, "etsy");
+      }
+    );
+  }
+
+  //facebook
+  if (marketplace == "facebook") {
+    chrome.tabs.create(
+      {
+        url: "https://www.facebook.com/marketplace/create/item",
+        active: false,
+      },
+      (tab) => {
+        const itemData = {
+          imageUrls: [],
+          title: "nike shirt premium",
+          description:
+            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
+          price: 29,
+          brand: "Adidas",
+          condition: "nwt",
+          color: "red",
+          sku: "ID456",
+          cost: 5,
+        };
+
+        openItemInNewTab(tab, properties, "facebook");
+      }
+    );
+  }
+
+  //grailed
+  if (marketplace == "grailed") {
+    chrome.tabs.create(
+      { url: "https://www.grailed.com/sell", active: false },
+      (tab) => {
+        const itemData = {
+          imageUrls: [],
+          title: "nike shirt premium",
+          description:
+            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
+          price: 29,
+          brand: "Adidas",
+          condition: "nwt",
+          color: "red",
+          sku: "ID456",
+          cost: 5,
+        };
+
+        openItemInNewTab(tab, properties, "grailed");
+      }
+    );
+  }
+
+  //kidizen
+  if (marketplace == "kidizen") {
+    console.log("called kidizen");
+    chrome.tabs.create(
+      { url: "https://www.kidizen.com/items/new", active: false },
+      (tab) => {
+        const itemData = {
+          imageUrls: [],
+          title: "nike shirt premium",
+          description:
+            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
+          price: 29,
+          brand: "Adidas",
+          condition: "nwt",
+          color: "red",
+          sku: "ID456",
+          cost: 5,
+        };
+
+        openItemInNewTab(tab, properties, "kidizen");
+      }
+    );
+  }
+
+  //mercari
+  if (marketplace == "mercari") {
+    chrome.tabs.create(
+      { url: "https://www.mercari.com/sell/", active: false },
+      (tab) => {
+        const itemData = {
+          imageUrls: [],
+          title: "nike shirt premium",
+          description:
+            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
+          price: 29,
+          brand: "Adidas",
+          condition: "nwt",
+          color: "red",
+          sku: "ID456",
+          cost: 5,
+        };
+
+        openItemInNewTab(tab, properties, "mercari");
+      }
+    );
+  }
+
+  //poshmark
+  if (marketplace == "poshmark") {
+    console.log("poshmark message received");
+
+    chrome.tabs.create(
+      { url: "https://poshmark.com/create-listing", active: false },
+      (tab) => {
+        const itemData = {
+          imageUrls: [],
+          title: "adidas pants",
+          description:
+            "This is the coolest adidas you have to get it, it's brand new my guy. Check it out.",
+          price: 29,
+          brand: "Adidas",
+          condition: "nwot",
+          color: "green",
+          sku: "",
+          cost: 5,
+        };
+
+        openItemInNewTab(tab, properties, "poshmark");
+      }
+    );
+  }
+}
+
+function openItemInNewTab(tab, data, marketplace) {
   const itemData = JSON.stringify(data);
 
   chrome.tabs.executeScript(
     tab.id,
     {
-      file: `jquery-3.6.0.min.js`,
+      file: `third-party/jquery-3.6.0.min.js`,
     },
     () => {
       chrome.tabs.executeScript(
@@ -214,4 +366,36 @@ function createItemInNewTab(tab, data, marketplace) {
       );
     }
   );
+}
+
+//Functions ====>
+function getListingDetails(tab, data, marketplace) {
+  const retrievalObject = JSON.stringify(data);
+
+  chrome.tabs.executeScript(
+    tab.id,
+    {
+      file: `third-party/jquery-3.6.0.min.js`,
+    },
+    () => {
+      chrome.tabs.executeScript(
+        tab.id,
+        {
+          //TODO: pass data in here
+          //TODO: not really working
+          code: `const retrievalObject = ${retrievalObject};`,
+        },
+        () => {
+          chrome.tabs.executeScript(tab.id, {
+            file: `marketplaces/get-item/${marketplace}-edit.js`,
+          });
+        }
+      );
+    }
+  );
+}
+
+function openTab() {
+  console.log("open tab called");
+  chrome.runtime.sendMessage({ command: "create-kidizen-item" });
 }

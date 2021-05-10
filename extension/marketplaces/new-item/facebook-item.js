@@ -53,7 +53,7 @@ waitForElementToDisplay(
   "label[aria-label='Title']",
   function () {
     //itemData inherited from execute script
-    readyToInsertFields(itemData);
+    getItemDetails(itemData);
   },
   100,
   100000000000000
@@ -84,7 +84,7 @@ async function fillOutFacebookForm(
   fillInputValue(facebook_price, price);
 
   if (condition != "") {
-    let conditionValue = matchCondition(condition);
+    let conditionValue = formatCondition(condition);
 
     //LATER: condition needs to click value
 
@@ -107,7 +107,7 @@ async function fillOutFacebookForm(
   fillTextAreaValue(facebook_description, description);
 }
 
-function matchCondition(condition) {
+function formatCondition(condition) {
   //return poshmark condition value from our condition value
   switch (condition) {
     case "nwt":
@@ -153,7 +153,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields(itemData) {
+function getItemDetails(itemData) {
   console.log("ready to insert fields is called from poshmark");
 
   fillOutFacebookForm(

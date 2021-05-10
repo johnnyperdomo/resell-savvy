@@ -148,116 +148,76 @@ if (
 
 //TODO: this is just for testing, delete only when you finish testing all copy/pasting
 
-const depopBtn = document.querySelector("#post-to-depop");
+////////////////////////////////////////////////
 
-if (depopBtn) {
-  depopBtn.addEventListener("click", postToDepop);
+const depop = document.querySelector("#get-from-depop");
+
+if (depop) {
+  depop.addEventListener("click", copyFromDepop);
 }
 
-function postToDepop() {
-  console.log("depop");
-
-  chrome.runtime.sendMessage({ command: "create-depop-item" });
+function copyFromDepop() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-depop" });
 }
 
-//
-//TODO: ebay
-// const depopBtn = document.querySelector("#post-to-depop");
+const ebay = document.querySelector("#get-from-ebay");
 
-// if (depopBtn) {
-//   depopBtn.addEventListener("click", postToDepop);
-// }
-
-// function postToDepop() {
-//   console.log("depop");
-
-//   chrome.runtime.sendMessage({ command: "create-depop-item" });
-// }
-
-//
-
-const etsyBtn = document.querySelector("#post-to-etsy");
-
-if (etsyBtn) {
-  etsyBtn.addEventListener("click", postToEtsy);
+if (ebay) {
+  ebay.addEventListener("click", copyFromEbay);
 }
 
-function postToEtsy() {
-  console.log("etsy");
-
-  chrome.runtime.sendMessage({ command: "create-etsy-item" });
+function copyFromEbay() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-ebay" });
 }
 
-//
+const etsy = document.querySelector("#get-from-etsy");
 
-const facebookBtn = document.querySelector("#post-to-facebook");
-
-if (facebookBtn) {
-  facebookBtn.addEventListener("click", postToFacebook);
+if (etsy) {
+  etsy.addEventListener("click", copyFromEtsy);
 }
 
-function postToFacebook() {
-  console.log("facebook");
-
-  chrome.runtime.sendMessage({ command: "create-facebook-item" });
+function copyFromEtsy() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-etsy" });
 }
 
-//
+const grailed = document.querySelector("#get-from-grailed");
 
-const grailedBtn = document.querySelector("#post-to-grailed");
-
-if (grailedBtn) {
-  grailedBtn.addEventListener("click", postToGrailed);
+if (grailed) {
+  grailed.addEventListener("click", copyFromGrailed);
 }
 
-function postToGrailed() {
-  console.log("grailed");
-
-  chrome.runtime.sendMessage({ command: "create-grailed-item" });
+function copyFromGrailed() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-grailed" });
 }
 
-//
+const kidizen = document.querySelector("#get-from-kidizen");
 
-const kidizenBtn = document.querySelector("#post-to-kidizen");
-
-if (kidizenBtn) {
-  kidizenBtn.addEventListener("click", postToKidizen);
+if (kidizen) {
+  kidizen.addEventListener("click", copyFromKidizen);
 }
 
-function postToKidizen() {
-  console.log("kidizen");
-
-  chrome.runtime.sendMessage({ command: "create-kidizen-item" });
+function copyFromKidizen() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-kidizen" });
 }
 
-//
+const mercari = document.querySelector("#get-from-mercari");
 
-const mercariBtn = document.querySelector("#post-to-mercari");
-
-if (mercariBtn) {
-  mercariBtn.addEventListener("click", postToMercari);
+if (mercari) {
+  mercari.addEventListener("click", copyFromMercari);
 }
 
-function postToMercari() {
-  console.log("mercari");
-
-  chrome.runtime.sendMessage({ command: "create-mercari-item" });
+function copyFromMercari() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-mercari" });
 }
 
-//
+const poshmark = document.querySelector("#get-from-poshmark");
 
-//
-
-const poshmarkBtn = document.querySelector("#post-to-poshmark");
-
-if (poshmarkBtn) {
-  poshmarkBtn.addEventListener("click", postToPoshmark);
+if (poshmark) {
+  poshmark.addEventListener("click", copyFromPoshmark);
 }
 
-function postToPoshmark() {
-  console.log("poshmark");
-
-  chrome.runtime.sendMessage({ command: "create-poshmark-item" });
+function copyFromPoshmark() {
+  chrome.runtime.sendMessage({ command: "get-listing-from-poshmark" });
 }
 
 // {

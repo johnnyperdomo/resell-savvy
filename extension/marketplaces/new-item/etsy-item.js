@@ -51,7 +51,7 @@ waitForElementToDisplay(
   "input[name='title']",
   function () {
     //itemData inherited from execute script
-    readyToInsertFields(itemData);
+    getItemDetails(itemData);
   },
   100,
   100000000000000
@@ -133,7 +133,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function readyToInsertFields() {
+function getItemDetails() {
   console.log("yeahhhhhh title found");
   fillOutEtsyForm(
     itemData.imageUrls,
