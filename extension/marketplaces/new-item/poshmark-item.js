@@ -1,7 +1,4 @@
-console.log("hi from poshmark");
-
-//LATER: create files by pages to make code cleaner
-//LATER: make elements fail safely if not found, just skip instead of failing the entire function
+//LATER: make elements fail safely if not found, just skip instead of failing the entire function, check to see if element exists, simulate if element not found, send error using sentry
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
@@ -29,36 +26,36 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
 
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "input[data-vv-name='title']",
-  function () {
-    //itemData inherited from execute script
-    getItemDetails(itemData);
-  },
-  100,
-  100000000000000
-);
+// //TODO: call code from postMessage request
+// waitForElementToDisplay(
+//   "input[data-vv-name='title']",
+//   function () {
+//     //itemData inherited from execute script
+//     getItemDetails(itemData);
+//   },
+//   100,
+//   100000000000000
+// );
 
 async function fillOutPoshmarkForm(
   imageUrls,
@@ -71,10 +68,8 @@ async function fillOutPoshmarkForm(
   costPrice,
   sku
 ) {
-  console.log("waiting on form filler");
-
-  await waitForElementToLoad("form");
-  console.log("called form filler");
+  await waitForElementToLoad("input[data-vv-name='title']");
+  console.log("wait for element to load");
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(
     'textarea[data-vv-name="description"]'
@@ -168,7 +163,8 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails(itemData) {
+function getItemDetails() {
+  console.log(itemData);
   fillOutPoshmarkForm(
     itemData.imageUrls,
     itemData.title,
@@ -181,3 +177,11 @@ function getItemDetails(itemData) {
     itemData.sku
   );
 }
+
+// //detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};

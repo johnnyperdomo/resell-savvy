@@ -26,36 +26,36 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
 
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "input[name='title']",
-  function () {
-    //itemData inherited from execute script
-    getItemDetails(itemData);
-  },
-  100,
-  100000000000000
-);
+// //TODO: call code from postMessage request
+// waitForElementToDisplay(
+//   "input[name='title']",
+//   function () {
+//     //itemData inherited from execute script
+//     getItemDetails(itemData);
+//   },
+//   100,
+//   100000000000000
+// );
 
 async function fillOutGrailedForm(
   imageUrls,
@@ -66,13 +66,8 @@ async function fillOutGrailedForm(
   brand,
   price
 ) {
-  console.log("waiting on form filler");
-
-  await waitForElementToLoad("form");
-  console.log("called form filler");
-
+  await waitForElementToLoad("input[name='title']");
   const inputFiles = $('input[type="file"]');
-
   console.log("input files, ", inputFiles);
 
   let grailed_title = document.querySelector("input[name='title']");
@@ -179,8 +174,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails(itemData) {
-  console.log("yeahhhhhh title found");
+function getItemDetails() {
   fillOutGrailedForm(
     itemData.imageUrls,
     itemData.title,
@@ -191,3 +185,11 @@ function getItemDetails(itemData) {
     itemData.price
   );
 }
+
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};

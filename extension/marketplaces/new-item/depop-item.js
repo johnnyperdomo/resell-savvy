@@ -1,15 +1,6 @@
-//LATER: create files by pages to make code cleaner
+//LATER: add progress states to page when it starts the crosslist session, - white blurry modal that stops the user from editing the page. i.e. waiting for page to load "check internet connection" (make funny animation) -> pasting in progress -> etc.... timeout in a few seconds by default just in case it doesn't get stuck. (that way they know the crosslist is not the reason it's slow, it's because of your internet)
+
 //LATER: watch for elements that are not yet loaded, and add them when they are actvated by their previous elements. i.e., brand is not available until the category is filled. watch and then fill as soon as it becomes available.
-
-// chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-//   // Handle message.
-//   // In this example, message === 'whatever value; String, object, whatever'
-
-//   if (message == "hi") {
-//     console.log(message, sender);
-//     alert("runtime is , ", message);
-//   }
-// });
 
 // function toDataUrl(url, callback) {
 //   var xhr = new XMLHttpRequest();
@@ -65,6 +56,8 @@
 //   return dataTransfer.files;
 // }
 
+//FIX: maybe we should wait for page to load? this is giving some errors when crosslisting
+//TODO: set timeout after a few seconds, if element not found, skip code and execute anyways
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
   if (!inTree) inTree = $(document.body);
@@ -91,36 +84,40 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+//TODO: make this element ready to display a
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         console.log("element not found yet");
 
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "#description",
-  function () {
-    //itemData inherited from execute script
-    getItemDetails(itemData);
-  },
-  100,
-  100000000000000
-);
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
+
+// // TODO: call code from postMessage request
+// waitForElementToDisplay(
+//   "#description",
+//   function () {
+//     //itemData inherited from execute script
+//     // getItemDetails(itemData);
+//     console.log("found element");
+//   },
+//   100,
+//   5000
+// );
 
 async function fillOutDepopForm(
   imageUrls,
@@ -131,7 +128,7 @@ async function fillOutDepopForm(
 ) {
   console.log("waiting on form filler");
 
-  await waitForElementToLoad("form");
+  await waitForElementToLoad("#description");
   console.log("called form filler");
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'
@@ -226,8 +223,8 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation, splices, and maximum length values
-function getItemDetails(itemData) {
-  console.log(itemData);
+function getItemDetails() {
+  //inherited value
   fillOutDepopForm(
     itemData.imageUrls,
     itemData.description,
@@ -236,3 +233,11 @@ function getItemDetails(itemData) {
     itemData.price
   );
 }
+
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};

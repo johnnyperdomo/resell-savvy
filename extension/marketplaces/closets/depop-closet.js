@@ -55,6 +55,7 @@ function openModal() {
 }
 
 async function createCrossListButton() {
+  //FIX: this giving error when listing item, since this is a universal closet function
   //if rearrange button is present, it means this is their personal closet
   await waitForElementToLoad('button[data-testid="action__moveSold"]');
   //products tab should be loaded

@@ -3,14 +3,12 @@
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //   console.log("updated, ", tabId, changeInfo, tab);
 
-  console.log(tab);
-
   //depop closet
-  if (tab.url.indexOf("depop.com/") > -1) {
-    chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/depop-closet.js",
-    });
-  }
+  // if (tab.url.indexOf("depop.com/") > -1) {
+  //   chrome.tabs.executeScript(tab.id, {
+  //     file: "marketplaces/closets/depop-closet.js",
+  //   });
+  // }
 
   //ebay closet
   //TODO: bulk sell page works so don't worry about it

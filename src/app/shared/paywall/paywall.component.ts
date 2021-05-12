@@ -113,6 +113,7 @@ export class PaywallComponent implements OnInit {
           (await this.stripe).redirectToCheckout({ sessionId: sessionId });
         } else {
           //LATER: do more configurations to figure out how to apply this code based on what system created it etc, and if it's from stripe or firebase
+          //LATER: segment coupon code based on appending initials(verify type on client side before sending text), RS-SELL30 = made in dashboard, S-LVECHT = means made in stripe, based on type, send request to firebase or stripe to verify coupon code
           if (this.couponCode.createdBy == 'firebase') {
             if (
               this.couponCode.type &&
@@ -158,8 +159,6 @@ export class PaywallComponent implements OnInit {
   }
 
   async verifyCoupon(couponCode: string) {
-    //TODO
-
     try {
       const codeSnapshot = await this.db
         .collection<Coupon>('codes')

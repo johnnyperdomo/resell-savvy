@@ -53,7 +53,7 @@ export class AppComponent {
                 //active subscription
 
                 if (this.router.url === '/paywall') {
-                  this.router.navigate(['/inventory']);
+                  //  this.router.navigate(['/inventory']);
                 }
               } else {
                 //needs to resubscribe

@@ -26,41 +26,41 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
 
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "input[name='title']",
-  function () {
-    //itemData inherited from execute script
-    getItemDetails(itemData);
-  },
-  100,
-  100000000000000
-);
+// //TODO: call code from postMessage request
+// waitForElementToDisplay(
+//   "input[name='title']",
+//   function () {
+//     //itemData inherited from execute script
+//     getItemDetails(itemData);
+//   },
+//   100,
+//   100000000000000
+// );
 
 async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   console.log("waiting on form filler");
 
-  await waitForElementToLoad("form");
+  await waitForElementToLoad("input[name='title']");
   console.log("called form filler");
 
   const inputFiles = $('input[type="file"]');
@@ -134,7 +134,7 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function getItemDetails() {
-  console.log("yeahhhhhh title found");
+  //inherited value
   fillOutEtsyForm(
     itemData.imageUrls,
     itemData.title,
@@ -143,3 +143,11 @@ function getItemDetails() {
     itemData.sku
   );
 }
+
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};

@@ -4,10 +4,7 @@
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //Start Crosspost session
-
   if (msg.command == "start-crosslist-session") {
-    //TODO: close tab id
-
     let tab = msg.data.tab;
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
     let listingURL = msg.data.listingURL;
@@ -25,22 +22,18 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       createItem(itemProperties, marketplace);
     });
 
-    // chrome.tabs.create({ url: "https://www.google.com" });
-    // openTab();
-    // chrome.runtime.sendMessage({ command: "create-kidizen-item" });
-
     //TODO: open new tabs with marketplaces array
     console.log("message received: ", msg.data);
   }
 
   //get listing data =====>
 
+  //depop
   if (msg.command == "get-listing-from-depop") {
     //TODO: set data id
     chrome.tabs.create(
       {
-        url:
-          "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/",
+        url: "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/",
         active: false,
       },
       (tab) => {
@@ -55,10 +48,12 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     );
   }
 
+  //ebay
   if (msg.command == "get-listing-from-ebay") {
     //TODO: check for v1/v2
   }
 
+  //etsy
   if (msg.command == "get-listing-from-etsy") {
     //TODO: set data id
     chrome.tabs.create(
@@ -77,6 +72,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     );
   }
 
+  //grailed
   if (msg.command == "get-listing-from-grailed") {
     //TODO: set data id
     chrome.tabs.create(
@@ -86,7 +82,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyToMarketplaces: [
+            "depop",
+            "mercari",
+            "kidizen",
+            "etsy",
+            "grailed",
+            "poshmark",
+          ],
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -96,15 +99,17 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     );
   }
 
+  //kidizen
   if (msg.command == "get-listing-from-kidizen") {
     //TODO: set data id
     chrome.tabs.create(
       {
         url: "https://www.kidizen.com/items/lightning-bolt-8383962/edit",
+        active: false,
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyToMarketplaces: ["poshmark"],
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -114,6 +119,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     );
   }
 
+  //mercari
   if (msg.command == "get-listing-from-mercari") {
     //TODO: set data id
     chrome.tabs.create(
@@ -132,6 +138,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     );
   }
 
+  //poshmark
   if (msg.command == "get-listing-from-poshmark") {
     //TODO: set data id
     chrome.tabs.create(
@@ -161,23 +168,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 //   //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
 // });
 
-chrome.tabs.onRemoved.addListener((tabId) => {
-  //TODO: if tab removed, remove this from the process
-});
-
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/depop.js"],
-//   "matches": ["*://www.depop.com/*"],
-//   "run_at": "document_start"
-// },
-
 //Functions ====>
 
 function createItem(properties, marketplace) {
   if (marketplace == "depop") {
     //FIX: doesn't work if tab active set to false? Could it be bcuz we're waiting for element display function?
     chrome.tabs.create(
-      { url: "https://www.depop.com/products/create/" },
+      { url: "https://www.depop.com/products/create/", active: false },
       (tab) => {
         //TODO: execute script
 
@@ -393,9 +390,4 @@ function getListingDetails(tab, data, marketplace) {
       );
     }
   );
-}
-
-function openTab() {
-  console.log("open tab called");
-  chrome.runtime.sendMessage({ command: "create-kidizen-item" });
 }

@@ -28,36 +28,36 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
 
-//TODO: call code from postMessage request
-waitForElementToDisplay(
-  "#item_title",
-  function () {
-    //itemData inherited from execute script
-    getItemDetails(itemData);
-  },
-  100,
-  100000000000000
-);
+// //TODO: call code from postMessage request
+// waitForElementToDisplay(
+//   "#item_title",
+//   function () {
+//     //itemData inherited from execute script
+//     getItemDetails(itemData);
+//   },
+//   100,
+//   100000000000000
+// );
 
 async function fillOutKidizenForm(
   imageUrls,
@@ -75,10 +75,6 @@ async function fillOutKidizenForm(
   let kidizen_title = document.querySelector("#item_title");
   let kidizen_description = document.querySelector("#item_description");
   let kidizen_price = document.querySelector("#item_list_price");
-
-  let kidizen_brand_button = document.querySelector(
-    ".DropdownTrigger--required"
-  );
 
   fillInputValue(kidizen_title, title);
   fillTextAreaValue(kidizen_description, description);
@@ -185,7 +181,7 @@ function fillTextAreaValue(textArea, value) {
 }
 
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails(itemData) {
+function getItemDetails() {
   fillOutKidizenForm(
     itemData.imageUrls,
     itemData.title,
@@ -195,3 +191,11 @@ function getItemDetails(itemData) {
     itemData.price
   );
 }
+
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};
