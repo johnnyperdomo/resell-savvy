@@ -1,5 +1,7 @@
 //LATER: add progress states to page when it starts the crosslist session, - white blurry modal that stops the user from editing the page. i.e. waiting for page to load "check internet connection" (make funny animation) -> pasting in progress -> etc.... timeout in a few seconds by default just in case it doesn't get stuck. (that way they know the crosslist is not the reason it's slow, it's because of your internet)
 
+//LATER: after items finish crosslisting, add a little popup(like how honey coupon has), at the top right corner. and mention something like - "we were able to fill the following properties based on listing details - "title", "description", "images", etc...." so everytime we fill a new item successfully, append it successfully to a property of sorts. (make it small and not annoying, and it doesn't block the ui, just like a small notication, they can leave it there or dismiss, but it shouldn't affect them )
+
 //LATER: watch for elements that are not yet loaded, and add them when they are actvated by their previous elements. i.e., brand is not available until the category is filled. watch and then fill as soon as it becomes available.
 
 // function toDataUrl(url, callback) {
@@ -74,7 +76,7 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
         clearInterval(interval);
         resolve(node);
       } else {
-        console.log("node is not ready yet");
+        console.log("node is not ready yet ", selector);
       }
       if (timeStampMax && new Date() > timeStampMax) {
         clearInterval(interval);
@@ -126,6 +128,7 @@ async function fillOutDepopForm(
   color,
   price
 ) {
+  //LATER: append brand
   console.log("waiting on form filler");
 
   await waitForElementToLoad("#description");
@@ -162,8 +165,9 @@ async function fillOutDepopForm(
     //LATER: gray or grey should both match
     fillInputValue(depop_color, color);
 
+    //get first color
     let searchColor = await waitForElementToLoad(
-      `div[value*=${color}][class*=ColourSelectstyles__Colour]`
+      `[class*=ColourSelectstyles__Colour]`
     );
     //closet traverses up the dom to find the closest element in the parent
     searchColor.closest(".listingSelect__option").trigger("click");

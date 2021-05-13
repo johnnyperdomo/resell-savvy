@@ -1,4 +1,10 @@
-//LATER: make elements fail safely if not found, just skip instead of failing the entire function, check to see if element exists, simulate if element not found, send error using sentry
+//LATER: make elements fail safely if not found, just skip instead of failing the entire function, check to see if element exists, simulate if element not found, send error using sentry for each element, this should work for any element we are looking for, whether in the closets, get item, or set item data. (el -> title not found in poshmark closet, )...blah blah blah... full details, also version of chrome extension, the browser, every little thing they can give details on. don't collect all errors on page, bcuz some of the code is from the platform. Maybe we can automate some of this with puppeteer too & visualping. add errors from waiting on element to load as well, if it times out cuz it couldn't find it
+
+// places we need to track bcuz were manipulating code
+// 1. get item listing - edit functionality (edit listing url)
+// 2. paste item listing - create item funcitonality (new listing url)
+// 3. listing url - the simple url listing
+// 4. closet -
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work

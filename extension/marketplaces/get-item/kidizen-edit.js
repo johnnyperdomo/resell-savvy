@@ -54,13 +54,8 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await waitForElementToLoad("form");
-  console.log("called form filler");
+  await waitForElementToLoad("#item_title");
 
-  const title = "";
-
-  //while loop freezing
-  //TODO: instead of making firm 3 seconds, check the interval every 2 seconds
   return await new Promise((resolve) =>
     setTimeout(() => {
       let imageURLs = []; //LATER: kidizen doens't show on edit page
@@ -95,8 +90,8 @@ async function formatItemProperties() {
         brand: kidizen_brand,
         condition: formatCondition(kidizen_condition),
         price: kidizen_price,
-        sku: "", //doesn't exist
-        cost: "", //doesn't exist
+        sku: "", //null
+        cost: "", //null
       };
 
       resolve(properties);
@@ -108,17 +103,16 @@ async function getItemDetails() {
   //TODO: get item details, convert to rs-savvy-format
   //send message to background script
 
-  let rtvObject = retrievalObject;
-
   const properties = await formatItemProperties();
 
   const data = {
-    copyToMarketplaces: rtvObject.copyToMarketplaces,
-    listingURL: rtvObject.listingURL,
-    tab: rtvObject.tab,
+    copyToMarketplaces: retrievalObject.copyToMarketplaces,
+    copyFromMarketplace: retrievalObject.copyFromMarketplace,
+    listingURL: retrievalObject.listingURL,
+    tab: retrievalObject.tab,
     properties: properties,
   };
-  console.log(data);
+
   sendMessageToBackground(data);
 }
 
@@ -131,8 +125,10 @@ function sendMessageToBackground(data) {
   });
 }
 
-window.addEventListener("load", function () {
-  console.log("loaded");
-
-  getItemDetails();
-});
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+    console.log("page complete");
+  }
+};

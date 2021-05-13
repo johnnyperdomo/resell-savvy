@@ -71,7 +71,7 @@ async function createCrossListButton() {
   document.body.appendChild(button);
 }
 
-createCrossListButton();
+// createCrossListButton();
 
 function getCardInfo() {
   var parsedArray = [];

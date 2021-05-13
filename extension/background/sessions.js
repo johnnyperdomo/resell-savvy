@@ -7,6 +7,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.command == "start-crosslist-session") {
     let tab = msg.data.tab;
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
+    let copyFromMarketplace = msg.data.copyFromMarketplace;
     let listingURL = msg.data.listingURL;
     let itemProperties = msg.data.properties;
 
@@ -33,13 +34,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     //TODO: set data id
     chrome.tabs.create(
       {
-        url: "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/",
+        url: "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/", //TODO: what they will get data from
         active: false,
       },
       (tab) => {
         let retrievalObject = {
           copyToMarketplaces: ["poshmark", "mercari", "kidizen"],
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          copyFromMarketplace: "depop",
+          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji", //TODO: the actual listing url
           tab: tab,
         };
 
@@ -63,6 +65,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       (tab) => {
         let retrievalObject = {
           copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyFromMarketplace: "etsy",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -90,6 +93,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
             "grailed",
             "poshmark",
           ],
+          copyFromMarketplace: "grailed",
+
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -110,6 +115,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       (tab) => {
         let retrievalObject = {
           copyToMarketplaces: ["poshmark"],
+          copyFromMarketplace: "kidizen",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -128,7 +134,9 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyToMarketplaces: ["depop", "grailed", "kidizen", "poshmark"],
+          copyFromMarketplace: "mercari",
+
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -147,7 +155,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyToMarketplaces: ["depop", "mercari", "kidizen", "etsy"],
+          copyFromMarketplace: "poshmark",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };

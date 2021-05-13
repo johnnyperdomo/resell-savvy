@@ -77,7 +77,6 @@ async function fillOutMercariForm(
 
   let mercari_brand = document.querySelector('input[data-testid="Brand"]');
   let mercari_price = document.querySelector('input[data-testid="Price"]');
-
   let mercari_color = document.querySelector('button[data-testid="Color"]');
 
   fillInputValue(mercari_title, title);

@@ -26,35 +26,35 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
+// function waitForElementToDisplay(
+//   selector,
+//   callback,
+//   checkFrequencyInMs,
+//   timeoutInMs
+// ) {
+//   var startTimeInMs = Date.now();
+//   (function loopSearch() {
+//     if (document.querySelector(selector) != null) {
+//       callback();
+//       return;
+//     } else {
+//       setTimeout(function () {
+//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+//         loopSearch();
+//       }, checkFrequencyInMs);
+//     }
+//   })();
+// }
 
-waitForElementToDisplay(
-  "input[name='title']",
-  function () {
-    //retrievalObject inherited from execute script
-    getItemDetails(retrievalObject);
-  },
-  100,
-  100000000000000
-);
+// waitForElementToDisplay(
+//   "input[name='title']",
+//   function () {
+//     //retrievalObject inherited from execute script
+//     getItemDetails(retrievalObject);
+//   },
+//   100,
+//   100000000000000
+// );
 
 function formatCondition(condition) {
   //return rs condition value from condition value
@@ -77,15 +77,8 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await waitForElementToLoad("form");
-  console.log("called form filler");
+  await waitForElementToLoad("input[name='title']");
 
-  //TODO: maybe check if imge src are loaded first
-
-  const title = "";
-
-  //while loop freezing
-  //TODO: instead of making firm 3 seconds, check the interval every 2 seconds
   return await new Promise((resolve) =>
     setTimeout(() => {
       let imagesEl = document.querySelectorAll(".photo img");
@@ -95,7 +88,7 @@ async function formatItemProperties() {
 
       let grailed_title = $("input[name='title']").val();
       let grailed_description = $("textarea[name='description']").val();
-      let grailed_color = $("input[name='color']").val();
+      let grailed_color = $("input[name='color']").val().toLowerCase();
       let grailed_brand = $("#designer-autocomplete").val(); //designer
       let grailed_condition = $("select[name='condition']").val();
       let grailed_price = $("input[name='price']").val();
@@ -117,22 +110,23 @@ async function formatItemProperties() {
         brand: grailed_brand,
         condition: formatCondition(grailed_condition),
         price: grailed_price,
-        sku: "", //doesn't exist
-        cost: "", //doesn't exist
+        sku: "", //null
+        cost: "", //null
       };
 
       resolve(properties);
-    }, 3000)
+    }, 100)
   );
 }
 
-async function getItemDetails(retrievalObject) {
+async function getItemDetails() {
   //TODO: get item details, convert to rs-savvy-format
   //send message to background script
   const properties = await formatItemProperties();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,
+    copyFromMarketplace: retrievalObject.copyFromMarketplace,
     listingURL: retrievalObject.listingURL,
     tab: retrievalObject.tab,
     properties: properties,
@@ -142,10 +136,15 @@ async function getItemDetails(retrievalObject) {
 }
 
 function sendMessageToBackground(data) {
-  console.log("data, ", data);
-
   chrome.runtime.sendMessage({
     command: "start-crosslist-session",
     data: data,
   });
 }
+
+//detect if document is ready
+document.onreadystatechange = function () {
+  if (document.readyState === "complete") {
+    getItemDetails();
+  }
+};
