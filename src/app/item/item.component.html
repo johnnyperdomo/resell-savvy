@@ -66,7 +66,10 @@
                       "
                     />
                     <button
-                      class="position-absolute btn-sm btn btn-outline-light btn-rounded-circle"
+                      class="
+                        position-absolute
+                        btn-sm btn btn-outline-light btn-rounded-circle
+                      "
                       style="top: 4px; right: 4px"
                       (click)="onDeleteImage(image)"
                     >
@@ -284,14 +287,16 @@
           <hr class="mt-5 mb-4" />
 
           <h2 class="header-title">List Items</h2>
+          <!-- TODO: regex for input urls -->
+          <!-- TODO: instead of delist, just let them view the item -->
           <small class="form-text text-muted mt-2">
-            List, delist, and relist your items with one click. Whenever you
-            list your item,
-            <b>we automatically track the listing url</b>, or you can enter it
-            manually.
+            List, manage, and organize all your listings in one click. Link your
+            item from the marketplace's listing page with our extension, or you
+            can enter it manually.
           </small>
 
-          <!-- FIX: input heights are different on delist inputs -->
+          <!-- LATER: input heights are different on delist inputs -->
+          <!-- LATER: when user first pastes item, they don't see the view option right away, we should change that. Get the current input value, instead of the saved firebase value, and that's how we should respond to the view/hide button. To provide a good ux -->
 
           <!-- Ebay Listing url -->
           <div class="row mt-4">
@@ -299,14 +304,14 @@
               <div class="form-group">
                 <label>Ebay</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.ebay != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.ebay)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -314,19 +319,22 @@
                     class="form-control form-control-appended"
                     placeholder="Ebay listing url"
                     formControlName="ebay"
+                    #ebayInput
                   />
+
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.ebay != ''"
+                      *ngIf="ebayInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(ebayInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
+
+                <!-- <p>{{ username.value }}</p> -->
               </div>
             </div>
 
@@ -335,14 +343,14 @@
               <div class="form-group">
                 <label>Poshmark</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.poshmark != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.poshmark)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -350,16 +358,16 @@
                     class="form-control form-control-appended"
                     placeholder="Poshmark listing url"
                     formControlName="poshmark"
+                    #poshmarkInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.poshmark != ''"
+                      *ngIf="poshmarkInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(poshmarkInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -373,14 +381,14 @@
               <div class="form-group">
                 <label>Etsy</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.etsy != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.etsy)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -388,16 +396,16 @@
                     class="form-control form-control-appended"
                     placeholder="Etsy listing url"
                     formControlName="etsy"
+                    #poshmarkInput
                   />
                   <div class="input-group-append">
                     <button
                       *ngIf="item && item.marketplaces.etsy != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(item.marketplaces.etsy)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -409,14 +417,14 @@
               <div class="form-group">
                 <label>Kidizen</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.kidizen != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.kidizen)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -424,16 +432,16 @@
                     class="form-control form-control-appended"
                     placeholder="Kidizen listing url"
                     formControlName="kidizen"
+                    #kidizenInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.kidizen != ''"
+                      *ngIf="kidizenInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(kidizenInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -448,14 +456,14 @@
               <div class="form-group">
                 <label>Grailed</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.grailed != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.grailed)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -463,16 +471,16 @@
                     class="form-control form-control-appended"
                     placeholder="Grailed listing url"
                     formControlName="grailed"
+                    #grailedInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.grailed != ''"
+                      *ngIf="grailedInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(grailedInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -484,14 +492,14 @@
               <div class="form-group">
                 <label>Depop</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.depop != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.depop)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -499,16 +507,16 @@
                     class="form-control form-control-appended"
                     placeholder="Depop listing url"
                     formControlName="depop"
+                    #depopInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.depop != ''"
+                      *ngIf="depopInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(depopInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -522,14 +530,14 @@
               <div class="form-group">
                 <label>Mercari</label>
 
-                <button
+                <!-- <button
                   *ngIf="item && item.marketplaces.mercari != ''"
                   class="text-muted btn btn-link"
                   (click)="goToLink(item.marketplaces.mercari)"
                   target="_blank"
                 >
                   <span class="fe fe-eye"></span>
-                </button>
+                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -537,16 +545,16 @@
                     class="form-control form-control-appended"
                     placeholder="Mercari listing url"
                     formControlName="mercari"
+                    #mercariInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.mercari != ''"
+                      *ngIf="mercariInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="onDelistItem()"
+                      (click)="goToLink(mercariInput.value)"
                     >
-                      <!-- TODO: list/delist, based on if url is empty or not -->
-                      Delist Item
+                      View Item
                     </button>
                   </div>
                 </div>
@@ -582,8 +590,7 @@
                               type="button"
                               (click)="onDelistItem()"
                             > -->
-            <!-- TODO: list/delist, based on if url is empty or not -->
-            <!-- Delist Item -->
+            <!-- View Item -->
             <!-- </button>
                           </div>
                         </div>
@@ -605,3 +612,5 @@
     </div>
   </div>
 </div>
+
+<!-- LATER: instead of having button that delists for you(this can cause alot of problems since no two marketplaces have the same delete item functionality, some of them are really difficult, like ebay for example.) But you can have a button to edit the item for them, so if they update rs-details, they can update details on marketplaces. -->

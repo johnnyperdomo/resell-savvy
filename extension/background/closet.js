@@ -4,6 +4,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //   console.log("updated, ", tabId, changeInfo, tab);
 
   //depop closet
+  //TODO: //FIX: gives some error cuz of node loading
   // if (tab.url.indexOf("depop.com/") > -1) {
   //   chrome.tabs.executeScript(tab.id, {
   //     file: "marketplaces/closets/depop-closet.js",
