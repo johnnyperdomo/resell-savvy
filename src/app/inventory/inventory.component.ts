@@ -145,7 +145,7 @@ export class InventoryComponent implements OnInit {
   iterateMarketplaces(item: Item) {
     let array = [];
     for (let marketplace in item.marketplaces) {
-      if (item.marketplaces[marketplace] != '') {
+      if (item.marketplaces[marketplace] != null) {
         array.push(marketplace);
       }
     }

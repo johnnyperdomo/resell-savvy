@@ -13,6 +13,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MarketplaceUrlValidation } from './marketplace.validator';
+import { Marketplace as MarketplaceType } from '../shared/marketplace.type';
 
 @Component({
   selector: 'app-item',
@@ -107,13 +108,15 @@ export class ItemComponent implements OnInit {
       sku: item.sku,
       cost: item.cost,
       notes: item.notes,
-      ebay: item.marketplaces.ebay,
-      poshmark: item.marketplaces.poshmark,
-      mercari: item.marketplaces.mercari,
-      etsy: item.marketplaces.etsy,
-      grailed: item.marketplaces.grailed,
-      depop: item.marketplaces.depop,
-      kidizen: item.marketplaces.kidizen,
+      ebay: item.marketplaces.ebay ? item.marketplaces.ebay.url : '',
+      poshmark: item.marketplaces.poshmark
+        ? item.marketplaces.poshmark.url
+        : '',
+      mercari: item.marketplaces.mercari ? item.marketplaces.mercari.url : '',
+      etsy: item.marketplaces.etsy ? item.marketplaces.etsy.url : '',
+      grailed: item.marketplaces.grailed ? item.marketplaces.grailed.url : '',
+      depop: item.marketplaces.depop ? item.marketplaces.depop.url : '',
+      kidizen: item.marketplaces.kidizen ? item.marketplaces.kidizen.url : '',
       // facebook: item.marketplaces.facebook,
       // tradesy: item.marketplaces.tradesy,
     });
@@ -317,15 +320,30 @@ export class ItemComponent implements OnInit {
     const sku = this.trimStr(formValue.sku);
     const cost = formValue.cost;
     const notes = this.trimStr(formValue.notes);
-    const ebay = this.trimStr(formValue.ebay);
-    const poshmark = this.trimStr(formValue.poshmark);
-    const mercari = this.trimStr(formValue.mercari);
+    const ebay = this.setMarketplaceValue(this.trimStr(formValue.ebay), 'ebay');
+    const poshmark = this.setMarketplaceValue(
+      this.trimStr(formValue.poshmark),
+      'poshmark'
+    );
+    const mercari = this.setMarketplaceValue(
+      this.trimStr(formValue.mercari),
+      'mercari'
+    );
     // const facebook = this.trimStr(formValue.facebook); //LATER
-    const etsy = this.trimStr(formValue.etsy);
+    const etsy = this.setMarketplaceValue(this.trimStr(formValue.etsy), 'etsy');
     // const tradesy = this.trimStr(formValue.tradesy); //LATER
-    const grailed = this.trimStr(formValue.grailed);
-    const depop = this.trimStr(formValue.depop);
-    const kidizen = this.trimStr(formValue.kidizen);
+    const grailed = this.setMarketplaceValue(
+      this.trimStr(formValue.grailed),
+      'grailed'
+    );
+    const depop = this.setMarketplaceValue(
+      this.trimStr(formValue.depop),
+      'depop'
+    );
+    const kidizen = this.setMarketplaceValue(
+      this.trimStr(formValue.kidizen),
+      'kidizen'
+    );
 
     const status = this.setItemStatus([
       ebay,
@@ -362,12 +380,12 @@ export class ItemComponent implements OnInit {
                 ebay: ebay,
                 poshmark: poshmark,
                 mercari: mercari,
-                facebook: '', //LATER: integrate with facebook, a little challenging
+                facebook: null, //LATER: integrate with facebook, a little challenging
                 etsy: etsy,
                 grailed: grailed,
                 depop: depop,
                 kidizen: kidizen,
-                tradesy: '', //LATER: integrate with tradesy
+                tradesy: null, //LATER: integrate with tradesy
               },
               modified: firebase.default.firestore.Timestamp.now(),
             });
@@ -404,10 +422,100 @@ export class ItemComponent implements OnInit {
     this.saveItem();
   }
 
+  setMarketplaceValue(url: string, marketplace: MarketplaceType) {
+    switch (marketplace) {
+      case 'depop':
+        if (url === '') {
+          return null;
+        }
+
+        //convert to URL -> get extract pathname
+        let depopPath = new URL(url).pathname; // '/products/item-id/'
+        let depopID = depopPath.split('products/').pop().split('/')[0]; //gets -> item-id
+
+        return { url, extractedID: depopID };
+
+      case 'ebay':
+        if (url === '') {
+          return null;
+        }
+
+        //convert to URL -> get extract pathname
+        let ebayPath = new URL(url).pathname; // '/itm/1234'
+        let ebayID = ebayPath.split('itm/').pop().split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: ebayID };
+
+      case 'etsy':
+        if (url === '') {
+          return null;
+        }
+
+        let etsyPath = new URL(url).pathname; // '/listing/1234/product-name'
+        let etsyID = etsyPath.split('listing/').pop().split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: etsyID };
+
+      case 'grailed':
+        if (url === '') {
+          return null;
+        }
+
+        let grailedPath = new URL(url).pathname; // '/listings/1234-product-name'
+        let grailedID = grailedPath
+          .split('listings/')
+          .pop()
+          .split('-')[0]
+          .split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: grailedID };
+
+      case 'kidizen':
+        if (url === '') {
+          return null;
+        }
+
+        let kidizenPath = new URL(url).pathname; // '/items/product-name-1234'
+        let kidizenID = kidizenPath
+          .split('items/')
+          .pop()
+          .split('-')
+          .pop()
+          .split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: kidizenID };
+
+      case 'mercari':
+        if (url === '') {
+          return null;
+        }
+
+        let mercariPath = new URL(url).pathname; // 'us/item/1234/'
+        let mercariID = mercariPath.split('item/').pop().split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: mercariID };
+
+      case 'poshmark':
+        if (url === '') {
+          return null;
+        }
+
+        let poshmarkPath = new URL(url).pathname; // '/listing/product-name-1234'
+        let poshmarkID = poshmarkPath
+          .split('listing/')
+          .pop()
+          .split('-')
+          .pop()
+          .split('/')[0]; //gets -> 1234
+
+        return { url, extractedID: poshmarkID };
+    }
+  }
+
   //based if they have a listing url or not
-  setItemStatus(marketplaceValues: string[]) {
+  setItemStatus(marketplaceValues: any[]) {
     const urls = marketplaceValues.filter((listingURLS) => {
-      return listingURLS != '';
+      return listingURLS != null;
     });
 
     if (urls.length > 0) {

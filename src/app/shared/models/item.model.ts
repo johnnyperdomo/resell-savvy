@@ -20,15 +20,42 @@ export class Item {
   public condition: string; //nwt, nwot, good, pre-owned, poor
   public notes: string; //these are internal notes
   public marketplaces: {
-    ebay: string;
-    etsy: string;
-    poshmark: string;
-    grailed: string;
-    depop: string;
-    kidizen: string;
-    facebook: string;
-    mercari: string;
-    tradesy: string;
+    ebay: {
+      url: string;
+      extractedID: string;
+    };
+    etsy: {
+      url: string;
+      extractedID: string;
+    };
+    poshmark: {
+      url: string;
+      extractedID: string;
+    };
+    grailed: {
+      url: string;
+      extractedID: string;
+    };
+    depop: {
+      url: string;
+      extractedID: string;
+    };
+    kidizen: {
+      url: string;
+      extractedID: string;
+    };
+    facebook: {
+      url: string;
+      extractedID: string;
+    };
+    mercari: {
+      url: string;
+      extractedID: string;
+    };
+    tradesy: {
+      url: string;
+      extractedID: string;
+    };
   }; //save listing urls here, or leave empty if delisted or null: ''
   public sold?: {
     marketplace: string;

@@ -4,7 +4,9 @@
 
 <!-- LATER: show error messages -->
 <!-- LATER: show character counts -->
-<!-- TODO: show subtle error alert that says they need chrome extension installed to list/delist, disable marketplace buttons if they don't have the chrome extension installed. -->
+<!-- LATER: show subtle error alert that says they need chrome extension installed to list/delist, disable marketplace buttons if they don't have the chrome extension installed. -->
+
+<!-- LATER: don't show red error messages when on marketplace url when if the input is only whitespace, so trim it in the validation -->
 
 <div class="main-content">
   <div class="container-fluid">
@@ -29,6 +31,7 @@
                   type="button"
                   (click)="onSubmit()"
                   class="btn btn-primary"
+                  [disabled]="!itemForm.valid"
                 >
                   Save
                 </button>
@@ -411,14 +414,14 @@
                     class="form-control form-control-appended"
                     placeholder="Etsy listing url"
                     formControlName="etsy"
-                    #poshmarkInput
+                    #etsyInput
                   />
                   <div class="input-group-append">
                     <button
-                      *ngIf="item && item.marketplaces.etsy != ''"
+                      *ngIf="etsyInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(item.marketplaces.etsy)"
+                      (click)="goToLink(etsyInput.value)"
                     >
                       View Item
                     </button>
@@ -660,11 +663,16 @@
 
           <!-- Bulk List -->
           <div class="mt-4">
-            <button (click)="onListItems()" class="btn btn-block btn-primary">
+            <button
+              (click)="onListItems()"
+              class="btn btn-block btn-primary"
+              [disabled]="!itemForm.valid"
+            >
               List Items
             </button>
             <small class="form-text text-muted mt-2 text-center">
-              This will open up the listing preview
+              Install Chrome Extension to Crosslist
+              <!-- LATER: add error message when chrome extension not enabled, detect it with a content script -->
             </small>
           </div>
         </form>
