@@ -4,6 +4,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { NavigationStart, Router } from '@angular/router';
 //LATER: add error handling and red error responses
 
+//LATER: change favicon
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

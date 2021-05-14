@@ -334,7 +334,14 @@
                   </div>
                 </div>
 
-                <!-- <p>{{ username.value }}</p> -->
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('ebay').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.ebay.com/itm/1234</b>
+                </span>
               </div>
             </div>
 
@@ -371,6 +378,14 @@
                     </button>
                   </div>
                 </div>
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('poshmark').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.poshmark.com/listing/1234</b>
+                </span>
               </div>
             </div>
           </div>
@@ -409,6 +424,15 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('etsy').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.etsy.com/listing/1234</b>
+                </span>
               </div>
             </div>
 
@@ -445,6 +469,15 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('kidizen').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.kidizen.com/items/1234</b>
+                </span>
               </div>
             </div>
           </div>
@@ -484,6 +517,15 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('grailed').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.grailed.com/listings/1234</b>
+                </span>
               </div>
             </div>
 
@@ -520,6 +562,15 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('depop').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.depop.com/products/1234</b>
+                </span>
               </div>
             </div>
           </div>
@@ -558,6 +609,15 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Invalid Listing URL -->
+                <span
+                  class="small text-danger"
+                  *ngIf="itemForm.get('mercari').hasError('UrlInvalid')"
+                >
+                  Please enter a valid listing url such as:
+                  <b>https://www.mercar.com/us/item/1234</b>
+                </span>
               </div>
             </div>
 

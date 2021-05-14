@@ -12,12 +12,17 @@ import { Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { MarketplaceUrlValidation } from './marketplace.validator';
 
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss'],
 })
+
+//Delist functionality can have alot of errors and can be very buggy since each platform can have a complicated process for delisting, and it forces me to complete that process for them, which can cause of unexpected errors. I might just avoid this for now. To not add too much complexity to the app.
+
+//LATER: try to find a better/faster way that users can confirm if they removed the listing from the marketplace
 
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
 //LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
@@ -56,26 +61,39 @@ export class ItemComponent implements OnInit {
 
   setupItemForm() {
     //LATER: have price/number validator
-    this.itemForm = this._formBuilder.group({
-      title: [''],
-      description: [''],
-      price: [null],
-      brand: [''],
-      condition: [''],
-      color: [''],
-      sku: [''],
-      cost: [null],
-      notes: [''],
-      ebay: [''],
-      poshmark: [''],
-      mercari: [''],
-      etsy: [''],
-      grailed: [''],
-      depop: [''],
-      kidizen: [''],
-      // tradesy: [''],
-      // facebook: [''],
-    });
+    this.itemForm = this._formBuilder.group(
+      {
+        title: [''],
+        description: [''],
+        price: [null],
+        brand: [''],
+        condition: [''],
+        color: [''],
+        sku: [''],
+        cost: [null],
+        notes: [''],
+        ebay: [''],
+        poshmark: [''],
+        mercari: [''],
+        etsy: [''],
+        grailed: [''],
+        depop: [''],
+        kidizen: [''],
+        // tradesy: [''],
+        // facebook: [''],
+      },
+      {
+        validators: [
+          MarketplaceUrlValidation.ConfirmDepopListingURL,
+          MarketplaceUrlValidation.ConfirmEbayListingURL,
+          MarketplaceUrlValidation.ConfirmEtsyListingURL,
+          MarketplaceUrlValidation.ConfirmGrailedListingURL,
+          MarketplaceUrlValidation.ConfirmKidizenListingURL,
+          MarketplaceUrlValidation.ConfirmMercariListingURL,
+          MarketplaceUrlValidation.ConfirmPoshmarkListingURL,
+        ],
+      }
+    );
   }
 
   patchItemForm(item: Item) {
@@ -148,9 +166,8 @@ export class ItemComponent implements OnInit {
         `https://${environment.azure.accountName}.blob.core.windows.net?${signature}`
       );
 
-      const containerClient = blobServiceClient.getContainerClient(
-        'item-images'
-      );
+      const containerClient =
+        blobServiceClient.getContainerClient('item-images');
 
       const blockBlobClient = containerClient.getBlockBlobClient(customKey);
       console.log(blockBlobClient);
@@ -275,9 +292,8 @@ export class ItemComponent implements OnInit {
             .collection('items')
             .doc(this.item.id)
             .update({
-              images: firebase.default.firestore.FieldValue.arrayRemove(
-                imageImage
-              ),
+              images:
+                firebase.default.firestore.FieldValue.arrayRemove(imageImage),
             });
         } catch (error) {
           this.isUploading = false;
@@ -378,14 +394,6 @@ export class ItemComponent implements OnInit {
     window.open(externalURL, '_blank');
   }
 
-  onListItem() {
-    //TODO: chrome extension should list this item
-    //TODO: disable if no chrome extension present
-    console.log('list item');
-
-    this.saveItem();
-  }
-
   onListItems() {
     //TODO: chrome extension should list this item
     //TODO: disable if no chrome extension present
@@ -394,14 +402,6 @@ export class ItemComponent implements OnInit {
 
     console.log('list item');
     this.saveItem();
-  }
-
-  onDelistItem() {
-    console.log('delist item');
-
-    this.saveItem();
-    //TODO: chrome extension should list this item
-    //TODO: disable if no chrome extension present
   }
 
   //based if they have a listing url or not
