@@ -345,6 +345,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.ebay.com/itm/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="ebayInput.value != ''"
+                  (click)="unlinkMarketplace('ebay', ebayInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
 
@@ -389,6 +397,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.poshmark.com/listing/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="poshmarkInput.value != ''"
+                  (click)="unlinkMarketplace('poshmark', poshmarkInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
           </div>
@@ -436,6 +452,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.etsy.com/listing/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="etsyInput.value != ''"
+                  (click)="unlinkMarketplace('etsy', etsyInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
 
@@ -481,6 +505,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.kidizen.com/items/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="kidizenInput.value != ''"
+                  (click)="unlinkMarketplace('kidizen', kidizenInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
           </div>
@@ -529,6 +561,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.grailed.com/listings/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="grailedInput.value != ''"
+                  (click)="unlinkMarketplace('grailed', grailedInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
 
@@ -574,6 +614,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.depop.com/products/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="depopInput.value != ''"
+                  (click)="unlinkMarketplace('depop', depopInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
           </div>
@@ -619,8 +667,16 @@
                   *ngIf="itemForm.get('mercari').hasError('UrlInvalid')"
                 >
                   Please enter a valid listing url such as:
-                  <b>https://www.mercar.com/us/item/1234</b>
+                  <b>https://www.mercari.com/us/item/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="mercariInput.value != ''"
+                  (click)="unlinkMarketplace('mercari', mercariInput.value)"
+                >
+                  <u>Unlink Marketplace</u>
+                </button>
               </div>
             </div>
 

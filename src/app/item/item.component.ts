@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as Azure from '@azure/storage-blob';
 import * as firebase from 'firebase';
 import * as Uppy from '@uppy/core';
@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MarketplaceUrlValidation } from './marketplace.validator';
 import { Marketplace as MarketplaceType } from '../shared/marketplace.type';
+import * as Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-item',
@@ -30,6 +31,8 @@ import { Marketplace as MarketplaceType } from '../shared/marketplace.type';
 //LATER: see how you can download images with cdn path, to reduce bandwidth
 //LATER: load html after data input, since the transition looks kind of ugly (bad ux)
 export class ItemComponent implements OnInit {
+  @ViewChild('mercariInput') mercariInput;
+
   itemForm: FormGroup;
 
   item: Item;
@@ -523,6 +526,26 @@ export class ItemComponent implements OnInit {
     }
 
     return 'draft';
+  }
+
+  unlinkMarketplace(marketplace: MarketplaceType, url: string) {
+    Swal.default
+      .fire({
+        title: 'Are you sure you?',
+        text: `Unlinking this listing won't delist it from ${marketplace.toUpperCase()}. Please remember to delist it manually.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Unlink listing',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.itemForm.patchValue({
+            [`${marketplace}`]: '',
+          });
+        }
+      });
   }
 
   ngOnDestroy() {
