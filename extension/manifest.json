@@ -27,8 +27,15 @@
 
   "content_scripts": [
     {
-      "js": ["third-party/jquery-3.6.0.min.js", "third-party/bootstrap.min.js"],
-      "css": ["third-party/bootstrap.min.css"],
+      "js": [
+        "third-party/jquery-3.6.0.min.js",
+        "third-party/bootstrap.min.js",
+        "third-party/sweetalert.min.js"
+      ],
+      "css": [
+        "third-party/bootstrap.min.css",
+        "third-party/sweetalert.min.css"
+      ],
       "matches": [
         "*://*.etsy.com/*",
         "*://*.ebay.com/*",

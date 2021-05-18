@@ -125,6 +125,21 @@ async function fillOutPoshmarkForm(
 
     // console.log($(`a:contains("Red")`).parent());
   }
+
+  showCrosslistSuccessAlert();
+}
+
+function showCrosslistSuccessAlert() {
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Poshmark</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 const capitalize = (s) => {

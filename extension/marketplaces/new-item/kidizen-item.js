@@ -130,6 +130,21 @@ async function fillOutKidizenForm(
 
   //LATER: currency/price validation
   fillInputValue(kidizen_price, price);
+
+  showCrosslistSuccessAlert();
+}
+
+function showCrosslistSuccessAlert() {
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Kidizen</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 function matchCondition(condition) {

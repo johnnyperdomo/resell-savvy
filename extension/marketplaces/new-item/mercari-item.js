@@ -95,7 +95,7 @@ async function fillOutMercariForm(
 
     // let brandList = await waitForElementToLoad(
     //   'div[data-testid="BrandDropdown"]',
-    //   5000
+    //   7500
     // );
 
     // let nestedDivs = brandList.find(" > div > div");
@@ -137,6 +137,21 @@ async function fillOutMercariForm(
   //   await waitForElementToLoad("ul#categoryId li");
 
   // console.log("clicked the option 7");
+
+  showCrosslistSuccessAlert();
+}
+
+function showCrosslistSuccessAlert() {
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Mercari</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 const capitalize = (s) => {

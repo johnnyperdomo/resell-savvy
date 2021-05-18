@@ -121,6 +121,23 @@ async function fillOutGrailedForm(
 
   //LATER: currency/price validation
   fillInputValue(grailed_price, price);
+
+  showCrosslistSuccessAlert();
+}
+
+function showCrosslistSuccessAlert() {
+  //LATER: this inherits class from parent, try to fix but later on. Not a big issue
+
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Grailed</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 const capitalize = (s) => {

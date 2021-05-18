@@ -118,7 +118,7 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
 //     console.log("found element");
 //   },
 //   100,
-//   5000
+//   7500
 // );
 
 async function fillOutDepopForm(
@@ -175,7 +175,21 @@ async function fillOutDepopForm(
 
   fillInputValue(depop_price, price);
 
+  showCrosslistSuccessAlert();
   //LATER: price validation
+}
+
+function showCrosslistSuccessAlert() {
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Depop</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 function matchCondition(condition) {

@@ -80,6 +80,22 @@ async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   //LATER: currency/price validation
   fillInputValue(etsy_price, price);
   fillInputValue(etsy_sku, sku);
+
+  showCrosslistSuccessAlert();
+}
+
+function showCrosslistSuccessAlert() {
+  //LATER: this inherits class from parent, try to fix but later on
+  Swal.fire({
+    icon: "success",
+    title: "Almost done!",
+    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Etsy</b> to finish your listing.`,
+    timer: 7500,
+    timerProgressBar: true,
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+  });
 }
 
 const capitalize = (s) => {
