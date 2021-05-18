@@ -49,31 +49,52 @@
       "run_at": "document_start"
     },
     {
-      "css": ["marketplaces/closets/depop-closet.css"],
+      "css": [
+        "marketplaces/closets/depop-closet.css",
+        "marketplaces/listings/depop-listing.css"
+      ],
       "matches": ["*://*.depop.com/*"]
     },
     {
-      "css": ["marketplaces/closets/ebay-closet.css"],
+      "css": [
+        "marketplaces/closets/ebay-closet.css",
+        "marketplaces/listings/ebay-listing.css"
+      ],
       "matches": ["*://*.ebay.com/*"]
     },
     {
-      "css": ["marketplaces/closets/etsy-closet.css"],
+      "css": [
+        "marketplaces/closets/etsy-closet.css",
+        "marketplaces/listings/etsy-listing.css"
+      ],
       "matches": ["*://*.etsy.com/*"]
     },
     {
-      "css": ["marketplaces/closets/grailed-closet.css"],
+      "css": [
+        "marketplaces/closets/grailed-closet.css",
+        "marketplaces/listings/grailed-listing.css"
+      ],
       "matches": ["*://*.grailed.com/*"]
     },
     {
-      "css": ["marketplaces/closets/kidizen-closet.css"],
+      "css": [
+        "marketplaces/closets/kidizen-closet.css",
+        "marketplaces/listings/kidizen-listing.css"
+      ],
       "matches": ["*://*.kidizen.com/*"]
     },
     {
-      "css": ["marketplaces/closets/mercari-closet.css"],
+      "css": [
+        "marketplaces/closets/mercari-closet.css",
+        "marketplaces/listings/mercari-listing.css"
+      ],
       "matches": ["*://*.mercari.com/*"]
     },
     {
-      "css": ["marketplaces/closets/poshmark-closet.css"],
+      "css": [
+        "marketplaces/closets/poshmark-closet.css",
+        "marketplaces/listings/poshmark-listing.css"
+      ],
       "matches": ["*://*.poshmark.com/*"]
     }
   ],

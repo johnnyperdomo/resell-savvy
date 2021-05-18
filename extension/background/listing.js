@@ -1,14 +1,17 @@
 //LATER: check if this is user's closet, not just any random user's
 
-//TODO: show link url
+//LATER: add a note on the modal saying something like "please ensure this is your closet, rs savvy only works with your personal items"
+
+//LATER: verify urls, some of them prefix "listings" can inlude also the entire listing collection page, so we want to make sure that its "listings/", just verify the pages later on
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //depop listing
   if (tab.url.indexOf("depop.com/products") > -1) {
     console.log("depop item detected");
 
-    // chrome.tabs.executeScript(tab.id, {
-    //   file: "marketplaces/closets/depop-closet.js",
-    // });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/depop-listing.js",
+    });
   }
 
   //ebay listing
@@ -16,9 +19,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("ebay.com/itm") > -1) {
     console.log("ebay listing detected, tab = ", tabId);
 
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/ebay-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/ebay-listing.js",
+    });
   }
 
   //etsy listing
@@ -26,9 +29,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("etsy.com/listing") > -1) {
     console.log("etsy listing detected, tab = ", tabId);
 
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/etsy-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/etsy-listing.js",
+    });
   }
 
   //facebook listing
@@ -45,19 +48,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("grailed.com/listings") > -1) {
     console.log("grailed listing detected, tab = ", tabId);
 
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/grailed-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/grailed-listing.js",
+    });
   }
 
   //kidizen listing
-  //TODO: make sure the closet is the personal closet, look for edit button
-  if (tab.url.indexOf("kidizen.com/items") > -1) {
+  //TODO:
+  if (tab.url.indexOf("kidizen.com/items/") > -1) {
     console.log("kidizen listing detected, tab = ", tabId);
 
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/kidizen-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/kidizen-listing.js",
+    });
   }
 
   //mercari listing
@@ -65,16 +68,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("mercari.com/us/item") > -1) {
     console.log("mercari listing detected, tab = ", tabId);
 
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/mercari-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/mercari-listing.js",
+    });
   }
 
   //poshmark listing
   if (tab.url.indexOf("poshmark.com/listing") > -1) {
     console.log("poshmark listing actived");
-    //   chrome.tabs.executeScript(tab.id, {
-    //     file: "marketplaces/closets/poshmark-closet.js",
-    //   });
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/listings/poshmark-listing.js",
+    });
   }
 });

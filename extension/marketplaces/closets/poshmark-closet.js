@@ -34,7 +34,7 @@
 
 // insertModal();
 
-function openModal() {
+function onLinkBtnPressed() {
   const cardInfo = getCardInfo();
 
   //TODO
@@ -54,7 +54,7 @@ function openModal() {
   console.log("open modal with data = ", cardInfo);
 }
 
-async function createCrossListButton() {
+async function createLinkButton() {
   //if profile edit, user's closet
   await waitForElementToLoad("a[href='/user/edit-profile']");
   //tile card
@@ -66,12 +66,12 @@ async function createCrossListButton() {
   button.classList = "rs-crosslist-btn btn-primary shadow ";
   button.innerHTML =
     '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rs-icon-center" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /> </svg>';
-  button.addEventListener("click", openModal);
+  button.addEventListener("click", onLinkBtnPressed);
 
   document.body.appendChild(button);
 }
 
-createCrossListButton();
+createLinkButton();
 
 function getCardInfo() {
   var parsedArray = [];
