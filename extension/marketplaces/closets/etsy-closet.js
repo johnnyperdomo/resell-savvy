@@ -71,8 +71,6 @@ async function createCrossListButton() {
   document.body.appendChild(button);
 }
 
-// createCrossListButton();
-
 function getCardInfo() {
   var parsedArray = [];
 
@@ -127,4 +125,34 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
       }
     }, 50);
   });
+}
+
+//check frequency every 1 second, expire after 30 seconds, that way node won't block javascript from running on any other page just in case
+waitForElementToDisplay(
+  ".list-region",
+  function () {
+    createCrossListButton();
+  },
+  1000,
+  30000
+);
+
+function waitForElementToDisplay(
+  selector,
+  callback,
+  checkFrequencyInMs,
+  timeoutInMs
+) {
+  var startTimeInMs = Date.now();
+  (function loopSearch() {
+    if (document.querySelector(selector) != null) {
+      callback();
+      return;
+    } else {
+      setTimeout(function () {
+        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
+        loopSearch();
+      }, checkFrequencyInMs);
+    }
+  })();
 }

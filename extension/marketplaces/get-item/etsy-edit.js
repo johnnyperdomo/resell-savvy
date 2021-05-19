@@ -113,7 +113,7 @@ function showPageLoadingAlert() {
 }
 
 function showProcessingAlert() {
-  //FIX: //LATER: inherits parent style, fix this. Could it be that we can fix this with an iframe?
+  //FIX: //LATER: inherits parent style, fix this. Could it be that we can fix this with a shadowdom?
   Swal.fire({
     title: "Processing...",
     html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",

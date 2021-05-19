@@ -5,11 +5,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   //depop closet
   //TODO: //FIX: gives some error cuz of node loading
-  // if (tab.url.indexOf("depop.com/") > -1) {
-  //   chrome.tabs.executeScript(tab.id, {
-  //     file: "marketplaces/closets/depop-closet.js",
-  //   });
-  // }
+  if (tab.url.indexOf("depop.com/") > -1) {
+    console.log("depop page is reloaded");
+    chrome.tabs.executeScript(tab.id, {
+      file: "marketplaces/closets/depop-closet.js",
+    });
+  }
 
   //ebay closet
   //TODO: bulk sell page works so don't worry about it
@@ -51,7 +52,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //kidizen closet
-  //TODO: make sure the closet is the personal closet, look for edit button
+  //LATER: make sure the closet is the personal closet, look for edit button
   if (tab.url.indexOf("kidizen.com/users") > -1) {
     console.log("kidizen closet detected, tab = ", tabId);
 
