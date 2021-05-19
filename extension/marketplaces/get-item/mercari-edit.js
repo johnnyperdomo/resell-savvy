@@ -1,4 +1,4 @@
-console.log("mercari edit ");
+showPageLoadingAlert();
 
 //LATER: kidizen doesn't load images in edit page, their error.
 
@@ -115,7 +115,36 @@ function sendMessageToBackground(data) {
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
+    showProcessingAlert();
     getItemDetails();
-    console.log("page complete");
   }
 };
+
+function showPageLoadingAlert() {
+  //LATER: change background color to make it more presentable, maybe a opaque white?
+  //LATER: show gif, or lottie image instead of just a simple loading spinner?
+  Swal.fire({
+    title: "Waiting on page to load...",
+    html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
+    footer: "Page loading time is affected by your internet speed.",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  Swal;
+}
+
+function showProcessingAlert() {
+  Swal.fire({
+    title: "Processing...",
+    html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
+    footer: "This tab will auto-close after it finishes processing.",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}

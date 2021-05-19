@@ -2,7 +2,9 @@
 
 //LATER: add a note on the modal saying something like "please ensure this is your closet, rs savvy only works with your personal items"
 
-//LATER: verify urls, some of them prefix "listings" can inlude also the entire listing collection page, so we want to make sure that its "listings/", just verify the pages later on
+//LATER: verify urls, some of them prefix "listings" can inlude also the entire listing collection page, so we want to make sure that its "listings/", just verify the pages later on,
+
+//LATER: maybe use an observer to check a specific element from the page exists before showing button, cuz some pages use the same "listing prefix", even if it's not a listing page.
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //depop listing

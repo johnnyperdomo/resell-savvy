@@ -131,12 +131,13 @@ function showCrosslistSuccessAlert() {
   Swal.fire({
     icon: "success",
     title: "Almost done!",
-    html: `Details successfully crosslisted. Finish adding a few details unique to <b>Grailed</b> to finish your listing.`,
+    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Grailed</b> to finish your listing.`,
     timer: 7500,
     timerProgressBar: true,
     toast: true,
     position: "top-end",
     showConfirmButton: false,
+    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
   });
 }
 
