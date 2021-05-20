@@ -18,7 +18,8 @@
     "*://*.kidizen.com/*",
     "*://*.mercari.com/*",
     "*://*.grailed.com/*",
-    "*://*.poshmark.com/*"
+    "*://*.poshmark.com/*",
+    "*://www.picupload.ebay.com/*"
   ],
 
   "background": {
@@ -44,9 +45,12 @@
         "*://*.facebook.com/*",
         "*://*.mercari.com/*",
         "*://*.grailed.com/*",
-        "*://*.poshmark.com/*"
+        "*://*.poshmark.com/*",
+        "*://www.picupload.ebay.com/*"
       ],
-      "run_at": "document_start"
+
+      "run_at": "document_start",
+      "all_frames": true
     },
     {
       "css": [
