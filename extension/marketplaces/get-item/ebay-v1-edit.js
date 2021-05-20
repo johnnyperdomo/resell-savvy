@@ -1,4 +1,11 @@
-showPageLoadingAlert();
+//check if the content script already exists, if it does, then don't proceed with the function
+// if (window.RS_EBAY_ALREADY_INJECTED_FLAG) {
+//   console.log("this script was already injected");
+// } else {
+window.RS_EBAY_ALREADY_INJECTED_FLAG = true;
+console.log("letssssssssss go we called v1 here!!!!!");
+
+// showPageLoadingAlert();
 
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
@@ -26,50 +33,14 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// waitForElementToDisplay(
-//   "input[name='title']",
-//   function () {
-//     //retrievalObject inherited from execute script
-//     getItemDetails(retrievalObject);
-//   },
-//   100,
-//   100000000000000
-// );
-
 function formatCondition(condition) {
   //return rs condition value from condition value
   switch (condition) {
-    case "is_new":
+    case "1000": //NEW
       return "nwt";
 
-    case "is_gently_used":
+    case "3000": //USED
       return "good";
-
-    case "is_used":
-      return "preowned";
-
-    case "is_worn":
-      return "poor";
 
     default:
       return "";
@@ -77,40 +48,52 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await waitForElementToLoad("input[name='title']");
+  await waitForElementToLoad("#editpane_title");
 
   return await new Promise((resolve) =>
     setTimeout(() => {
-      let imagesEl = document.querySelectorAll(".photo img");
+      let imagesEl = document.querySelectorAll("#tg-thumbsWrap img");
+
+      console.log("thumb, ", document.querySelectorAll(".thumb"));
+
+      console.log("images El", imagesEl);
       let imageURLs = Array.from(imagesEl).map((image) => {
-        return $(image).attr("src");
+        console.log(image);
+        //regex to replace whatever jpg url shortener prefic to its original value
+
+        let newImage = $(image).attr("src");
+        newImage.replace(/_[\d]+\.JPG/, "_57.JPG");
+
+        console.log("new ", newImage);
+        return newImage;
       });
 
-      let grailed_title = $("input[name='title']").val();
-      let grailed_description = $("textarea[name='description']").val();
-      let grailed_color = $("input[name='color']").val().toLowerCase();
-      let grailed_brand = $("#designer-autocomplete").val(); //designer
-      let grailed_condition = $("select[name='condition']").val();
-      let grailed_price = $("input[name='price']").val();
+      let desc = $('iframe[id*="txtEdit_st"]')
+        .contents()
+        .find("body")[0].innerText; //this works!!!
 
-      console.log(
-        grailed_title,
-        grailed_description,
-        grailed_color,
-        grailed_brand,
-        grailed_condition,
-        grailed_price
-      );
+      let img = $('iframe[id="uploader_iframe"]').contents().find("body"); //this works!!!
+      console.log("img, ", img);
+      console.log("desc, ", desc);
+
+      let ebay_title = $("#editpane_title").val();
+      let ebay_description = $("#editpane_desc iframe").contents().find("body");
+      let ebay_brand = $("input[fieldname='Brand']").val();
+      let ebay_condition = $("select[name='itemCondition']").val();
+      let ebay_price = $("#binPrice").val(); //TODO: check ebay to see what would it be for an auction listing
+      let ebay_sku = $("#editpane_skuNumber").val();
+
+      console.log(ebay_description);
 
       let properties = {
-        imageUrls: imageURLs,
-        title: grailed_title,
-        description: grailed_description,
-        color: grailed_color,
-        brand: grailed_brand,
-        condition: formatCondition(grailed_condition),
-        price: grailed_price,
-        sku: "", //null
+        imageUrls: [],
+        title: ebay_title,
+        description: "",
+        color: "", //null
+        brand: ebay_brand,
+        condition: formatCondition(ebay_condition),
+        price: ebay_price,
+        sku: ebay_sku,
         cost: "", //null
       };
 
@@ -131,22 +114,18 @@ async function getItemDetails() {
     tab: retrievalObject.tab,
     properties: properties,
   };
+  console.log(data);
 
-  sendMessageToBackground(data);
-}
-
-function sendMessageToBackground(data) {
-  chrome.runtime.sendMessage({
-    command: "start-crosslist-session",
-    data: data,
-  });
+  //  sendMessageToBackground(data);
 }
 
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    showProcessingAlert();
-    getItemDetails();
+    //  showProcessingAlert();
+
+      getItemDetails();
+  
   }
 };
 
@@ -166,7 +145,7 @@ function showPageLoadingAlert() {
 }
 
 function showProcessingAlert() {
-  //FIX: //LATER: inherits parents styles, but fix later on, maybe with shadow dom
+  //FIX: //LATER: inheriting parent css style
   Swal.fire({
     title: "Processing...",
     html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
@@ -178,3 +157,4 @@ function showProcessingAlert() {
     },
   });
 }
+//}

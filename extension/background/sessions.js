@@ -2,6 +2,12 @@
 //LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
 //TODO: save global array to keep track of process
 
+//only listens to changes on the active ebay tab, to detect if url changes based on v1/v2 design
+var ebayGetListingActiveTabs = [];
+var ebaySetListingActiveTabs = [];
+
+//TODO: if successfully set listing, maybe send a push message from the content script to exit remove tab id, since the background function could still be listening for changes, but we don't want it to.
+
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //Start Crosspost session
   if (msg.command == "start-crosslist-session") {
@@ -53,6 +59,18 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //ebay
   if (msg.command == "get-listing-from-ebay") {
     //TODO: check for v1/v2
+
+    //NOTE: to get correct version of ebay listing url, check the onUpdated url event listener below
+    //TODO: set correct data
+    chrome.tabs.create(
+      {
+        url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&sellingMode=ReviseItem&ReturnURL=https%3A%2F%2Fwww.ebay.com%2Fsh%2Flst%2Factive&lineID=363389338870",
+      },
+      (tab) => {
+        ebayGetListingActiveTabs.push(tab.id);
+        console.log("ebay active tab pushed, ", ebayGetListingActiveTabs);
+      }
+    );
   }
 
   //etsy
@@ -94,7 +112,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
             "poshmark",
           ],
           copyFromMarketplace: "grailed",
-
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -382,6 +399,7 @@ function getListingDetails(tab, data, marketplace) {
     tab.id,
     {
       file: `third-party/jquery-3.6.0.min.js`,
+      allFrames: true,
     },
     () => {
       chrome.tabs.executeScript(
@@ -400,3 +418,66 @@ function getListingDetails(tab, data, marketplace) {
     }
   );
 }
+
+//listen to active ebay tabs
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  //TODO: be careful and make sure we don't post double content script while it's loading, because this event listener can fire multiple times, just once
+  console.log("active tabs get, ", ebayGetListingActiveTabs);
+
+  if (!ebayGetListingActiveTabs.includes(tabId)) {
+    console.log(
+      "this tab is not an active ebay listing we are listing to, so exit out.",
+      tabId
+    );
+    return false;
+  }
+
+  //v1
+  const versionOneListingURL = "bulksell.ebay.com/ws/eBayISAPI";
+  if (tab.url.toLowerCase().indexOf(versionOneListingURL.toLowerCase()) > -1) {
+    console.log("this is versiooooooon one on tab: ", tab);
+
+    let retrievalObject = {
+      copyToMarketplaces: ["depop", "mercari", "kidizen"],
+      copyFromMarketplace: "ebay",
+      listingURL: "https://www.ebay.com/itm/363389338870",
+      tab: tab,
+    };
+
+    getListingDetails(tab, retrievalObject, "ebay-v1");
+  }
+
+  //v2
+  const versionTwoListingURL = "ebay.com/lstng";
+  if (tab.url.toLowerCase().indexOf(versionTwoListingURL.toLowerCase()) > -1) {
+    console.log("this is versiooooooon two on tab: ", tab);
+
+    let retrievalObject = {
+      copyToMarketplaces: ["depop", "mercari", "kidizen", "poshmark"],
+      copyFromMarketplace: "ebay",
+      listingURL: "https://www.ebay.com/itm/363389338870",
+      tab: tab,
+    };
+
+    getListingDetails(tab, retrievalObject, "ebay-v2");
+  }
+
+  console.log("yay this tab is included, ", tab);
+});
+
+//listen to ebay tabs that were removed
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  console.log("tab removed: ", tabId, removeInfo);
+
+  if (ebayGetListingActiveTabs.includes(tabId)) {
+    //remove tabId from array
+    ebayGetListingActiveTabs = ebayGetListingActiveTabs.filter(
+      (e) => e !== tabId
+    );
+
+    console.log(
+      "new get listing active tabs for ebay, ",
+      ebayGetListingActiveTabs
+    );
+  }
+});

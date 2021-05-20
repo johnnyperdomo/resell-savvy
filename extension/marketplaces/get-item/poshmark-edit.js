@@ -165,7 +165,6 @@ function showPageLoadingAlert() {
       Swal.showLoading();
     },
   });
-  Swal;
 }
 
 function showProcessingAlert() {
