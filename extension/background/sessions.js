@@ -167,7 +167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["poshmark"],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "kidizen",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -434,10 +434,13 @@ function injectScriptInNewTab(tab, data, marketplace) {
   data["tab"] = tab; //add tab properties to data object
   const itemData = JSON.stringify(data);
 
+  console.log("script inject");
+
   chrome.tabs.executeScript(
     tab.id,
     {
       file: `third-party/jquery-3.6.0.min.js`,
+      runAt: "document_start",
     },
     () => {
       chrome.tabs.executeScript(
@@ -446,10 +449,12 @@ function injectScriptInNewTab(tab, data, marketplace) {
           //TODO: pass data in here
           //TODO: not really working
           code: `const itemData = ${itemData};`,
+          runAt: "document_start",
         },
         () => {
           chrome.tabs.executeScript(tab.id, {
             file: `marketplaces/new-item/${marketplace}-item.js`,
+            runAt: "document_start",
           });
         }
       );
@@ -461,11 +466,13 @@ function injectScriptInNewTab(tab, data, marketplace) {
 function getListingDetails(tab, data, marketplace) {
   const retrievalObject = JSON.stringify(data);
 
+  console.log("get script injected");
+
   chrome.tabs.executeScript(
     tab.id,
     {
       file: `third-party/jquery-3.6.0.min.js`,
-      allFrames: true,
+      runAt: "document_start",
     },
     () => {
       chrome.tabs.executeScript(
@@ -474,10 +481,12 @@ function getListingDetails(tab, data, marketplace) {
           //TODO: pass data in here
           //TODO: not really working
           code: `const retrievalObject = ${retrievalObject};`,
+          runAt: "document_start",
         },
         () => {
           chrome.tabs.executeScript(tab.id, {
             file: `marketplaces/get-item/${marketplace}-edit.js`,
+            runAt: "document_start",
           });
         }
       );

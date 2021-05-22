@@ -1,5 +1,3 @@
-showPageLoadingAlert();
-
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   if (!inTree) inTree = $(document.body);
   let timeStampMax = null;
@@ -90,6 +88,12 @@ function sendMessageToBackground(data) {
 
 //detect if document is ready
 document.onreadystatechange = function () {
+  //doc tree is loaded
+  if (document.readyState === "interactive") {
+    showPageLoadingAlert();
+  }
+
+  //doc tree is fully ready to be manipulated
   if (document.readyState === "complete") {
     showProcessingAlert();
     getItemDetails();
@@ -100,10 +104,11 @@ function showPageLoadingAlert() {
   //LATER: change background color to make it more presentable, maybe a opaque white?
   //LATER: show gif, or lottie image instead of just a simple loading spinner?
   Swal.fire({
-    title: "Waiting on page to load...",
+    title: "Waiting on page to finish loading...",
     html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
     footer: "Page loading time is affected by your internet speed.",
     allowOutsideClick: false,
+    backdrop: "rgba(239, 239, 239, 0.98)",
     showConfirmButton: false,
     willOpen: () => {
       Swal.showLoading();
@@ -112,12 +117,13 @@ function showPageLoadingAlert() {
 }
 
 function showProcessingAlert() {
-  //FIX: //LATER: inherits parent style, fix this. Could it be that we can fix this with a shadowdom?
+  //FIX: //LATER: inherits parent style, fix this. Could it be that we can fix this with a shadowdom? select target
   Swal.fire({
     title: "Processing...",
     html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
     footer: "This tab will auto-close after it finishes processing.",
     allowOutsideClick: false,
+    backdrop: "rgba(239, 239, 239, 0.98)",
     showConfirmButton: false,
     willOpen: () => {
       Swal.showLoading();

@@ -1,7 +1,5 @@
 console.log("yooooo from the ebay bulksell page");
 
-showPageLoadingAlert();
-
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
   if (!inTree) inTree = $(document.body);
@@ -61,6 +59,10 @@ function fillInputValue(input, value) {
 }
 
 document.onreadystatechange = function () {
+  if (document.readyState === "interactive") {
+    showPageLoadingAlert();
+  }
+
   if (document.readyState === "complete") {
     console.log(itemData);
     showProcessingAlert();
@@ -73,10 +75,11 @@ function showPageLoadingAlert() {
   //LATER: change background color to make it more presentable, maybe a opaque white?
   //LATER: show gif, or lottie image instead of just a simple loading spinner?
   Swal.fire({
-    title: "Waiting on page to load...",
+    title: "Waiting on page to finish loading...",
     html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
     footer: "Page loading time is affected by your internet speed.",
     allowOutsideClick: false,
+    backdrop: "rgba(239, 239, 239, 0.98)",
     showConfirmButton: false,
     willOpen: () => {
       Swal.showLoading();
@@ -90,6 +93,7 @@ function showProcessingAlert() {
     html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
     footer: "This tab will auto-close after it finishes processing.",
     allowOutsideClick: false,
+    backdrop: "rgba(239, 239, 239, 0.98)",
     showConfirmButton: false,
     willOpen: () => {
       Swal.showLoading();
