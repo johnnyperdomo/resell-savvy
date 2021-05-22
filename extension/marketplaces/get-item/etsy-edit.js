@@ -25,7 +25,7 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-async function formatItemProperties() {
+async function formatItemPropertiesVersion1() {
   await waitForElementToLoad("input[name='title']");
 
   return await new Promise((resolve) =>
@@ -67,7 +67,7 @@ async function formatItemProperties() {
 
 async function getItemDetails() {
   //send message to background script
-  const properties = await formatItemProperties();
+  const properties = await formatItemPropertiesVersion1();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,

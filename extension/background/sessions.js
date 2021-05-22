@@ -1,15 +1,24 @@
 //handling communication between marketplaces
 //LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
-//TODO: save global array to keep track of process
-
-//only listens to changes on the active ebay tab, to detect if url changes based on v1/v2 design
-var ebayGetListingActiveTabs = [];
-var ebaySetListingActiveTabs = [];
-
-//TODO: if successfully set listing, maybe send a push message from the content script to exit remove tab id, since the background function could still be listening for changes, but we don't want it to.
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
+  //TODO: test remove this later on, just for testing set...
+  if (msg.command == "test-ebay") {
+    createItem([], "ebay");
+  }
+
+  //LATER: maybe a better way to do this later on?
+  if (msg.command == "set-ebay-create-listing-active-tab") {
+    //TODO: set the tab above for ebay create listing
+
+    let tab = msg.data.tab;
+    ebaySetListingActiveTabs.push(tab.id);
+
+    console.log("ebay active tab pushed for get, ", ebaySetListingActiveTabs);
+  }
+
   //Start Crosspost session
+
   if (msg.command == "start-crosslist-session") {
     let tab = msg.data.tab;
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
@@ -58,17 +67,21 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
   //ebay
   if (msg.command == "get-listing-from-ebay") {
-    //TODO: check for v1/v2
-
-    //NOTE: to get correct version of ebay listing url, check the onUpdated url event listener below
+    //NOTE: Ebay has two different listing versions, the script checks the version first before manipulating the dom
     //TODO: set correct data
     chrome.tabs.create(
       {
         url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&sellingMode=ReviseItem&ReturnURL=https%3A%2F%2Fwww.ebay.com%2Fsh%2Flst%2Factive&lineID=363389338870",
       },
       (tab) => {
-        ebayGetListingActiveTabs.push(tab.id);
-        console.log("ebay active tab pushed, ", ebayGetListingActiveTabs);
+        let retrievalObject = {
+          copyToMarketplaces: ["poshmark", "mercari", "kidizen"],
+          copyFromMarketplace: "ebay",
+          listingURL: "https://www.ebay.com/itm/363389338870", //TODO: the actual listing url
+          tab: tab,
+        };
+
+        getListingDetails(tab, retrievalObject, "ebay");
       }
     );
   }
@@ -186,19 +199,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //LATER: wait for listing data to be retrieved successfully, that way we can tell the client that it is processing, and show them different progress states
 });
 
-//TODO: nest this inside one of the tabs
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//   console.log("updated, ", tabId, changeInfo, tab);
-//   //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
-
-//   //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
-// });
-
 //Functions ====>
 
 function createItem(properties, marketplace) {
   if (marketplace == "depop") {
-    //FIX: doesn't work if tab active set to false? Could it be bcuz we're waiting for element display function?
     chrome.tabs.create(
       { url: "https://www.depop.com/products/create/", active: false },
       (tab) => {
@@ -213,8 +217,47 @@ function createItem(properties, marketplace) {
   }
 
   //ebay
+  //NOTE: ebay has special configurations since the listing creation pages is paginated
   if (marketplace == "ebay") {
     //TODO: ebay has some special configuration
+
+    chrome.tabs.create(
+      {
+        url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList",
+        active: false,
+      },
+      (tab) => {
+        ebaySetListingActiveTabs.push(tab.id);
+        console.log(
+          "ebay active tab for set pushed, ",
+          ebaySetListingActiveTabs
+        );
+
+        let data = { properties: { title: "gymshark pants" }, tab: tab };
+
+        const itemData = JSON.stringify(data);
+        chrome.tabs.executeScript(
+          tab.id,
+          {
+            file: `third-party/jquery-3.6.0.min.js`,
+          },
+          () => {
+            chrome.tabs.executeScript(
+              tab.id,
+              {
+                //TODO: pass in tab as well
+                code: `const itemData = ${itemData};`,
+              },
+              () => {
+                chrome.tabs.executeScript(tab.id, {
+                  file: `marketplaces/new-item/ebay-bulksell-item.js`,
+                });
+              }
+            );
+          }
+        );
+      }
+    );
   }
 
   //etsy
@@ -418,66 +461,3 @@ function getListingDetails(tab, data, marketplace) {
     }
   );
 }
-
-//listen to active ebay tabs
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //TODO: be careful and make sure we don't post double content script while it's loading, because this event listener can fire multiple times, just once
-  console.log("active tabs get, ", ebayGetListingActiveTabs);
-
-  if (!ebayGetListingActiveTabs.includes(tabId)) {
-    console.log(
-      "this tab is not an active ebay listing we are listing to, so exit out.",
-      tabId
-    );
-    return false;
-  }
-
-  //v1
-  const versionOneListingURL = "bulksell.ebay.com/ws/eBayISAPI";
-  if (tab.url.toLowerCase().indexOf(versionOneListingURL.toLowerCase()) > -1) {
-    console.log("this is versiooooooon one on tab: ", tab);
-
-    let retrievalObject = {
-      copyToMarketplaces: ["depop", "mercari", "kidizen"],
-      copyFromMarketplace: "ebay",
-      listingURL: "https://www.ebay.com/itm/363389338870",
-      tab: tab,
-    };
-
-    getListingDetails(tab, retrievalObject, "ebay-v1");
-  }
-
-  //v2
-  const versionTwoListingURL = "ebay.com/lstng";
-  if (tab.url.toLowerCase().indexOf(versionTwoListingURL.toLowerCase()) > -1) {
-    console.log("this is versiooooooon two on tab: ", tab);
-
-    let retrievalObject = {
-      copyToMarketplaces: ["depop", "mercari", "kidizen", "poshmark"],
-      copyFromMarketplace: "ebay",
-      listingURL: "https://www.ebay.com/itm/363389338870",
-      tab: tab,
-    };
-
-    getListingDetails(tab, retrievalObject, "ebay-v2");
-  }
-
-  console.log("yay this tab is included, ", tab);
-});
-
-//listen to ebay tabs that were removed
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  console.log("tab removed: ", tabId, removeInfo);
-
-  if (ebayGetListingActiveTabs.includes(tabId)) {
-    //remove tabId from array
-    ebayGetListingActiveTabs = ebayGetListingActiveTabs.filter(
-      (e) => e !== tabId
-    );
-
-    console.log(
-      "new get listing active tabs for ebay, ",
-      ebayGetListingActiveTabs
-    );
-  }
-});

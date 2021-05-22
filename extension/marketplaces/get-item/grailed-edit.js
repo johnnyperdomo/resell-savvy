@@ -76,7 +76,7 @@ function formatCondition(condition) {
   }
 }
 
-async function formatItemProperties() {
+async function formatItemPropertiesVersion1() {
   await waitForElementToLoad("input[name='title']");
 
   return await new Promise((resolve) =>
@@ -122,7 +122,7 @@ async function formatItemProperties() {
 async function getItemDetails() {
   //TODO: get item details, convert to rs-savvy-format
   //send message to background script
-  const properties = await formatItemProperties();
+  const properties = await formatItemPropertiesVersion1();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,

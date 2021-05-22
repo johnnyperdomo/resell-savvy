@@ -50,7 +50,7 @@ function formatCondition(condition) {
   }
 }
 
-async function formatItemProperties() {
+async function formatItemPropertiesVersion1() {
   await waitForElementToLoad("#description");
 
   //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind
@@ -99,7 +99,7 @@ async function formatItemProperties() {
 async function getItemDetails() {
   //TODO: get item details, convert to rs-savvy-format
   //send message to background script
-  const properties = await formatItemProperties();
+  const properties = await formatItemPropertiesVersion1();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,
@@ -141,7 +141,6 @@ function showPageLoadingAlert() {
       Swal.showLoading();
     },
   });
-  
 }
 
 function showProcessingAlert() {

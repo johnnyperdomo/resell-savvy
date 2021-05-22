@@ -28,6 +28,11 @@
 
   "content_scripts": [
     {
+      "matches": ["https://bulkedit.ebay.com/*"],
+      "js": ["third-party/jquery-3.6.0.min.js", "bulkedit.js"],
+      "all_frames": true
+    },
+    {
       "js": [
         "third-party/jquery-3.6.0.min.js",
         "third-party/bootstrap.min.js",

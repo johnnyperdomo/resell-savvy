@@ -220,6 +220,18 @@ function copyFromPoshmark() {
   chrome.runtime.sendMessage({ command: "get-listing-from-poshmark" });
 }
 
+const ebayOpen = document.querySelector("#post-ebay");
+
+if (ebayOpen) {
+  ebayOpen.addEventListener("click", openEbay);
+}
+
+function openEbay() {
+  chrome.runtime.sendMessage({
+    command: "test-ebay",
+  });
+}
+
 // {
 //   "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
 //   "matches": ["*://poshmark.com/*"],
