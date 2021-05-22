@@ -1,20 +1,43 @@
 //handling communication between marketplaces
 //LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
 
+var ebaySetListingActiveTabs = {};
+
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //TODO: test remove this later on, just for testing set...
   if (msg.command == "test-ebay") {
-    createItem([], "ebay");
+    const itemData = {
+      imageUrls: [],
+      title: "Fanny pack",
+      description: "ebay desc",
+      price: "98",
+      brand: "Adidas",
+      condition: "nwt",
+      color: "",
+      sku: "123edfgreet",
+      cost: "",
+    };
+    createItem(itemData, "ebay");
   }
 
   //LATER: maybe a better way to do this later on?
-  if (msg.command == "set-ebay-create-listing-active-tab") {
+  if (msg.command == "remove-ebay-active-tab") {
     //TODO: set the tab above for ebay create listing
 
-    let tab = msg.data.tab;
-    ebaySetListingActiveTabs.push(tab.id);
+    console.log("remove ebay active tab called", msg.data);
 
-    console.log("ebay active tab pushed for get, ", ebaySetListingActiveTabs);
+    let tabId = msg.data.tab;
+
+    if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
+      console.log();
+      //remove tabId from object
+      delete ebaySetListingActiveTabs[tabId];
+
+      console.log(
+        "removed listing active tabs for ebay, ",
+        ebaySetListingActiveTabs
+      );
+    }
   }
 
   //Start Crosspost session
@@ -210,7 +233,7 @@ function createItem(properties, marketplace) {
 
         //TODO get data from message
 
-        openItemInNewTab(tab, properties, "depop");
+        injectScriptInNewTab(tab, properties, "depop");
       }
     );
     //TODO: save tab info to process array
@@ -227,35 +250,34 @@ function createItem(properties, marketplace) {
         active: false,
       },
       (tab) => {
-        ebaySetListingActiveTabs.push(tab.id);
-        console.log(
-          "ebay active tab for set pushed, ",
-          ebaySetListingActiveTabs
-        );
+        // let data = { properties: { title: "gymshark pants" }, tab: tab };
 
-        let data = { properties: { title: "gymshark pants" }, tab: tab };
+        // const itemData = JSON.stringify(data);
+        // chrome.tabs.executeScript(
+        //   tab.id,
+        //   {
+        //     file: `third-party/jquery-3.6.0.min.js`,
+        //   },
+        //   () => {
+        //     chrome.tabs.executeScript(
+        //       tab.id,
+        //       {
+        //         //TODO: pass in tab as well
+        //         code: `const itemData = ${itemData};`,
+        //       },
+        //       () => {
+        //         chrome.tabs.executeScript(tab.id, {
+        //           file: `marketplaces/new-item/ebay-bulksell-item.js`,
+        //         });
+        //       }
+        //     );
+        //   }
+        // );
 
-        const itemData = JSON.stringify(data);
-        chrome.tabs.executeScript(
-          tab.id,
-          {
-            file: `third-party/jquery-3.6.0.min.js`,
-          },
-          () => {
-            chrome.tabs.executeScript(
-              tab.id,
-              {
-                //TODO: pass in tab as well
-                code: `const itemData = ${itemData};`,
-              },
-              () => {
-                chrome.tabs.executeScript(tab.id, {
-                  file: `marketplaces/new-item/ebay-bulksell-item.js`,
-                });
-              }
-            );
-          }
-        );
+        injectScriptInNewTab(tab, properties, "ebay-bulksell");
+
+        //set active tab to be listened to, and watch page updates since this listing is a multistep process.
+        ebaySetListingActiveTabs[tab.id] = properties;
       }
     );
   }
@@ -281,7 +303,7 @@ function createItem(properties, marketplace) {
           cost: properties.cost,
         };
 
-        openItemInNewTab(tab, properties, "etsy");
+        injectScriptInNewTab(tab, properties, "etsy");
       }
     );
   }
@@ -307,7 +329,7 @@ function createItem(properties, marketplace) {
           cost: 5,
         };
 
-        openItemInNewTab(tab, properties, "facebook");
+        injectScriptInNewTab(tab, properties, "facebook");
       }
     );
   }
@@ -330,7 +352,7 @@ function createItem(properties, marketplace) {
           cost: 5,
         };
 
-        openItemInNewTab(tab, properties, "grailed");
+        injectScriptInNewTab(tab, properties, "grailed");
       }
     );
   }
@@ -354,7 +376,7 @@ function createItem(properties, marketplace) {
           cost: 5,
         };
 
-        openItemInNewTab(tab, properties, "kidizen");
+        injectScriptInNewTab(tab, properties, "kidizen");
       }
     );
   }
@@ -377,7 +399,7 @@ function createItem(properties, marketplace) {
           cost: 5,
         };
 
-        openItemInNewTab(tab, properties, "mercari");
+        injectScriptInNewTab(tab, properties, "mercari");
       }
     );
   }
@@ -402,13 +424,14 @@ function createItem(properties, marketplace) {
           cost: 5,
         };
 
-        openItemInNewTab(tab, properties, "poshmark");
+        injectScriptInNewTab(tab, properties, "poshmark");
       }
     );
   }
 }
 
-function openItemInNewTab(tab, data, marketplace) {
+function injectScriptInNewTab(tab, data, marketplace) {
+  data["tab"] = tab; //add tab properties to data object
   const itemData = JSON.stringify(data);
 
   chrome.tabs.executeScript(
@@ -461,3 +484,39 @@ function getListingDetails(tab, data, marketplace) {
     }
   );
 }
+
+//listen to active ebay tabs
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  //TODO: be careful and make sure we don't post double content script while it's loading, because this event listener can fire multiple times, just once
+  console.log("active tabs get, ", ebaySetListingActiveTabs);
+
+  if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
+    console.log("this tab is active, script will be inject into tab:", tabId);
+
+    let data = ebaySetListingActiveTabs[tabId];
+
+    //  injectScriptInNewTab(tabId, data, "ebay");
+
+    // chrome.tabs.executeScript(tab.id, {
+    //   file: `marketplaces/new-item/ebay-item.js`,
+    // });
+
+    //TODO: inject script to active tab
+  }
+});
+
+//listen to ebay tabs that were removed
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  //ebay active tab is removed on script completion or tab removal, whichever comes first
+  console.log("tab removed: ", tabId, removeInfo);
+
+  if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
+    //remove tabId from object
+    delete ebaySetListingActiveTabs[tabId];
+
+    console.log(
+      "new get listing active tabs for ebay, ",
+      ebaySetListingActiveTabs
+    );
+  }
+});

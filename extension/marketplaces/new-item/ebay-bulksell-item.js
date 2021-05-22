@@ -1,5 +1,7 @@
 console.log("yooooo from the ebay bulksell page");
 
+showPageLoadingAlert();
+
 function waitForElementToLoad(selector, waitTimeMax, inTree) {
   //TODO: we need jQuery for this to work
   if (!inTree) inTree = $(document.body);
@@ -26,7 +28,7 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
   });
 }
 
-async function enterEbayItemTitle(title) {
+async function enterEbayItemTitle() {
   setTimeout(() => {
     //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to
     let iframe = document.querySelector("iframe[name='findprod_iframe']");
@@ -60,7 +62,53 @@ function fillInputValue(input, value) {
 
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
+    console.log(itemData);
+    showProcessingAlert();
     enterEbayItemTitle(itemData.title);
     console.log("page complete");
   }
 };
+
+function showPageLoadingAlert() {
+  //LATER: change background color to make it more presentable, maybe a opaque white?
+  //LATER: show gif, or lottie image instead of just a simple loading spinner?
+  Swal.fire({
+    title: "Waiting on page to load...",
+    html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
+    footer: "Page loading time is affected by your internet speed.",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
+
+function showProcessingAlert() {
+  Swal.fire({
+    title: "Processing...",
+    html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
+    footer: "This tab will auto-close after it finishes processing.",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    willOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
+
+// {
+//     "matches": [
+//       "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList*",
+//       "https://www.ebay.com/lstng*"
+//     ],
+//     "js": [
+//       "third-party/jquery-3.6.0.min.js",
+//       "marketplaces/new-item/ebay-item.js"
+//     ],
+//     "all_frames": true
+//   },
+
+// let autocompleteList = await waitForElementToLoad(
+//   'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
+// );

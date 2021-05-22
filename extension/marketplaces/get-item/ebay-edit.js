@@ -2,7 +2,6 @@ console.log("message recevied from ebay session");
 
 showPageLoadingAlert();
 
-//TODO: make this element ready to display a
 function waitForElementToDisplay(
   selector,
   callback,
@@ -64,9 +63,9 @@ function waitForElementToLoad(selector, waitTimeMax, inTree) {
 }
 
 function detectEbayListingVersion() {
+  //detect using a unique element from each version
+
   //ebay listing version 1
-  //detecting using title wrap
-  //editpane_form
   waitForElementToDisplay(
     "#editpane_form",
     function () {
@@ -145,6 +144,7 @@ document.onreadystatechange = function () {
 //=====================> Ebay Listing Version 1
 
 async function formatItemPropertiesVersionOne() {
+  //LATER: some categories have color property(such as handbags), search to see if color exists, if it does, get
   await waitForElementToLoad("#editpane_title");
 
   return await new Promise(
@@ -185,6 +185,7 @@ async function formatItemPropertiesVersionOne() {
 function formatConditionVersionOne(condition) {
   //return rs condition value from condition value
   switch (condition) {
+    //LATER: some ebay conditions may be different based on category. so reconfigure this later to just pull new if nwt, or default to the second one
     case "1000": //NEW
       return "nwt";
 
@@ -199,6 +200,7 @@ function formatConditionVersionOne(condition) {
 ////=====================> Ebay Listing Version 2
 
 async function formatItemPropertiesVersionTwo() {
+  //LATER: some categories have color property(such as handbags), search to see if color exists, if it does, get
   await waitForElementToLoad("input[name='title']");
 
   return await new Promise(
@@ -256,6 +258,8 @@ async function formatItemPropertiesVersionTwo() {
 function formatConditionVersionTwo(condition) {
   //return rs condition value from condition value
   switch (condition) {
+    //LATER: some ebay conditions may be different based on category. so reconfigure this later to just pull new if nwt, or default to the second one
+
     case "new": //NEW
       return "nwt";
 

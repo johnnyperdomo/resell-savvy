@@ -53,7 +53,6 @@
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*"
       ],
-
       "run_at": "document_start",
       "all_frames": true
     },
