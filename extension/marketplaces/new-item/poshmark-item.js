@@ -186,7 +186,6 @@ function fillTextAreaValue(textArea, value) {
 
 //LATER: do more error checking for fields, example like price/currency validation
 function getItemDetails() {
-  console.log(itemData);
   fillOutPoshmarkForm(
     itemData.imageUrls,
     itemData.title,

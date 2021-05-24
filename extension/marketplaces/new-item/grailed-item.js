@@ -102,7 +102,6 @@ async function fillOutGrailedForm(
 
   //   console.log("data transfer, " + dataTransfer);
 
-  grailed_condition.selecl;
   $(grailed_condition).trigger("click");
   if (condition != "") {
     //TODO: this is not selecting value

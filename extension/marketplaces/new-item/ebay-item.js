@@ -63,6 +63,10 @@ function fillInputValue(input, value) {
 }
 
 document.onreadystatechange = function () {
+  if (document.readyState === "interactive") {
+    console.log("page is interactive");
+  }
+
   if (document.readyState === "complete") {
     console.log("page complete");
 
@@ -73,8 +77,8 @@ document.onreadystatechange = function () {
     waitForElementToDisplay(
       "#editpane_subtitle",
       function () {
-        // getItemDetails(itemData);
         console.log("detected ebay v1");
+        getItemDetails("one");
         //TODO:
         //   removeEbayActiveTab();
       },
@@ -86,16 +90,62 @@ document.onreadystatechange = function () {
     waitForElementToDisplay(
       ".summary__container",
       function () {
-        //itemData inherited from execute script
         // getItemDetails(itemData);
         console.log("detected ebay v2");
-        //   getItemDetails("two");
+        getItemDetails("two");
+
+        //remove ebay active tab
       },
       100,
       1000000000000
     );
   }
 };
+
+function getItemDetails(version) {
+  switch (version) {
+    case "one":
+      //TODO
+      //   fillOutEbayFormOne(
+      //     itemData.imageUrls,
+      //     itemData.title,
+      //     itemData.description,
+      //     itemData.brand,
+      //     itemData.condition,
+      //     itemData.color,
+      //     itemData.price,
+      //     itemData.sku
+      //   );
+
+      fillOutEbayFormOne(
+        [],
+        "Nike shirt premium bro",
+        "this is the best nike shirt i have ever seen in my entire life",
+        "Nike",
+        "used",
+        "Red",
+        "97",
+        "123edg"
+      );
+
+      break;
+    case "two":
+      fillOutEbayFormTwo(
+        [],
+        "Nike shirt premium bro",
+        "this is the best nike shirt i have ever seen in my entire life",
+        "Nike",
+        "used",
+        "Red",
+        "97",
+        "123edg"
+      );
+
+      break;
+    default:
+      break;
+  }
+}
 
 //remove active tab from ebay array in sessions.js that way we don't keep listing for unintended changes to tab
 function removeEbayActiveTab() {
@@ -108,37 +158,49 @@ function removeEbayActiveTab() {
 
 //=====================> Ebay Listing Version 1
 
-async function fillOutEbayFormOne() {
-  //   await waitForElementToLoad("#editpane_title");
-  //   return await new Promise(
-  //     (resolve) =>
-  //       setTimeout(() => {
-  //         //NOTE: Alternative method would be to inject script into iframe, get urls, and then send message back here
-  //         //hidden uploader form with input values
-  //         let imageURLS = $("#epsUrls").val().split(";");
-  //         let ebay_title = $("#editpane_title").val();
-  //         let ebay_description = $('iframe[id*="txtEdit_st"]')
-  //           .contents()
-  //           .find("body")[0].innerText;
-  //         let ebay_brand = $("input[fieldname='Brand']").val();
-  //         let ebay_condition = $("select[name='itemCondition']").val();
-  //         let ebay_price = $("#binPrice").val(); //TODO: check ebay to see what would it be for an auction listing
-  //         let ebay_sku = $("#editpane_skuNumber").val();
-  //         console.log(ebay_description);
-  //         let properties = {
-  //           imageUrls: imageURLS,
-  //           title: ebay_title,
-  //           description: ebay_description,
-  //           color: "", //null
-  //           brand: ebay_brand,
-  //           condition: formatConditionVersionOne(ebay_condition),
-  //           price: ebay_price,
-  //           sku: ebay_sku,
-  //           cost: "", //null
-  //         };
-  //         resolve(properties);
-  //       }, 3000) //NOTE: wait 3 seconds to wait for iframe to load
-  //   );
+async function fillOutEbayFormOne(
+  imageUrls,
+  title,
+  description,
+  brand,
+  condition,
+  color,
+  price,
+  sku
+) {
+  //LATER: fill out color
+
+  //LATER: check to see if element is found before buying?
+
+  await waitForElementToLoad("#editpane_title");
+
+  let ebay_title = document.querySelector("input[id='editpane_title']");
+  let ebay_sku = document.querySelector("input[id='editpane_skuNumber']");
+  let ebay_condition = document.querySelector("select[id='itemCondition']");
+
+  let ebay_brand = document.querySelector(
+    "input[id='Listing.Item.ItemSpecific[Brand]']"
+  );
+  let ebay_color = document.querySelector(
+    "input[id='Listing.Item.ItemSpecific[Color]']"
+  );
+
+  let ebay_desc_iframe = $('iframe[id*="txtEdit_st"]').contents().find("body");
+
+  let ebay_price = document.querySelector("input[id='binPrice']");
+
+  fillInputValue(ebay_title, title);
+  fillInputValue(ebay_sku, sku);
+  fillInputValue(ebay_brand, brand);
+  fillInputValue(ebay_color, color);
+  ebay_desc_iframe.html(description); //in iframe, so inputing the value by html
+  fillInputValue(ebay_price, price);
+
+  if (condition) {
+    let conditionValue = formatConditionVersionOne(condition);
+
+    $(ebay_condition).val(conditionValue).trigger("change");
+  }
 }
 
 function formatConditionVersionOne(condition) {
@@ -146,70 +208,39 @@ function formatConditionVersionOne(condition) {
   switch (condition) {
     //ebay conditions are different based on category, default to nwt if applicable or second value to remove complexity
 
-    //TODO: when setting condition, just choose 1000 as the value, if not 1000, just default to the second nearest selection
+    //LATER: when setting condition, just choose 1000 as the value, if not 1000, just default to the second nearest selection
+    //var values = $.map(options ,function(option) {
+    //     return option.value;
+    // });
 
     case "nwt": //NEW
       return "1000";
 
     default:
-      return "";
+      return "3000";
   }
 }
 
 ////=====================> Ebay Listing Version 2
 
-async function fillOutEbayFormTwo() {
-  //   await waitForElementToLoad("input[name='title']");
-  //   return await new Promise(
-  //     (resolve) =>
-  //       setTimeout(() => {
-  //         //image is nested inside button as a css background style
-  //         let imagesEl = document.querySelectorAll(
-  //           "button.uploader-thumbnails__image"
-  //         );
-  //         let imageURLs = Array.from(imagesEl).map((image) => {
-  //           let fullURL = $(image).css("background-image"); //this returns url("{image link goes here}")
-  //           let cleanURL = fullURL.substring(
-  //             fullURL.lastIndexOf("http"),
-  //             fullURL.lastIndexOf('")')
-  //           ); //get url between parentheses
-  //           //regex replace thumbnail size of _(random int).JPG, with full image _57
-  //           return cleanURL.replace(/_[\d]+\.JPG/, "_57.JPG");
-  //         });
-  //         let ebay_title = $("input[name='title']").val();
-  //         //LATER: desc only works after iframe has been loaded in, this loads dynamically a little bit after page, so we have to wait for it. using 5 seconds in not the best way, see how you can use a wait for iframe to load function or something.
-  //         let ebay_description = $(".summary__description iframe")
-  //           .contents()
-  //           .find("body")[0].innerText;
-  //         let ebay_brand = $('button[_track*="_Brand."]').text();
-  //         let ebay_condition = $('button[_track*=".condition."]')
-  //           .text()
-  //           .toLowerCase();
-  //         let ebay_price = $("input[name='price']").val(); //TODO: check ebay to see what would it be for an auction listing
-  //         let ebay_sku = $("input[name='customLabel']").val();
-  //         // console.log(ebay_description);
-  //         console.log("ebay condition, ", ebay_condition);
-  //         let properties = {
-  //           imageUrls: imageURLs,
-  //           title: ebay_title,
-  //           description: ebay_description,
-  //           color: "", //null
-  //           brand: ebay_brand,
-  //           condition: formatConditionVersionTwo(ebay_condition),
-  //           price: ebay_price,
-  //           sku: ebay_sku,
-  //           cost: "", //null
-  //         };
-  //         resolve(properties);
-  //       }, 3000) //NOTE: wait 3 seconds to wait for iframe to load
-  //   );
+async function fillOutEbayFormTwo(
+  imageUrls,
+  title,
+  description,
+  brand,
+  condition,
+  color,
+  price,
+  sku
+) {
+  //LATER: fill out color based on clothes type if exists
 }
 
 function formatConditionVersionTwo(condition) {
   //return rs condition value from condition value
   switch (condition) {
     //ebay conditions are different based on category, default to nwt if applicable or second value to remove complexity
-    //TODO: when setting condition, just choose closest to 'new' as the value,(first item with "new" in it) if not, just default to the second nearest selection
+    //LATER: when setting condition, just choose closest to 'new' as the value,(first item with "new" in it) if not, just default to the second nearest selection //scrape all the values of select condition, so new, used, good, etc....filter out nwt, and get the second one
 
     case "nwt": //NEW
       return "new";
