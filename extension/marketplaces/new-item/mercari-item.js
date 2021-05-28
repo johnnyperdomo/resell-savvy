@@ -80,25 +80,15 @@ async function fillOutMercariForm(
   let mercari_color = document.querySelector('button[data-testid="Color"]');
 
   fillInputValue(mercari_title, title);
-
   fillTextAreaValue(mercari_description, description);
 
   if (brand != "") {
     fillInputValue(mercari_brand, brand);
 
-    // $(mercari_brand).trigger("input");
-
     //TODO: this giving alot of problems, not working correctly
     let brandList = await waitForElementToLoad(
       'div[data-testid="BrandDropdown"] > div > div'
     );
-
-    // let brandList = await waitForElementToLoad(
-    //   'div[data-testid="BrandDropdown"]',
-    //   7500
-    // );
-
-    // let nestedDivs = brandList.find(" > div > div");
 
     // console.log(nestedDivs);
     //TODO: handle waitfor element errors, if not found. This brand should not work, but it should still continue running the other code. We should do like a wait for element, but time out after a few seconds. If not it just continues looping forever and blocks the next inputs
@@ -127,9 +117,13 @@ async function fillOutMercariForm(
   //LATER: any number if available, round up, bcuz mercari doesn't accept decimals //FIX
   fillInputValue(mercari_price, price);
 
-  //TODO: you need to simulate user inputs for it to validate the inputs before submiting //focus
-  $(mercari_title).trigger("focus").trigger("blur");
-  $(mercari_description).trigger("focus").trigger("blur");
+  //TODO: you need to simulate user inputs for it to validate the inputs before submiting //focus //LATER input not detecting change right away, but works if they click inside input and then click out. for 'title and description'
+  // $(mercari_title)
+  //   .trigger("input")
+  //   .trigger("blur")
+  //   .trigger("keyup", { keyCode: 50 });
+  // $(mercari_title).trigger("keyup");
+  // $(mercari_description).trigger("input").trigger("blur");
 
   //   $('button[data-testid="PhotoUploadButton"]').trigger("click");
   // $("#categoryId").trigger("click");

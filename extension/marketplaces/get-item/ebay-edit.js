@@ -232,6 +232,7 @@ async function formatItemPropertiesVersionTwo() {
           .find("body")[0].innerText;
 
         let ebay_brand = $('button[_track*="_Brand."]').text();
+        //LATER: get condition by checking if it says new, if not default to used
         let ebay_condition = $('button[_track*=".condition."]')
           .text()
           .toLowerCase();

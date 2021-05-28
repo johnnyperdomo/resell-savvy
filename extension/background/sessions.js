@@ -1,6 +1,7 @@
 //handling communication between marketplaces
 //LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
 
+//LATER: when starting crosslist session, make sure if user is logged in, if not, show error message telling them to login
 var ebaySetListingActiveTabs = {};
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
@@ -167,7 +168,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["mercari"],
           copyFromMarketplace: "kidizen",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -208,7 +209,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen", "etsy"],
+          copyToMarketplaces: [
+            "depop",
+            "mercari",
+            "kidizen",
+            "etsy",
+            "grailed",
+          ],
           copyFromMarketplace: "poshmark",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
