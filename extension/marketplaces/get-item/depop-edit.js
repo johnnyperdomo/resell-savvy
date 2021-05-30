@@ -51,7 +51,7 @@ function formatCondition(condition) {
 async function formatItemPropertiesVersion1() {
   await waitForElementToLoad("#description");
 
-  //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind
+  //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind, so create a function that waits for element to load, but doesn't freeze ui, or cause to await, if it shows up, manually input(user will see this, but there's nothing you can do about it)
 
   return await new Promise((resolve) =>
     setTimeout(() => {

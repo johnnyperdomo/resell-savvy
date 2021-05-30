@@ -70,4 +70,11 @@ export class Item {
   }
 }
 
+//LATER: once I figure out how to simulate user inputting, such as puppeteer has, I will include the 'tag feature at least'
+
+//LATER: Specifics to add:
+//tags(array)
+//msrp
+//upc
+
 //Note: we won't have specifics such as packaging details, sizes, or tags. (mostly because inputing them on form fields is very complex since there are so many different use cases/variables when it comes to categories/Brands. also they require special dropdown and native browser elements to pull off, which can get very complex. Also, depending on what the user is reselling, different items have different requirements. So just keep it generic.)

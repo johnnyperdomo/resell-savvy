@@ -2,6 +2,11 @@
 //LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
 
 //LATER: when starting crosslist session, make sure if user is logged in, if not, show error message telling them to login
+
+//LATER: learn how to simulate typing like puppeteer, so you can make inputs work better
+
+//LATER: whenever there's a major error like timeout, or crosslist didn't work at all. Show small side popup that says "error, try crosslisting again".
+
 var ebaySetListingActiveTabs = {};
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {

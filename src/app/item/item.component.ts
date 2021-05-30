@@ -28,7 +28,7 @@ import * as Swal from 'sweetalert2';
 
 //LATER: have a more sophisticated file upload system, maybe uusing filepond library with image previews? idk
 //LATER: if user clicks cancel button is about to leave page, have a prompt that says, are you sure want to leave without saving, to make sure they don't lose their progress?
-//LATER: see how you can download images with cdn path, to reduce bandwidth
+//LATER: see how you can download images with cdn path, to reduce bandwidth, and increase performance, faster load time etc...
 //LATER: load html after data input, since the transition looks kind of ugly (bad ux)
 export class ItemComponent implements OnInit {
   @ViewChild('mercariInput') mercariInput;
