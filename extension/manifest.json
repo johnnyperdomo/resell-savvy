@@ -2,6 +2,11 @@
   "name": "ResellSavvy - Crosslisting tool for sellers",
   "version": "0.01",
   "description": "Crosslisting tool for sellers",
+  "icons": {
+    "16": "assets/icons/icon-16.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png"
+  },
   "permissions": [
     "storage",
     "declarativeContent",
