@@ -1,4 +1,5 @@
 console.log("bulk edit page - iframe detected");
+var domEvent = new DomEvent();
 
 //listen to message from 'ebay-bulksell-item.js' this is an iframe, so we manipulate dom from inside this iframe that was injected in manifest.json
 window.addEventListener("message", function (event) {
@@ -22,7 +23,7 @@ window.addEventListener("message", function (event) {
     // $(searchBar).trigger("focus");
 
     setTitle(properties.title);
-    // let autocompleteList = await waitForElementToLoad(
+    // let autocompleteList = await domEvent.waitForElementToLoad(
     //   'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
     // );
   }
@@ -42,7 +43,7 @@ async function setTitle(title) {
   fillInputValue(searchBar, title);
   $(searchBar).trigger("focus");
 
-  let autocompleteList = await waitForElementToLoad(
+  let autocompleteList = await domEvent.waitForElementToLoad(
     'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
   );
 
@@ -64,30 +65,4 @@ function fillInputValue(input, value) {
 
   var inputEvent = new Event("input", { bubbles: true });
   input.dispatchEvent(inputEvent);
-}
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
 }

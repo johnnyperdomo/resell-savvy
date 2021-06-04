@@ -2,63 +2,6 @@
 // //LATER: make elements fail safely if not found, just skip instead of failing the entire function
 // //FIX: error with itemData not being recognized
 
-// function waitForElementToLoad(selector, waitTimeMax, inTree) {
-//   //TODO: we need jQuery for this to work
-//   if (!inTree) inTree = $(document.body);
-//   let timeStampMax = null;
-//   if (waitTimeMax) {
-//     timeStampMax = new Date();
-//     timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-//   }
-//   return new Promise((resolve) => {
-//     let interval = setInterval(() => {
-//       let node = inTree.find(selector);
-//       if (node.length > 0) {
-//         console.log("node is ready");
-//         clearInterval(interval);
-//         resolve(node);
-//       } else {
-//         console.log("node is not ready yet");
-//       }
-//       if (timeStampMax && new Date() > timeStampMax) {
-//         clearInterval(interval);
-//         resolve(false);
-//       }
-//     }, 50);
-//   });
-// }
-
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// //TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "label[aria-label='Title']",
-//   function () {
-//     //itemData inherited from execute script
-//     getItemDetails(itemData);
-//   },
-//   100,
-//   100000000000000
-// );
-
 // async function fillOutFacebookForm(
 //   imageUrls,
 //   title,
@@ -68,7 +11,7 @@
 // ) {
 //   console.log("waiting on form filler");
 
-//   await waitForElementToLoad("form");
+//   await domEvent.waitForElementToLoad("form");
 //   console.log("called form filler");
 //   let facebook_title = document.querySelector(
 //     "label[aria-label='Title'] input"
@@ -98,7 +41,7 @@
 //     });
 
 //     $(`label[aria-label="Condition"]`).trigger("click");
-//     let searchCondition = await waitForElementToLoad(
+//     let searchCondition = await domEvent.waitForElementToLoad(
 //       `span:textEquals('${conditionValue}')`
 //     );
 //     searchCondition.trigger("click");

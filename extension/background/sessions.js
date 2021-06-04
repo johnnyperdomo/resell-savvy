@@ -7,6 +7,8 @@
 
 //LATER: whenever there's a major error like timeout, or crosslist didn't work at all. Show small side popup that says "error, try crosslisting again".
 
+//LATER: create shared class for scraping data, all in one place, make's it easier to read.
+
 var ebaySetListingActiveTabs = {};
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
@@ -83,7 +85,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["poshmark", "mercari", "kidizen"],
+          copyToMarketplaces: ["poshmark"],
           copyFromMarketplace: "depop",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji", //TODO: the actual listing url
           tab: tab,
@@ -214,13 +216,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: [
-            "depop",
-            "mercari",
-            "kidizen",
-            "etsy",
-            "grailed",
-          ],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "poshmark",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,

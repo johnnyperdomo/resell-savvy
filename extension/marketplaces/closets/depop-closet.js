@@ -33,6 +33,7 @@
 // }
 
 // insertModal();
+var domEvent = new DomEvent();
 
 function openModal() {
   const cardInfo = getCardInfo();
@@ -57,9 +58,9 @@ function openModal() {
 async function createCrossListButton() {
   //FIX: this giving error when listing item, since this is a universal closet function
   //if rearrange button is present, it means this is their personal closet
-  await waitForElementToLoad('button[data-testid="action__moveSold"]');
+  await domEvent.waitForElementToLoad('button[data-testid="action__moveSold"]');
   //products tab should be loaded
-  await waitForElementToLoad("#products-tab");
+  await domEvent.waitForElementToLoad("#products-tab");
 
   console.log("found btn");
   const button = document.createElement("button");
@@ -103,34 +104,8 @@ function getCardInfo() {
   return parsedArray;
 }
 
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
 //check frequency every 1 second, expire after 30 seconds, that way node won't block javascript from running on any other page just in case
-waitForElementToDisplay(
+domEvent.waitForElementToDisplay(
   'button[data-testid="action__moveSold"]',
   function () {
     createCrossListButton();
@@ -138,23 +113,3 @@ waitForElementToDisplay(
   1000,
   30000
 );
-
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}

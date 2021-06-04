@@ -1,49 +1,26 @@
-console.log("yooooo from the ebay bulksell page");
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function enterEbayItemTitle() {
-  setTimeout(() => {
-    //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to
-    let iframe = document.querySelector("iframe[name='findprod_iframe']");
-    console.log("iframe: ", iframe);
+  //wait half a second for dom to render
+  await helpers.delay(500);
 
-    iframe.contentWindow.postMessage(
-      {
-        data: itemData,
-        command: "add-ebay-title-iframe",
-      },
-      "*"
-    );
+  //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to
+  let iframe = document.querySelector("iframe[name='findprod_iframe']");
+  console.log("iframe: ", iframe);
 
-    //TODO: after iframe dom is manipulated successfully, when the other pages load, and the dom is successfully added as well after crosslist, send message to remove tab from being listened to, since this won't do it automatically. since the tab won't close right away, this could cause some leaks if not handled properly (OUTDATED METHOD)
+  iframe.contentWindow.postMessage(
+    {
+      data: itemData,
+      command: "add-ebay-title-iframe",
+    },
+    "*"
+  );
 
-    //TODO: use wait for display to show, wait for the listing forms to be present, and check if v1 or v2 before proceeding
-  }, 500);
+  //TODO: after iframe dom is manipulated successfully, when the other pages load, and the dom is successfully added as well after crosslist, send message to remove tab from being listened to, since this won't do it automatically. since the tab won't close right away, this could cause some leaks if not handled properly (OUTDATED METHOD)
+
+  //TODO: use wait for display to show, wait for the listing forms to be present, and check if v1 or v2 before proceeding
 }
 
 function fillInputValue(input, value) {
@@ -60,46 +37,16 @@ function fillInputValue(input, value) {
 
 document.onreadystatechange = function () {
   if (document.readyState === "interactive") {
-    showPageLoadingAlert();
+    swalAlert.showPageLoadingAlert();
   }
 
   if (document.readyState === "complete") {
     console.log(itemData);
-    showProcessingAlert();
+    swalAlert.showProcessingAlert();
     enterEbayItemTitle(itemData.title);
     console.log("page complete");
   }
 };
-
-function showPageLoadingAlert() {
-  //LATER: change background color to make it more presentable, maybe a opaque white?
-  //LATER: show gif, or lottie image instead of just a simple loading spinner?
-  Swal.fire({
-    title: "Waiting on page to finish loading...",
-    html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
-    footer: "Page loading time is affected by your internet speed.",
-    allowOutsideClick: false,
-    backdrop: "rgba(239, 239, 239, 0.98)",
-    showConfirmButton: false,
-    willOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}
-
-function showProcessingAlert() {
-  Swal.fire({
-    title: "Processing...",
-    html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
-    footer: "This tab will auto-close after it finishes processing.",
-    allowOutsideClick: false,
-    backdrop: "rgba(239, 239, 239, 0.98)",
-    showConfirmButton: false,
-    willOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}
 
 // {
 //     "matches": [
@@ -113,6 +60,6 @@ function showProcessingAlert() {
 //     "all_frames": true
 //   },
 
-// let autocompleteList = await waitForElementToLoad(
+// let autocompleteList = await domEvent.waitForElementToLoad(
 //   'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
 // );

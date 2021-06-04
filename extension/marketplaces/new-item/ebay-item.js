@@ -1,4 +1,3 @@
-console.log("hi from ebay");
 //TODO: just in case, autotimeout "sweet alert crosslisting modal to 30 seconds, if there is an error or something stalls, they can still access the page after 30 seconds"
 //TODO: have window flag, but only set value to true once detected
 //LATER: await for element should time out to not freeze ui
@@ -6,73 +5,9 @@ console.log("hi from ebay");
 //TODO: //FIX: inputs not detecting change, not working!!!!!
 //TODO: remove new item from manifest.json
 
-async function delay(ms) {
-  // return await for better async stack trace support in case of errors.
-  return await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-//TODO: make this element ready to display a
-function waitForElementToDisplay(
-  selector,
-  callback,
-  checkFrequencyInMs,
-  timeoutInMs
-) {
-  var startTimeInMs = Date.now();
-  (function loopSearch() {
-    if (document.querySelector(selector) != null) {
-      callback();
-      return;
-    } else {
-      setTimeout(function () {
-        if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-        console.log("element not found yet");
-
-        loopSearch();
-      }, checkFrequencyInMs);
-    }
-  })();
-}
-
-function showCrosslistSuccessAlert() {
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Ebay</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
-}
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 function fillInputValue(input, value) {
   var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -118,7 +53,7 @@ document.onreadystatechange = function () {
 
     //look for subtitle, which is unique from the bulksell title search bar
     //Ebay listing version 1
-    waitForElementToDisplay(
+    domEvent.waitForElementToDisplay(
       "#editpane_subtitle",
       function () {
         console.log("detected ebay v1");
@@ -131,7 +66,7 @@ document.onreadystatechange = function () {
     );
 
     //ebay listing version 2
-    waitForElementToDisplay(
+    domEvent.waitForElementToDisplay(
       ".summary__container",
       function () {
         // getItemDetails(itemData);
@@ -146,7 +81,7 @@ document.onreadystatechange = function () {
   }
 };
 
-function getItemDetails(version) {
+async function getItemDetails(version) {
   switch (version) {
     case "one":
       //TODO
@@ -174,20 +109,19 @@ function getItemDetails(version) {
 
       break;
     case "two":
-      //waits for iframe to load
-      //LATER: just set delay? cleaner?
-      setTimeout(() => {
-        fillOutEbayFormTwo(
-          [],
-          "Banana",
-          "Adidas is the best brand",
-          "Adidas",
-          "nwt",
-          "Red",
-          "132.00",
-          "123edg"
-        );
-      }, 1000);
+      //wait for iframe to load
+      await helpers.delay(1000);
+
+      fillOutEbayFormTwo(
+        [],
+        "Banana",
+        "Adidas is the best brand",
+        "Adidas",
+        "nwt",
+        "Red",
+        "132.00",
+        "123edg"
+      );
 
       break;
     default:
@@ -219,7 +153,7 @@ async function fillOutEbayFormOne(
   //LATER: check to see if element is found before buying?
 
   //TODO: //FIX: inputs not detecting change, not working!!!!!
-  await waitForElementToLoad("#editpane_title");
+  await domEvent.waitForElementToLoad("#editpane_title");
 
   let ebay_title = document.querySelector("input[id='editpane_title']");
   let ebay_sku = document.querySelector("input[id='editpane_skuNumber']");
@@ -250,7 +184,7 @@ async function fillOutEbayFormOne(
     $(ebay_condition).val(conditionValue).trigger("change");
   }
 
-  showCrosslistSuccessAlert();
+  swalAlert.showCrosslistSuccessAlert();
 }
 
 function formatConditionVersionOne(condition) {
@@ -327,7 +261,7 @@ async function fillOutEbayFormTwo(
 
     $(item_specifics_edit_button).trigger("click");
 
-    let sidepane = await waitForElementToLoad(
+    let sidepane = await domEvent.waitForElementToLoad(
       "div[_track*='ATTRIBUTES']#dialog-sidepane"
     );
 
@@ -347,7 +281,7 @@ async function fillOutEbayFormTwo(
 
       //input page
 
-      let searchBoxInput = await waitForElementToLoad(
+      let searchBoxInput = await domEvent.waitForElementToLoad(
         "#dialog-sidepane .search-box__field input"
       );
 
@@ -388,7 +322,7 @@ async function fillOutEbayFormTwo(
     $(condition_edit_button).trigger("click");
 
     //LATER: in the wait for element function, we are going to wait for sidepane for 5 seconds, if not found, we are going to exit out of function, return the await, and just continue on with our code
-    let sidepane = await waitForElementToLoad(
+    let sidepane = await domEvent.waitForElementToLoad(
       "div[_track*='CONDITION']#dialog-sidepane"
     );
 
@@ -411,7 +345,7 @@ async function fillOutEbayFormTwo(
         $(conditionPanel).find(".se-field-card button").trigger("click");
       }
 
-      let radio = await waitForElementToLoad(
+      let radio = await domEvent.waitForElementToLoad(
         `#dialog-sidepane input[type='radio'][value='${conditionValue}']`
       );
 
@@ -441,7 +375,7 @@ async function fillOutEbayFormTwo(
     $(price_edit_button).trigger("click");
 
     //LATER: in the wait for element function, we are going to wait for sidepane for 5 seconds, if not found, we are going to exit out of function, return the await, and just continue on with our code
-    let sidepane = await waitForElementToLoad(
+    let sidepane = await domEvent.waitForElementToLoad(
       "div[_track*='PRICE']#dialog-sidepane"
     );
 
@@ -466,7 +400,7 @@ async function fillOutEbayFormTwo(
 
       //input page
       //find textBox input
-      let textBoxInput = await waitForElementToLoad(
+      let textBoxInput = await domEvent.waitForElementToLoad(
         "#dialog-sidepane .se-textbox--input input[name='price']"
       );
 

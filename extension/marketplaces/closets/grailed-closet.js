@@ -1,4 +1,5 @@
 ///////////////
+var domEvent = new DomEvent();
 
 function insertModal() {
   //TODO
@@ -56,7 +57,7 @@ function openModal() {
 
 async function createCrossListButton() {
   //wait for item cards
-  await waitForElementToLoad(".ListingCards");
+  await domEvent.waitForElementToLoad(".ListingCards");
 
   const button = document.createElement("button");
   button.classList = "rs-crosslist-btn btn-primary shadow ";
@@ -99,30 +100,4 @@ function getCardInfo() {
   });
 
   return parsedArray;
-}
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
 }

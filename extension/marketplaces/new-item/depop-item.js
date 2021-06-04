@@ -58,68 +58,8 @@
 //   return dataTransfer.files;
 // }
 
-//FIX: maybe we should wait for page to load? this is giving some errors when crosslisting
-//TODO: set timeout after a few seconds, if element not found, skip code and execute anyways
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet ", selector);
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-//TODO: make this element ready to display a
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         console.log("element not found yet");
-
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// // TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "#description",
-//   function () {
-//     //itemData inherited from execute script
-//     // getItemDetails(itemData);
-//     console.log("found element");
-//   },
-//   100,
-//   7500
-// );
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
 
 async function fillOutDepopForm(
   imageUrls,
@@ -131,7 +71,7 @@ async function fillOutDepopForm(
   //LATER: append brand
   console.log("waiting on form filler");
 
-  await waitForElementToLoad("#description");
+  await domEvent.waitForElementToLoad("#description");
   console.log("called form filler");
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'
@@ -144,6 +84,18 @@ async function fillOutDepopForm(
 
   let depop_image_input = document.querySelector("input[type=file]");
 
+  url =
+    "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"; // url of image
+
+  //TODO: this works!!!!!!
+  //Tested Successfully on major platforms.
+  //Execute Command
+  await UploadImage(
+    url,
+    fname,
+    document.querySelectorAll("input[type=file]")[0]
+  );
+
   fillTextAreaValue(depop_description, description);
 
   if (condition != "") {
@@ -152,7 +104,7 @@ async function fillOutDepopForm(
     console.log(conditionValue);
 
     fillInputValue(depop_condition, conditionValue);
-    let conditionList = await waitForElementToLoad(
+    let conditionList = await domEvent.waitForElementToLoad(
       ".listingSelect__menu-list > div"
     );
 
@@ -166,7 +118,7 @@ async function fillOutDepopForm(
     fillInputValue(depop_color, color);
 
     //get first color
-    let searchColor = await waitForElementToLoad(
+    let searchColor = await domEvent.waitForElementToLoad(
       `[class*=ColourSelectstyles__Colour]`
     );
     //closet traverses up the dom to find the closest element in the parent
@@ -175,22 +127,8 @@ async function fillOutDepopForm(
 
   fillInputValue(depop_price, price);
 
-  showCrosslistSuccessAlert();
+  swalAlert.showCrosslistSuccessAlert();
   //LATER: price validation
-}
-
-function showCrosslistSuccessAlert() {
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Depop</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
 }
 
 function matchCondition(condition) {
@@ -260,3 +198,35 @@ document.onreadystatechange = function () {
     console.log("page complete");
   }
 };
+
+//TODO: test image
+
+url2 =
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
+
+fname = "cat.png"; //File name to be submitted
+
+function event_dispatcher(t) {
+  var e = new Event("change", {
+    bubbles: !0,
+  });
+  t.dispatchEvent(e);
+}
+
+function uploadImage_trigger(t) {
+  console.log("Uploaded Success.");
+  var e = t.file,
+    n = t.targetInput,
+    i = new DataTransfer();
+  i.items.add(e), (n.files = i.files), event_dispatcher(n);
+}
+
+async function UploadImage(url, file_name, input_Element) {
+  fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((blob) => {
+      u = new Uint8Array(blob);
+      myfile = new File([u.buffer], file_name, { type: "image/png" });
+      uploadImage_trigger({ file: myfile, targetInput: input_Element });
+    });
+}

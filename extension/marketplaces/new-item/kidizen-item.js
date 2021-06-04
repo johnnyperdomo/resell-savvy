@@ -1,63 +1,9 @@
-//you have to select category first before having access to the other drop downs. Just default to 'kids clothing'
+//NOTE:you have to select category first before having access to the other drop downs. Just default to 'kids clothing'
 
 //LATER: create files by pages to make code cleaner
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// //TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "#item_title",
-//   function () {
-//     //itemData inherited from execute script
-//     getItemDetails(itemData);
-//   },
-//   100,
-//   100000000000000
-// );
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function fillOutKidizenForm(
   imageUrls,
@@ -69,7 +15,7 @@ async function fillOutKidizenForm(
 ) {
   console.log("waiting on form filler");
 
-  await waitForElementToLoad("form");
+  await domEvent.waitForElementToLoad("form");
   console.log("called form filler");
 
   let kidizen_title = document.querySelector("#item_title");
@@ -83,7 +29,7 @@ async function fillOutKidizenForm(
   $("span:contains('Category')")
     .closest(".DropdownTrigger--required")
     .trigger("click");
-  const kidDropDownItem = await waitForElementToLoad(
+  const kidDropDownItem = await domEvent.waitForElementToLoad(
     "div:contains('Kid Clothing')"
   );
   kidDropDownItem.trigger("click");
@@ -97,7 +43,7 @@ async function fillOutKidizenForm(
 
     console.log(brandEl.parent().parent().find("div"));
 
-    const dropDown = await waitForElementToLoad(
+    const dropDown = await domEvent.waitForElementToLoad(
       ".Dropdown",
       100000000,
       brandEl.parent().parent()
@@ -107,13 +53,13 @@ async function fillOutKidizenForm(
     fillInputValue(searchBarInput[0], brand);
 
     //wait half a second for dom to rerender
-    setTimeout(() => {
-      const brandList = dropDown.find(" .Dropdown-item");
+    await helpers.delay(500);
 
-      if (brandList.length) {
-        brandList.eq(0).trigger("click");
-      }
-    }, 500);
+    const brandList = dropDown.find(" .Dropdown-item");
+
+    if (brandList.length) {
+      brandList.eq(0).trigger("click");
+    }
   }
 
   if (condition != "") {
@@ -122,7 +68,7 @@ async function fillOutKidizenForm(
     $("span:contains('Condition')")
       .closest(".DropdownTrigger--required")
       .trigger("click");
-    const conditionDropDownItem = await waitForElementToLoad(
+    const conditionDropDownItem = await domEvent.waitForElementToLoad(
       `div:contains('${conditionVal}')`
     );
     conditionDropDownItem.trigger("click");
@@ -131,21 +77,7 @@ async function fillOutKidizenForm(
   //LATER: currency/price validation
   fillInputValue(kidizen_price, price);
 
-  showCrosslistSuccessAlert();
-}
-
-function showCrosslistSuccessAlert() {
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Kidizen</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
+  swalAlert.showCrosslistSuccessAlert();
 }
 
 function matchCondition(condition) {

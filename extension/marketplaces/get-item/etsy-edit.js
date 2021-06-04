@@ -1,66 +1,43 @@
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
+var swalAlert = new SwalAlert();
+var domEvent = new DomEvent();
+var helpers = new Helpers();
 
 async function formatItemPropertiesVersion1() {
-  await waitForElementToLoad("input[name='title']");
+  await domEvent.waitForElementToLoad("input[name='title']");
 
-  return await new Promise((resolve) =>
-    setTimeout(() => {
-      //image is nested inside button as a css background style
-      let imagesEl = document.querySelectorAll(".block-grid-item[data-image]");
-      let imageURLs = Array.from(imagesEl).map((image) => {
-        let fullURL = $(image).find(".width-full").css("background-image"); //this returns url("{image link goes here}")
-        let cleanURL = fullURL.substring(
-          fullURL.lastIndexOf("http"),
-          fullURL.lastIndexOf('")')
-        ); //get url between parentheses
+  //wait for page to render
+  await helpers.delay(100);
 
-        return cleanURL;
-      });
+  //image is nested inside button as a css background style
+  let imagesEl = document.querySelectorAll(".block-grid-item[data-image]");
+  let imageURLs = Array.from(imagesEl).map((image) => {
+    let fullURL = $(image).find(".width-full").css("background-image"); //this returns url("{image link goes here}")
+    let cleanURL = fullURL.substring(
+      fullURL.lastIndexOf("http"),
+      fullURL.lastIndexOf('")')
+    ); //get url between parentheses
 
-      let etsy_title = $("input[name='title']").val();
-      let etsy_description = $("textarea[name='description-text-area']").val();
-      let etsy_price = $("input[name='price-input']").val();
-      let etsy_sku = $("input[name='sku-input']").val();
+    return cleanURL;
+  });
 
-      let properties = {
-        imageUrls: imageURLs,
-        title: etsy_title, //null
-        description: etsy_description, //
-        color: "", //LATER: get color later
-        brand: "", //LATER: append later
-        condition: "", //null
-        price: etsy_price,
-        sku: etsy_sku, //null
-        cost: "", //null
-      };
+  let etsy_title = $("input[name='title']").val();
+  let etsy_description = $("textarea[name='description-text-area']").val();
+  let etsy_price = $("input[name='price-input']").val();
+  let etsy_sku = $("input[name='sku-input']").val();
 
-      console.log(properties);
-      resolve(properties);
-    }, 100)
-  );
+  let properties = {
+    imageUrls: imageURLs,
+    title: etsy_title, //null
+    description: etsy_description, //
+    color: "", //LATER: get color later
+    brand: "", //LATER: append later
+    condition: "", //null
+    price: etsy_price,
+    sku: etsy_sku, //null
+    cost: "", //null
+  };
+
+  return properties;
 }
 
 async function getItemDetails() {
@@ -90,43 +67,12 @@ function sendMessageToBackground(data) {
 document.onreadystatechange = function () {
   //doc tree is loaded
   if (document.readyState === "interactive") {
-    showPageLoadingAlert();
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
   //doc tree is fully ready to be manipulated
   if (document.readyState === "complete") {
-    showProcessingAlert();
+    swalAlert.showProcessingAlert(); //swal alert ui waiting
     getItemDetails();
   }
 };
-
-function showPageLoadingAlert() {
-  //LATER: change background color to make it more presentable, maybe a opaque white?
-  //LATER: show gif, or lottie image instead of just a simple loading spinner?
-  Swal.fire({
-    title: "Waiting on page to finish loading...",
-    html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
-    footer: "Page loading time is affected by your internet speed.",
-    allowOutsideClick: false,
-    backdrop: "rgba(239, 239, 239, 0.98)",
-    showConfirmButton: false,
-    willOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}
-
-function showProcessingAlert() {
-  //FIX: //LATER: inherits parent style, fix this. Could it be that we can fix this with a shadowdom? select target
-  Swal.fire({
-    title: "Processing...",
-    html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
-    footer: "This tab will auto-close after it finishes processing.",
-    allowOutsideClick: false,
-    backdrop: "rgba(239, 239, 239, 0.98)",
-    showConfirmButton: false,
-    willOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}

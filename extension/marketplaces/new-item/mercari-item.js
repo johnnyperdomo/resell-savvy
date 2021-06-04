@@ -1,61 +1,7 @@
 //LATER: create files by pages to make code cleaner
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet", selector);
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// //TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "#sellName",
-//   function () {
-//     //itemData inherited from execute script
-//     getItemDetails(itemData);
-//   },
-//   100,
-//   100000000000000
-// );
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function fillOutMercariForm(
   imageUrls,
@@ -68,7 +14,7 @@ async function fillOutMercariForm(
 ) {
   console.log("waiting on form filler");
 
-  await waitForElementToLoad("#sellName");
+  await domEvent.waitForElementToLoad("#sellName");
   console.log("called form filler");
   let mercari_title = document.querySelector('input[data-testid="Title"]');
   let mercari_description = document.querySelector(
@@ -86,7 +32,7 @@ async function fillOutMercariForm(
     fillInputValue(mercari_brand, brand);
 
     //TODO: this giving alot of problems, not working correctly
-    let brandList = await waitForElementToLoad(
+    let brandList = await domEvent.waitForElementToLoad(
       'div[data-testid="BrandDropdown"] > div > div'
     );
 
@@ -107,9 +53,11 @@ async function fillOutMercariForm(
   if (color != "") {
     $(mercari_color).trigger("click");
 
-    color = capitalize(color);
+    color = helpers.capitalize(color);
 
-    let searchColor = await waitForElementToLoad(`li:contains('${color}')`);
+    let searchColor = await domEvent.waitForElementToLoad(
+      `li:contains('${color}')`
+    );
 
     searchColor.trigger("click");
   }
@@ -128,31 +76,12 @@ async function fillOutMercariForm(
   //   $('button[data-testid="PhotoUploadButton"]').trigger("click");
   // $("#categoryId").trigger("click");
   // console.log("clicked the category");
-  //   await waitForElementToLoad("ul#categoryId li");
+  //   await domEvent.waitForElementToLoad("ul#categoryId li");
 
   // console.log("clicked the option 7");
 
-  showCrosslistSuccessAlert();
+  swalAlert.showCrosslistSuccessAlert();
 }
-
-function showCrosslistSuccessAlert() {
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Mercari</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
-}
-
-const capitalize = (s) => {
-  if (typeof s !== "string") return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
 
 function matchCondition(condition) {
   //return mercari condition value from our condition value

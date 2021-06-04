@@ -232,6 +232,7 @@ function openEbay() {
   });
 }
 
+//LATER: if user wants to crosslist but they are in different countries other than the us, add an options tab on the popup, and they can specify where they want to crosslist to(poshmark us, or poshmark canada for example). This will only be a change on the localhost, but if users crosslist to poshmark us for example, and then later change the settings, on firebase it will still showed up as already crosslisted, because it will take the 'poshmark' marketplace in general. The countries specificity only is for local user and crosslist destination. (later make sure that regex for marketplace links in dashboard aren't country specific, they just need to include the poshmark name.)
 // {
 //   "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
 //   "matches": ["*://poshmark.com/*"],

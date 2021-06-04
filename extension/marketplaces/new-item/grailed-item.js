@@ -1,61 +1,8 @@
 //LATER: create files by pages to make code cleaner
 
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// //TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "input[name='title']",
-//   function () {
-//     //itemData inherited from execute script
-//     getItemDetails(itemData);
-//   },
-//   100,
-//   100000000000000
-// );
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function fillOutGrailedForm(
   imageUrls,
@@ -66,7 +13,7 @@ async function fillOutGrailedForm(
   brand,
   price
 ) {
-  await waitForElementToLoad("input[name='title']");
+  await domEvent.waitForElementToLoad("input[name='title']");
   const inputFiles = $('input[type="file"]');
   console.log("input files, ", inputFiles);
 
@@ -84,7 +31,9 @@ async function fillOutGrailedForm(
   if (brand != "") {
     fillInputValue(grailed_brand, brand);
 
-    const brandList = await waitForElementToLoad("ul.autocomplete > li");
+    const brandList = await domEvent.waitForElementToLoad(
+      "ul.autocomplete > li"
+    );
 
     if (brandList.length) {
       //LATER: this is not clicking
@@ -93,7 +42,7 @@ async function fillOutGrailedForm(
   }
 
   if (color != "") {
-    color = capitalize(color);
+    color = helpers.capitalize(color);
     fillInputValue(grailed_color, color);
   }
 
@@ -121,29 +70,8 @@ async function fillOutGrailedForm(
   //LATER: currency/price validation
   fillInputValue(grailed_price, price);
 
-  showCrosslistSuccessAlert();
+  swalAlert.showCrosslistSuccessAlert();
 }
-
-function showCrosslistSuccessAlert() {
-  //LATER: this inherits class from parent, try to fix but later on. Not a big issue
-
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Grailed</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
-}
-
-const capitalize = (s) => {
-  if (typeof s !== "string") return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
 
 function formatCondition(condition) {
   //return grailed condition value from our condition value

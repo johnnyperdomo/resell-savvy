@@ -33,6 +33,7 @@
 
 //   $("#rs-crosslist-modal").modal({ show: false });
 // }
+var domEvent = new DomEvent();
 
 insertModal();
 
@@ -58,8 +59,8 @@ function openModal() {
 
 async function createCrossListButton() {
   //should wait for list region element to know it's on list tab
-  // await waitForElementToLoad(".list-region");
-  // await waitForElementToLoad(".content-region ");
+  // await domEvent.waitForElementToLoad(".list-region");
+  // await domEvent.waitForElementToLoad(".content-region ");
 
   console.log("found btn");
   const button = document.createElement("button");
@@ -101,30 +102,4 @@ function getCardInfo() {
   });
 
   return parsedArray;
-}
-
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
 }

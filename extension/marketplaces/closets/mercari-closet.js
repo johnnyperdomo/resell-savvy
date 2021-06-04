@@ -31,6 +31,7 @@
 // }
 
 // insertModal();
+var domEvent = new DomEvent();
 
 function openModal() {
   const cardInfo = getCardInfo();
@@ -53,7 +54,7 @@ function openModal() {
 }
 
 async function createCrossListButton() {
-  await waitForElementToLoad(".List__ListUnstyled-sc-14iq0yd-0");
+  await domEvent.waitForElementToLoad(".List__ListUnstyled-sc-14iq0yd-0");
 
   console.log("found btn");
   const button = document.createElement("button");
@@ -98,40 +99,14 @@ function getCardInfo() {
   return parsedArray;
 }
 
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
 // async function createCrosslistButtons() {
 //   //remove crosslist buttons before recreating, to avoid duplicates
 //   removeCrossListButtons();
 
 //   //find edit profile button to know this is your personal closet
-//   await waitForElementToLoad("a[href='/user/edit-profile']");
+//   await domEvent.waitForElementToLoad("a[href='/user/edit-profile']");
 //   //find card
-//   await waitForElementToLoad(".tile .card");
+//   await domEvent.waitForElementToLoad(".tile .card");
 
 //   var items = document.querySelectorAll(".tile .card");
 

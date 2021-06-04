@@ -19,7 +19,7 @@ import { SoldDialogComponent } from '../shared/sold-dialog/sold-dialog.component
 export class InventoryComponent implements OnInit {
   //LATER: paginate data so we don't pull all the items at once, as this can cause alot of reads which can become expensive later on; if i do this i have to add custom elastic search functionality, I also have to queryable data most likely from google bigquery to get 'stats' values
   //LATER: users can add their inventory to the dashboard directly(this would mean that i hve to store the images)
-  //LATER: allow users to filter the table/search by price, status, dates, marketplaces, etc...
+  //LATER: allow users to filter the table/search by price, status, condition,color, cost range, price range, dates, marketplaces, etc...
   //LATER: be more transparent and share the sold details on the item page, stating fees, etc... and maybe they can edit. This will be more apparent later on when they will need sales reports
 
   items: Item[];

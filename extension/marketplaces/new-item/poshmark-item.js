@@ -6,62 +6,9 @@
 // 3. listing url - the simple url listing
 // 4. closet -
 
-function waitForElementToLoad(selector, waitTimeMax, inTree) {
-  //TODO: we need jQuery for this to work
-  if (!inTree) inTree = $(document.body);
-  let timeStampMax = null;
-  if (waitTimeMax) {
-    timeStampMax = new Date();
-    timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-  }
-  return new Promise((resolve) => {
-    let interval = setInterval(() => {
-      let node = inTree.find(selector);
-      if (node.length > 0) {
-        console.log("node is ready");
-        clearInterval(interval);
-        resolve(node);
-      } else {
-        console.log("node is not ready yet");
-      }
-      if (timeStampMax && new Date() > timeStampMax) {
-        clearInterval(interval);
-        resolve(false);
-      }
-    }, 50);
-  });
-}
-
-// function waitForElementToDisplay(
-//   selector,
-//   callback,
-//   checkFrequencyInMs,
-//   timeoutInMs
-// ) {
-//   var startTimeInMs = Date.now();
-//   (function loopSearch() {
-//     if (document.querySelector(selector) != null) {
-//       callback();
-//       return;
-//     } else {
-//       setTimeout(function () {
-//         if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) return;
-//         loopSearch();
-//       }, checkFrequencyInMs);
-//     }
-//   })();
-// }
-
-// //TODO: call code from postMessage request
-// waitForElementToDisplay(
-//   "input[data-vv-name='title']",
-//   function () {
-//     //itemData inherited from execute script
-//     getItemDetails(itemData);
-//   },
-//   100,
-//   100000000000000
-// );
+var domEvent = new DomEvent();
+var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function fillOutPoshmarkForm(
   imageUrls,
@@ -74,7 +21,7 @@ async function fillOutPoshmarkForm(
   costPrice,
   sku
 ) {
-  await waitForElementToLoad("input[data-vv-name='title']");
+  await domEvent.waitForElementToLoad("input[data-vv-name='title']");
   console.log("wait for element to load");
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(
@@ -89,6 +36,18 @@ async function fillOutPoshmarkForm(
   let poshmark_sku = document.querySelector('input[data-vv-name="sku"]');
   let poshmark_costPrice = document.querySelector(
     'input[data-vv-name="costPriceAmount"]'
+  );
+
+  url =
+    "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"; // url of image
+
+  //TODO: this works!!!!!!
+  //Tested Successfully on major platforms.
+  //Execute Command
+  UploadImage(
+    imageUrls[0],
+    fname,
+    document.querySelectorAll("input[type=file]")[0]
   );
 
   fillInputValue(poshmark_title, title);
@@ -108,11 +67,13 @@ async function fillOutPoshmarkForm(
   }
 
   if (color != "") {
-    color = capitalize(color);
+    color = helpers.capitalize(color);
 
     // $(`div[data-et-name="color"]`).trigger("click");
 
-    let searchColor = await waitForElementToLoad(`li:contains('${color}')`);
+    let searchColor = await domEvent.waitForElementToLoad(
+      `li:contains('${color}')`
+    );
 
     searchColor.trigger("click");
 
@@ -126,27 +87,8 @@ async function fillOutPoshmarkForm(
     // console.log($(`a:contains("Red")`).parent());
   }
 
-  showCrosslistSuccessAlert();
+  swalAlert.showCrosslistSuccessAlert();
 }
-
-function showCrosslistSuccessAlert() {
-  Swal.fire({
-    icon: "success",
-    title: "Almost done!",
-    html: `Item successfully crosslisted. Finish adding a few details unique to <b>Poshmark</b> to finish your listing.`,
-    timer: 7500,
-    timerProgressBar: true,
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    footer: "Don't forget to link this listing to your ResellSavvy inventory.",
-  });
-}
-
-const capitalize = (s) => {
-  if (typeof s !== "string") return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
 
 function formatCondition(condition) {
   //return poshmark condition value from our condition value
@@ -206,3 +148,35 @@ document.onreadystatechange = function () {
     console.log("page complete");
   }
 };
+
+/////
+
+url2 =
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
+
+fname = "cat.png"; //File name to be submitted
+
+function event_dispatcher(t) {
+  var e = new Event("change", {
+    bubbles: !0,
+  });
+  t.dispatchEvent(e);
+}
+
+function uploadImage_trigger(t) {
+  console.log("Uploaded Success.");
+  var e = t.file,
+    n = t.targetInput,
+    i = new DataTransfer();
+  i.items.add(e), (n.files = i.files), event_dispatcher(n);
+}
+
+async function UploadImage(url, file_name, input_Element) {
+  fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((blob) => {
+      u = new Uint8Array(blob);
+      myfile = new File([u.buffer], file_name, { type: "image/png" });
+      uploadImage_trigger({ file: myfile, targetInput: input_Element });
+    });
+}

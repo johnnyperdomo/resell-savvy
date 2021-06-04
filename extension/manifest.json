@@ -50,7 +50,10 @@
       "js": [
         "third-party/jquery-3.6.0.min.js",
         "third-party/bootstrap.min.js",
-        "third-party/sweetalert.min.js"
+        "third-party/sweetalert.min.js",
+        "classes/swal-alert.js",
+        "classes/dom-event.js",
+        "classes/helpers.js"
       ],
       "css": [
         "third-party/bootstrap.min.css",
