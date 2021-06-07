@@ -1,12 +1,30 @@
-async function createLinkButton() {
+function createLinkButton() {
+  var findHost = document.querySelectorAll(".rs-link-host-element");
+
+  if (findHost.length > 0) {
+    //exit out function here, if button is already created/found
+    return;
+  }
+
+  // create host element
+  const hostElement = document.createElement("div");
+  hostElement.className = "rs-link-host-element";
+  document.body.appendChild(hostElement);
+
+  var host = document.querySelector(".rs-link-host-element");
+  var root = host.attachShadow({ mode: "open" });
+
   const button = document.createElement("button");
-  button.id = "rs-link-listing-btn";
-  button.classList = "rs-link-listing-btn btn-primary shadow ";
+  button.classList = "rs-link-btn bootstrap-btn";
+
+  //shadow dom doesn't inherit parent styles or bootstrap css
+  //LATER: make button cuter/ui friendly + shadow
   button.innerHTML =
+    "<style>.rs-link-btn{border-radius: 28px; border-collapse: separate; height: 56px;width: 56px;position: fixed;bottom: 20px;left: 20px;box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 8px;z-index: 100;} .bootstrap-btn {display: inline-block;font-weight: 400;color: #212529;text-align: center;border: 1px solid transparent; color: #fff;background-color: #007bff;}.bootstrap-btn:hover{background-color: #0069d9;cursor: pointer;}</style>" +
     '<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>';
   button.addEventListener("click", onLinkBtnPressed);
 
-  document.body.appendChild(button);
+  root.appendChild(button);
 }
 
 function onLinkBtnPressed() {
