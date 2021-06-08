@@ -43,4 +43,29 @@ class DomEvent {
       }
     })();
   }
+
+  //only this function works to change text, while firing inputs
+  fillInputValue(input, value) {
+    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      "value"
+    ).set;
+
+    nativeInputValueSetter.call(input, value);
+
+    var inputEvent = new Event("input", { bubbles: true });
+    input.dispatchEvent(inputEvent);
+  }
+
+  fillTextAreaValue(textArea, value) {
+    var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype,
+      "value"
+    ).set;
+
+    nativeTextAreaValueSetter.call(textArea, value);
+
+    var textAreaEvent = new Event("input", { bubbles: true });
+    textArea.dispatchEvent(textAreaEvent);
+  }
 }

@@ -22,7 +22,7 @@ async function fillOutPoshmarkForm(
   sku
 ) {
   await domEvent.waitForElementToLoad("input[data-vv-name='title']");
-  console.log("wait for element to load");
+
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(
     'textarea[data-vv-name="description"]'
@@ -38,27 +38,40 @@ async function fillOutPoshmarkForm(
     'input[data-vv-name="costPriceAmount"]'
   );
 
-  url =
-    "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"; // url of image
+  //title
+  $(poshmark_title).trigger("focus");
+  domEvent.fillInputValue(poshmark_title, title);
+  $(poshmark_title).trigger("blur");
 
-  //TODO: this works!!!!!!
-  //Tested Successfully on major platforms.
-  //Execute Command
-  UploadImage(
-    imageUrls[0],
-    fname,
-    document.querySelectorAll("input[type=file]")[0]
-  );
+  //desc
+  $(poshmark_description).trigger("focus");
+  domEvent.fillTextAreaValue(poshmark_description, description);
+  $(poshmark_description).trigger("blur");
 
-  fillInputValue(poshmark_title, title);
-  fillTextAreaValue(poshmark_description, description);
+  //brand
+  $(poshmark_brand).trigger("focus");
+  domEvent.fillInputValue(poshmark_brand, brand);
+  $(poshmark_brand).trigger("blur");
 
-  fillInputValue(poshmark_brand, brand);
+  //LATER: maybe add msrp input,
 
+  //listPrice
   //TODO: round up, posh dont accept decimals
-  fillInputValue(poshmark_listingPrice, listPrice);
-  fillInputValue(poshmark_sku, sku);
-  fillInputValue(poshmark_costPrice, costPrice);
+  $(poshmark_listingPrice).trigger("focus");
+  domEvent.fillInputValue(poshmark_listingPrice, listPrice);
+  $(poshmark_listingPrice).trigger("blur");
+
+  //---- additional inputs ----
+
+  //sku
+  $(poshmark_sku).trigger("focus");
+  domEvent.fillInputValue(poshmark_sku, sku);
+  $(poshmark_sku).trigger("blur");
+
+  //costPrice
+  $(poshmark_costPrice).trigger("focus");
+  domEvent.fillInputValue(poshmark_costPrice, costPrice);
+  $(poshmark_costPrice).trigger("blur");
 
   if (condition != "") {
     let conditionValue = formatCondition(condition);
@@ -69,22 +82,11 @@ async function fillOutPoshmarkForm(
   if (color != "") {
     color = helpers.capitalize(color);
 
-    // $(`div[data-et-name="color"]`).trigger("click");
-
     let searchColor = await domEvent.waitForElementToLoad(
       `li:contains('${color}')`
     );
 
     searchColor.trigger("click");
-
-    console.log(searchColor);
-    // $('a:contains("This One")')
-    //   .filter(function (index) {
-    //     return $(this).text() === "This One";
-    //   })
-    //   .trigger("click");
-
-    // console.log($(`a:contains("Red")`).parent());
   }
 
   swalAlert.showCrosslistSuccessAlert();
@@ -101,82 +103,59 @@ function formatCondition(condition) {
   }
 }
 
-//only this function works to change text
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-  input.dispatchEvent(inputEvent);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails() {
-  fillOutPoshmarkForm(
-    itemData.imageUrls,
-    itemData.title,
-    itemData.description,
-    itemData.brand,
-    itemData.condition,
-    itemData.color,
-    itemData.price,
-    itemData.cost,
-    itemData.sku
-  );
-}
 
 // //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    getItemDetails();
-    console.log("page complete");
+    fillOutPoshmarkForm(
+      itemData.imageUrls,
+      itemData.title,
+      itemData.description,
+      itemData.brand,
+      itemData.condition,
+      itemData.color,
+      itemData.price,
+      itemData.cost,
+      itemData.sku
+    );
   }
 };
 
 /////
 
-url2 =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
+// url2 =
+//   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
 
-fname = "cat.png"; //File name to be submitted
+// fname = "cat.png"; //File name to be submitted
 
-function event_dispatcher(t) {
-  var e = new Event("change", {
-    bubbles: !0,
-  });
-  t.dispatchEvent(e);
-}
+// function event_dispatcher(t) {
+//   var e = new Event("change", {
+//     bubbles: !0,
+//   });
+//   t.dispatchEvent(e);
+// }
 
-function uploadImage_trigger(t) {
-  console.log("Uploaded Success.");
-  var e = t.file,
-    n = t.targetInput,
-    i = new DataTransfer();
-  i.items.add(e), (n.files = i.files), event_dispatcher(n);
-}
+// function uploadImage_trigger(t) {
+//   console.log("Uploaded Success.");
+//   var e = t.file,
+//     n = t.targetInput,
+//     i = new DataTransfer();
+//   i.items.add(e), (n.files = i.files), event_dispatcher(n);
+// }
 
-async function UploadImage(url, file_name, input_Element) {
-  fetch(url)
-    .then((res) => res.arrayBuffer())
-    .then((blob) => {
-      u = new Uint8Array(blob);
-      myfile = new File([u.buffer], file_name, { type: "image/png" });
-      uploadImage_trigger({ file: myfile, targetInput: input_Element });
-    });
-}
+// async function UploadImage(url, file_name, input_Element) {
+//   fetch(url)
+//     .then((res) => res.arrayBuffer())
+//     .then((blob) => {
+//       u = new Uint8Array(blob);
+//       myfile = new File([u.buffer], file_name, { type: "image/png" });
+//       uploadImage_trigger({ file: myfile, targetInput: input_Element });
+//     });
+// }
+
+// UploadImage(
+//   imageUrls[0],
+//   fname,
+//   document.querySelectorAll("input[type=file]")[0]
+// );

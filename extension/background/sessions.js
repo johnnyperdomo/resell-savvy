@@ -195,7 +195,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "grailed", "kidizen", "poshmark"],
+          copyToMarketplaces: [
+            "depop",
+            "grailed",
+            "kidizen",
+            "poshmark",
+            "etsy",
+          ],
           copyFromMarketplace: "mercari",
 
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
@@ -216,7 +222,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["grailed"],
           copyFromMarketplace: "poshmark",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,

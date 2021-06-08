@@ -244,12 +244,14 @@ async function fillOutEbayFormTwo(
   // $(ebay_price).attr("value", "17.00");
 
   //can be either, sometimes its in iframe or it isn't
-  fillTextAreaValue(ebay_desc, description);
-  $(desc_iframe_textArea[0]).html(description);
-  let keyboard = Keysim.Keyboard.US_ENGLISH;
+  fillTextAreaValue(ebay_desc, "does this really work? Yesssirrrrr");
+  $(ebay_desc).trigger("focus").trigger("input").trigger("blur"); //TODO: this needs to be done to simulate user enter
+  // $(desc_iframe_textArea[0]).html(description);
+  // let keyboard = Keysim.Keyboard.US_ENGLISH;
 
-  console.log(keyboard);
-  keyboard.dispatchEventsForInput("hello!", ebay_title);
+  userSimulateType(139.88, document.querySelector("input[name=price]"));
+  // console.log(keyboard);
+  // keyboard.dispatchEventsForInput("hello!", ebay_title);
   // $(ebay_title).trigger("focus");
   //   ebay_desc_iframe.html(description); //in iframe, so inputing the value by html
 
@@ -292,7 +294,7 @@ async function fillOutEbayFormTwo(
         fillInputValue(searchBoxInput, brand);
 
         //wait 1 second for custom value btn to show
-        await delay(1000);
+        await helpers.delay(1000);
 
         //if button doesn't show up, bcuz it is already same brand, it will just fail to click but continue function
         let addCustomValueButton = $(
@@ -304,12 +306,12 @@ async function fillOutEbayFormTwo(
         $(addCustomValueButton).trigger("click");
       }
 
-      await delay(1000);
+      await helpers.delay(1000);
       $(sidepane).trigger("click");
     }
   }
 
-  await delay(500);
+  await helpers.delay(500);
 
   //condition
   if (condition) {
@@ -446,4 +448,17 @@ function formatConditionVersionTwo(condition) {
     default:
       return "3000";
   }
+}
+
+function event_dispatcher(t) {
+  var e = new Event("change", {
+    bubbles: !0,
+  });
+  t.dispatchEvent(e);
+}
+
+function userSimulateType(text, element) {
+  console.log("started!");
+  element.value = text;
+  event_dispatcher(element);
 }

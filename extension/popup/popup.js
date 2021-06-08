@@ -186,6 +186,7 @@ if (grailed) {
   grailed.addEventListener("click", copyFromGrailed);
 }
 
+//
 function copyFromGrailed() {
   chrome.runtime.sendMessage({ command: "get-listing-from-grailed" });
 }

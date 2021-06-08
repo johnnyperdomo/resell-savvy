@@ -73,6 +73,7 @@ async function fillOutDepopForm(
 
   await domEvent.waitForElementToLoad("#description");
   console.log("called form filler");
+
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'
   );
@@ -96,14 +97,19 @@ async function fillOutDepopForm(
     document.querySelectorAll("input[type=file]")[0]
   );
 
-  fillTextAreaValue(depop_description, description);
+  //description
+  $(depop_description).trigger("focus");
+  domEvent.fillTextAreaValue(depop_description, description);
+  $(depop_description).trigger("blur");
 
+  //condition
   if (condition != "") {
     let conditionValue = matchCondition(condition);
 
     console.log(conditionValue);
 
-    fillInputValue(depop_condition, conditionValue);
+    $(depop_condition).trigger("focus");
+    domEvent.fillInputValue(depop_condition, conditionValue);
     let conditionList = await domEvent.waitForElementToLoad(
       ".listingSelect__menu-list > div"
     );
@@ -115,7 +121,8 @@ async function fillOutDepopForm(
 
   if (color != "") {
     //LATER: gray or grey should both match
-    fillInputValue(depop_color, color);
+    $(depop_color).trigger("focus");
+    domEvent.fillInputValue(depop_color, color);
 
     //get first color
     let searchColor = await domEvent.waitForElementToLoad(
@@ -125,7 +132,9 @@ async function fillOutDepopForm(
     searchColor.closest(".listingSelect__option").trigger("click");
   }
 
-  fillInputValue(depop_price, price);
+  $(depop_price).trigger("focus");
+  domEvent.fillInputValue(depop_price, price);
+  $(depop_price).trigger("blur");
 
   swalAlert.showCrosslistSuccessAlert();
   //LATER: price validation
@@ -154,48 +163,18 @@ function matchCondition(condition) {
   }
 }
 
-//only this function works to change text
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-  input.dispatchEvent(inputEvent);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
 //LATER: do more error checking for fields, example like price/currency validation, splices, and maximum length values
-function getItemDetails() {
-  //inherited value
-  fillOutDepopForm(
-    itemData.imageUrls,
-    itemData.description,
-    itemData.condition,
-    itemData.color,
-    itemData.price
-  );
-}
 
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    getItemDetails();
-    console.log("page complete");
+    fillOutDepopForm(
+      itemData.imageUrls,
+      itemData.description,
+      itemData.condition,
+      itemData.color,
+      itemData.price
+    );
   }
 };
 

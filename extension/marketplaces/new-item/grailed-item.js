@@ -17,66 +17,72 @@ async function fillOutGrailedForm(
   const inputFiles = $('input[type="file"]');
   console.log("input files, ", inputFiles);
 
-  let grailed_title = document.querySelector("input[name='title']");
-  let grailed_description = document.querySelector(
-    "textarea[name='description']"
-  );
-  let grailed_color = document.querySelector("input[name='color']");
-  let grailed_brand = document.querySelector("#designer-autocomplete"); //designer
-  let grailed_condition = document.querySelector("select[name='condition']");
-  let grailed_price = document.querySelector("input[name='price']");
+  let grailed_title = $("input[name='title']");
+  let grailed_description = $("textarea[name='description']");
+  let grailed_color = $("input[name='color']");
+  let grailed_brand = document.querySelector("#designer-autocomplete"); //fillinput
+  let grailed_condition = $("select[name='condition']");
+  let grailed_price = $("input[name='price']");
 
-  fillInputValue(grailed_title, title);
+  //title
+  grailed_title.trigger("focus").val(title).trigger("input").trigger("blur");
 
+  //brand
   if (brand != "") {
-    fillInputValue(grailed_brand, brand);
+    $(grailed_brand).trigger("focus");
+    domEvent.fillInputValue(grailed_brand, brand);
 
-    const brandList = await domEvent.waitForElementToLoad(
-      "ul.autocomplete > li"
-    );
+    await domEvent.waitForElementToLoad("ul.autocomplete li");
 
-    if (brandList.length) {
-      //LATER: this is not clicking
-      brandList.eq(0).trigger("click");
+    let li = document.querySelector("ul.autocomplete li"); //grab first list item
+
+    if (li) {
+      //'mousedown', bcuz 'click' doesn't trigger on this element on grailed form.
+      var clickEvent = document.createEvent("MouseEvents");
+      clickEvent.initEvent("mousedown", true, true);
+      li.dispatchEvent(clickEvent);
     }
   }
 
   if (color != "") {
     color = helpers.capitalize(color);
-    fillInputValue(grailed_color, color);
+
+    grailed_color.trigger("focus").val(color).trigger("input").trigger("blur");
   }
 
-  //   const dataTransfer = new DataTransfer();
-  //   dataTransfer.items.add(new File(["hello world"], "This_Works.txt"));
-
-  //   console.log("data transfer, " + dataTransfer);
-
-  $(grailed_condition).trigger("click");
+  //condition
   if (condition != "") {
-    //TODO: this is not selecting value
-    console.log($(grailed_condition).val());
-    console.log("condition");
-    $(grailed_condition).val("is_used");
-    $(grailed_condition).trigger("change");
-    // $('select[name="condition"] option[value="is_used"]').attr(
-    // //   "selected",
-    // //   "selected"
-    // // );
-    console.log($(grailed_condition).val());
+    let conditionValue = matchCondition(condition);
+
+    grailed_condition
+      .trigger("focus")
+      .val(conditionValue)
+      .trigger("change")
+      .trigger("blur");
   }
 
-  fillTextAreaValue(grailed_description, description);
+  //description
+  grailed_description
+    .trigger("focus")
+    .val(description)
+    .trigger("input")
+    .trigger("blur");
 
   //LATER: currency/price validation
-  fillInputValue(grailed_price, price);
+  //price
+  grailed_price.trigger("focus").val(price).trigger("input").trigger("blur");
 
   swalAlert.showCrosslistSuccessAlert();
 }
 
-function formatCondition(condition) {
+function matchCondition(condition) {
   //return grailed condition value from our condition value
+
   switch (condition) {
-    case ("nwt", "nwot"):
+    case "nwt":
+      return "is_new";
+
+    case "nwot":
       return "is_new";
 
     case "good":
@@ -93,48 +99,19 @@ function formatCondition(condition) {
   }
 }
 
-//only this function works to change text
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-  input.dispatchEvent(inputEvent);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails() {
-  fillOutGrailedForm(
-    itemData.imageUrls,
-    itemData.title,
-    itemData.description,
-    itemData.color,
-    itemData.condition,
-    itemData.brand,
-    itemData.price
-  );
-}
 
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    getItemDetails();
-    console.log("page complete");
+    fillOutGrailedForm(
+      itemData.imageUrls,
+      itemData.title,
+      itemData.description,
+      itemData.color,
+      itemData.condition,
+      itemData.brand,
+      itemData.price
+    );
   }
 };

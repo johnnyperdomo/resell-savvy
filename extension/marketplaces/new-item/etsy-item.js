@@ -4,10 +4,7 @@ var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 
 async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
-  console.log("waiting on form filler");
-
   await domEvent.waitForElementToLoad("input[name='title']");
-  console.log("called form filler");
 
   const inputFiles = $('input[type="file"]');
 
@@ -20,12 +17,26 @@ async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   let etsy_price = document.querySelector("input[name='price-input']");
   let etsy_sku = document.querySelector("input[name='sku-input']");
 
-  fillInputValue(etsy_title, title);
-  fillTextAreaValue(etsy_description, description);
+  //title
+  $(etsy_title).trigger("focus");
+  domEvent.fillInputValue(etsy_title, title);
+  $(etsy_title).trigger("blur");
+
+  //description
+  $(etsy_description).trigger("focus");
+  domEvent.fillTextAreaValue(etsy_description, description);
+  $(etsy_description).trigger("blur");
 
   //LATER: currency/price validation
-  fillInputValue(etsy_price, price);
-  fillInputValue(etsy_sku, sku);
+  //price
+  $(etsy_price).trigger("focus");
+  domEvent.fillInputValue(etsy_price, price);
+  $(etsy_price).trigger("blur");
+
+  //sku
+  $(etsy_sku).trigger("focus");
+  domEvent.fillInputValue(etsy_sku, sku);
+  $(etsy_sku).trigger("blur");
 
   swalAlert.showCrosslistSuccessAlert();
 }
@@ -50,47 +61,17 @@ function matchCondition(condition) {
   }
 }
 
-//only this function works to change text
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-  input.dispatchEvent(inputEvent);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
 //LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails() {
-  //inherited value
-  fillOutEtsyForm(
-    itemData.imageUrls,
-    itemData.title,
-    itemData.description,
-    itemData.price,
-    itemData.sku
-  );
-}
 
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    getItemDetails();
-    console.log("page complete");
+    fillOutEtsyForm(
+      itemData.imageUrls,
+      itemData.title,
+      itemData.description,
+      itemData.price,
+      itemData.sku
+    );
   }
 };

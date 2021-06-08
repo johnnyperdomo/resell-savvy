@@ -22,9 +22,17 @@ async function fillOutKidizenForm(
   let kidizen_description = document.querySelector("#item_description");
   let kidizen_price = document.querySelector("#item_list_price");
 
-  fillInputValue(kidizen_title, title);
-  fillTextAreaValue(kidizen_description, description);
+  //title
+  $(kidizen_title).trigger("focus");
+  domEvent.fillInputValue(kidizen_title, title);
+  $(kidizen_title).trigger("blur");
 
+  //description
+  $(kidizen_description).trigger("focus");
+  domEvent.fillTextAreaValue(kidizen_description, description);
+  $(kidizen_description).trigger("blur");
+
+  //category
   //set default category item
   $("span:contains('Category')")
     .closest(".DropdownTrigger--required")
@@ -50,7 +58,9 @@ async function fillOutKidizenForm(
     );
 
     const searchBarInput = dropDown.find('input[placeholder="Search"]');
-    fillInputValue(searchBarInput[0], brand);
+
+    $(searchBarInput[0]).trigger("focus");
+    domEvent.fillInputValue(searchBarInput[0], brand);
 
     //wait half a second for dom to rerender
     await helpers.delay(500);
@@ -75,7 +85,11 @@ async function fillOutKidizenForm(
   }
 
   //LATER: currency/price validation
-  fillInputValue(kidizen_price, price);
+
+  //price
+  $(kidizen_price).trigger("focus");
+  domEvent.fillInputValue(kidizen_price, price);
+  $(kidizen_price).trigger("blur");
 
   swalAlert.showCrosslistSuccessAlert();
 }
@@ -103,47 +117,16 @@ function matchCondition(condition) {
   }
 }
 
-//only this function works to change text
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-  input.dispatchEvent(inputEvent);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
-//LATER: do more error checking for fields, example like price/currency validation
-function getItemDetails() {
-  fillOutKidizenForm(
-    itemData.imageUrls,
-    itemData.title,
-    itemData.description,
-    itemData.condition,
-    itemData.brand,
-    itemData.price
-  );
-}
-
 //detect if document is ready
 document.onreadystatechange = function () {
   if (document.readyState === "complete") {
-    getItemDetails();
-    console.log("page complete");
+    fillOutKidizenForm(
+      itemData.imageUrls,
+      itemData.title,
+      itemData.description,
+      itemData.condition,
+      itemData.brand,
+      itemData.price
+    );
   }
 };
