@@ -96,6 +96,8 @@ async function getItemDetails(version) {
       //     itemData.sku
       //   );
 
+      await helpers.delay(1000);
+
       fillOutEbayFormOne(
         [],
         "Nike shirt premium bro",
@@ -114,13 +116,13 @@ async function getItemDetails(version) {
 
       fillOutEbayFormTwo(
         [],
-        "Banana",
-        "Adidas is the best brand",
-        "Adidas",
-        "nwt",
+        "Gucci shirt",
+        "Yo, Gucci is the coolest brand my bro. I love that brand.",
+        "Gucci",
+        "used",
         "Red",
-        "132.00",
-        "123edg"
+        "123",
+        "abc"
       );
 
       break;
@@ -222,38 +224,39 @@ async function fillOutEbayFormTwo(
   let ebay_title = document.querySelector("input[name='title']");
   let ebay_sku = document.querySelector("input[name='customLabel']");
   let ebay_price = document.querySelector("input[name='price']");
-
-  let ebay_desc = document.querySelector("textarea[name='description']");
-  let ebay_desc_iframe = $('iframe[id="se-rte-frame__summary"]')[0]
-    .contentWindow.document.body;
-  let desc_iframe_textArea = $(ebay_desc_iframe).find(
+  let ebay_desc = document.querySelector("textarea[name='description']"); //normal textarea;
+  let ebay_desc_iframe = document.querySelector(
+    'iframe[id="se-rte-frame__summary"]'
+  ).contentWindow.document.body; //description iframe-textarea
+  let ebay_desc_iframe_textarea = ebay_desc_iframe.querySelector(
     '[contenteditable="true"]'
   );
 
-  // fillInputValue(ebay_title, title);
-  // fillInputValue(ebay_title, title);
-  // $(document).ready(function () {
-  //   $(ebay_title).change(function () {
-  //     console.log("ebay title was changed");
-  //   });
+  //title
+  $(ebay_title).trigger("focus");
+  userSimulateType(title, ebay_title);
+  $(ebay_title).trigger("blur");
 
-  // fillInputValue(ebay_title, "Boy if you dont get");
+  //sku
+  $(ebay_sku).trigger("focus");
+  userSimulateType(sku, ebay_sku);
+  $(ebay_sku).trigger("blur");
 
-  fillInputValue(ebay_sku, sku);
-  // fillInputValue(ebay_price, "17.00");
-  // $(ebay_price).attr("value", "17.00");
+  //description //can either be a textarea or an iframe, depending on which one ebay renders
+  //desc-textarea
+  $(ebay_desc).trigger("focus");
+  userSimulateType(description, ebay_desc);
+  $(ebay_desc).trigger("blur");
 
-  //can be either, sometimes its in iframe or it isn't
-  fillTextAreaValue(ebay_desc, "does this really work? Yesssirrrrr");
-  $(ebay_desc).trigger("focus").trigger("input").trigger("blur"); //TODO: this needs to be done to simulate user enter
-  // $(desc_iframe_textArea[0]).html(description);
-  // let keyboard = Keysim.Keyboard.US_ENGLISH;
+  //desc-iframe
+  ebay_desc_iframe_textarea.innerHTML = description;
+  $(ebay_desc_iframe_textarea).trigger("focus").trigger("blur");
+  $(ebay_desc_iframe).trigger("focus").trigger("blur");
 
-  userSimulateType(139.88, document.querySelector("input[name=price]"));
-  // console.log(keyboard);
-  // keyboard.dispatchEventsForInput("hello!", ebay_title);
-  // $(ebay_title).trigger("focus");
-  //   ebay_desc_iframe.html(description); //in iframe, so inputing the value by html
+  //price
+  $(ebay_price).trigger("focus");
+  userSimulateType(price, ebay_price);
+  $(ebay_price).trigger("blur");
 
   //brand
   if (brand) {
@@ -282,7 +285,6 @@ async function fillOutEbayFormTwo(
       }
 
       //input page
-
       let searchBoxInput = await domEvent.waitForElementToLoad(
         "#dialog-sidepane .search-box__field input"
       );
@@ -362,75 +364,7 @@ async function fillOutEbayFormTwo(
       }
 
       //click outside sidepane modal to close; wait a second for radio button to process
-      await delay(1000);
-      $(sidepane).trigger("click");
-    }
-  }
-
-  //price
-  //TODO: //FIX: work on price, not simulating input change
-  if (price) {
-    let price_edit_button = document.querySelector(
-      "button[_track*='PRICE'].edit-button"
-    );
-
-    $(price_edit_button).trigger("click");
-
-    //LATER: in the wait for element function, we are going to wait for sidepane for 5 seconds, if not found, we are going to exit out of function, return the await, and just continue on with our code
-    let sidepane = await domEvent.waitForElementToLoad(
-      "div[_track*='PRICE']#dialog-sidepane"
-    );
-
-    if (sidepane.length > 0) {
-      sidepane = sidepane[0];
-      console.log("sidepane is", sidepane);
-
-      let pricePanel = $(
-        "#dialog-sidepane .se-panel-container__body .se-panel-section:has(button[name='price'])"
-      );
-
-      console.log("condition panel, ", pricePanel);
-
-      //middle page
-      if (pricePanel.length > 0) {
-        console.log(
-          "se field card button",
-          $(pricePanel).find("button[name='price']")
-        );
-        $(pricePanel).find("button[name='price']").trigger("click");
-      }
-
-      //input page
-      //find textBox input
-      let textBoxInput = await domEvent.waitForElementToLoad(
-        "#dialog-sidepane .se-textbox--input input[name='price']"
-      );
-
-      if (textBoxInput.length > 0) {
-        textBoxInput = textBoxInput[0];
-
-        //TODO: //FIX not simulating user typing, use plugin for jquery simulate
-
-        // $(textBoxInput).trigger("focus");
-        // // fillInputValue(textBoxInput, price);
-        // $(textBoxInput).val("157.00").trigger("change");
-        // $(textBoxInput).attr("value", "157.00");
-
-        // $(textBoxInput).prop("value", "157.00");
-        // $(textBoxInput).trigger({
-        //   type: "keypress",
-        //   which: a.charCodeAt(0),
-        // });
-        // setTimeout(() => {
-        //   $(textBoxInput).trigger("change");
-        //   $(textBoxInput).trigger("blur");
-        // }, 2000);
-        // $(textBoxInput).val(price);
-        // $(textBoxInput).trigger("focus").trigger("blur");
-      }
-
-      //click outside sidepane modal to close; wait a second for radio button to process
-      await delay(1000);
+      await helpers.delay(1000);
       $(sidepane).trigger("click");
     }
   }
@@ -450,6 +384,7 @@ function formatConditionVersionTwo(condition) {
   }
 }
 
+//input changes on ebay text fields only //LATER: see if this works with 'fillinput' method, so we can only have one source of truth
 function event_dispatcher(t) {
   var e = new Event("change", {
     bubbles: !0,
@@ -458,7 +393,6 @@ function event_dispatcher(t) {
 }
 
 function userSimulateType(text, element) {
-  console.log("started!");
   element.value = text;
   event_dispatcher(element);
 }
