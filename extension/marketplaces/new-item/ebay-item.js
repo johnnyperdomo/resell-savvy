@@ -9,38 +9,6 @@ var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
 
-function fillInputValue(input, value) {
-  var nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    "value"
-  ).set;
-
-  nativeInputValueSetter.call(input, value);
-
-  var inputEvent = new Event("input", { bubbles: true });
-
-  //LATEr: potential code for bug fix
-  // const ke = new KeyboardEvent("keydown", {
-  //   bubbles: true,
-  //   cancelable: true,
-  //   keyCode: 13,
-  // });
-  input.dispatchEvent(inputEvent);
-  // input.dispatchEvent(ke);
-}
-
-function fillTextAreaValue(textArea, value) {
-  var nativeTextAreaValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLTextAreaElement.prototype,
-    "value"
-  ).set;
-
-  nativeTextAreaValueSetter.call(textArea, value);
-
-  var textAreaEvent = new Event("input", { bubbles: true });
-  textArea.dispatchEvent(textAreaEvent);
-}
-
 document.onreadystatechange = function () {
   if (document.readyState === "interactive") {
     console.log("page is interactive");
@@ -49,7 +17,7 @@ document.onreadystatechange = function () {
   if (document.readyState === "complete") {
     console.log("page complete");
 
-    //TODO: some inputs only exist on certain categories, before inputing, make sure input exists if available, if so then apply input
+    //LATER: some inputs only exist on certain categories, before inputing, make sure input exists if available, if so then apply input
 
     //look for subtitle, which is unique from the bulksell title search bar
     //Ebay listing version 1
@@ -85,34 +53,47 @@ async function getItemDetails(version) {
   switch (version) {
     case "one":
       //TODO
-      //   fillOutEbayFormOne(
-      //     itemData.imageUrls,
-      //     itemData.title,
-      //     itemData.description,
-      //     itemData.brand,
-      //     itemData.condition,
-      //     itemData.color,
-      //     itemData.price,
-      //     itemData.sku
-      //   );
 
+      //wait for iframe to load
       await helpers.delay(1000);
+
+      // fillOutEbayFormOne(
+      //   itemData.imageUrls,
+      //   itemData.title,
+      //   itemData.description,
+      //   itemData.brand,
+      //   itemData.condition,
+      //   itemData.color,
+      //   itemData.price,
+      //   itemData.sku
+      // );
 
       fillOutEbayFormOne(
         [],
-        "Nike shirt premium bro",
-        "this is the best nike shirt i have ever seen in my entire life",
-        "Nike",
+        "Gucci shirt",
+        "Yo, Gucci is the coolest brand my bro. I love that brand.",
+        "Gucci",
         "used",
         "Red",
-        "97",
-        "123edg"
+        "123",
+        "abc"
       );
 
       break;
     case "two":
       //wait for iframe to load
       await helpers.delay(1000);
+
+      // fillOutEbayFormTwo(
+      //   itemData.imageUrls,
+      //   itemData.title,
+      //   itemData.description,
+      //   itemData.brand,
+      //   itemData.condition,
+      //   itemData.color,
+      //   itemData.price,
+      //   itemData.sku
+      // );
 
       fillOutEbayFormTwo(
         [],
@@ -168,22 +149,51 @@ async function fillOutEbayFormOne(
     "input[id='Listing.Item.ItemSpecific[Color]']"
   );
 
-  let ebay_desc_iframe = $('iframe[id*="txtEdit_st"]').contents().find("body");
-
   let ebay_price = document.querySelector("input[id='binPrice']");
 
-  fillInputValue(ebay_title, title);
+  ////TODO: clean up code and make it function as normal
+  //TODO: remove values from manifest.json
+  //TODO: fix timeout on waitforElement
 
-  fillInputValue(ebay_sku, sku);
-  fillInputValue(ebay_brand, brand);
-  fillInputValue(ebay_color, color);
-  ebay_desc_iframe.html(description); //in iframe, so inputing the value by html
-  fillInputValue(ebay_price, price);
+  //title
+  $(ebay_title).trigger("focus");
+  userSimulateType(title, ebay_title);
+  $(ebay_title).trigger("blur");
+
+  //sku
+  $(ebay_sku).trigger("focus");
+  userSimulateType(sku, ebay_sku);
+  $(ebay_sku).trigger("blur");
+
+  //brand
+  $(ebay_brand).trigger("focus");
+  userSimulateType(brand, ebay_brand);
+  $(ebay_brand).trigger("blur");
+
+  //color
+
+  if (ebay_color) {
+    //check if element exists
+    $(ebay_color).trigger("focus");
+    userSimulateType(color, ebay_color);
+    $(ebay_color).trigger("blur");
+  }
+
+  //edit description
+  editDescriptionV1(description);
+
+  //price
+  $(ebay_price).trigger("focus");
+  userSimulateType(price, ebay_price);
+  $(ebay_price).trigger("blur");
 
   if (condition) {
     let conditionValue = formatConditionVersionOne(condition);
 
+    //LATER: //FIX: I don't think the condition is being passed into preview(not being detected?), maybe we should press it later on.
+    $(ebay_condition).trigger("focus");
     $(ebay_condition).val(conditionValue).trigger("change");
+    $(ebay_condition).trigger("blur");
   }
 
   swalAlert.showCrosslistSuccessAlert();
@@ -292,8 +302,7 @@ async function fillOutEbayFormTwo(
       if (searchBoxInput.length > 0) {
         searchBoxInput = searchBoxInput[0];
 
-        // $(searchBoxInput).val(brand);
-        fillInputValue(searchBoxInput, brand);
+        domEvent.fillInputValue(searchBoxInput, brand);
 
         //wait 1 second for custom value btn to show
         await helpers.delay(1000);
@@ -396,3 +405,34 @@ function userSimulateType(text, element) {
   element.value = text;
   event_dispatcher(element);
 }
+
+//special iframe for description in v1 form, this is the steps we have to take to trigger input change
+function editDescriptionV1(text) {
+  //LATER: //NOTE: this code was outsourced; later on, re-analyze and make sure it works correctly and its the most efficient
+
+  try {
+    document.querySelector("a[id*='_advLnk']").click(); //click on advanced editing button
+  } catch (e) {}
+
+  document.querySelector("span[id*='_switchLnk']").children[1].click(); //click 'item description; 'standard/html' tab option'
+
+  document.querySelector(
+    "iframe[id*='txtEdit_ht']"
+  ).contentWindow.document.body.innerText = text; //set text, on html tab version
+  //document.querySelector("iframe[id*='txtEdit_st']").contentWindow.document.body.innerHTML = text;
+
+  document.querySelector("span[id*='_switchLnk']").children[0].click(); //click 'item description; 'standard/html' tab option'
+  document.querySelector("a[id*='_ind']").click(); //click 'decrease indent, option in html editing; to trigger action'
+}
+
+// {
+//   "matches": [
+//     "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
+//     "https://www.ebay.com/lstng*"
+//   ],
+//   "js": [
+//     "third-party/jquery-3.6.0.min.js",
+//     "marketplaces/new-item/ebay-item.js"
+//   ],
+//   "all_frames": true
+// },

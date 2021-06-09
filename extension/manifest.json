@@ -33,14 +33,6 @@
 
   "content_scripts": [
     {
-      "matches": ["https://bulkedit.ebay.com/*"],
-      "js": [
-        "third-party/jquery-3.6.0.min.js",
-        "marketplaces/new-item/bulkedit-iframe.js"
-      ],
-      "all_frames": true
-    },
-    {
       "matches": [
         "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
         "https://www.ebay.com/lstng*"
@@ -48,6 +40,15 @@
       "js": [
         "third-party/jquery-3.6.0.min.js",
         "marketplaces/new-item/ebay-item.js"
+      ],
+      "all_frames": true
+    },
+
+    {
+      "matches": ["https://bulkedit.ebay.com/*"],
+      "js": [
+        "third-party/jquery-3.6.0.min.js",
+        "marketplaces/new-item/bulkedit-iframe.js"
       ],
       "all_frames": true
     },
