@@ -21,7 +21,7 @@ async function fillOutPoshmarkForm(
   costPrice,
   sku
 ) {
-  await domEvent.waitForElementToLoad("input[data-vv-name='title']");
+  await domEvent.waitForElementToLoad("input[data-vv-name='title']", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(
@@ -83,8 +83,9 @@ async function fillOutPoshmarkForm(
     color = helpers.capitalize(color);
 
     let searchColor = await domEvent.waitForElementToLoad(
-      `li:contains('${color}')`
-    );
+      `li:contains('${color}')`,
+      5000
+    ); //skips after 3 seconds if not detected
 
     searchColor.trigger("click");
   }

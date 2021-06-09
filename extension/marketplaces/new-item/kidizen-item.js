@@ -13,9 +13,7 @@ async function fillOutKidizenForm(
   brand,
   price
 ) {
-  console.log("waiting on form filler");
-
-  await domEvent.waitForElementToLoad("form");
+  await domEvent.waitForElementToLoad("#item_title", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
   console.log("called form filler");
 
   let kidizen_title = document.querySelector("#item_title");
@@ -38,7 +36,8 @@ async function fillOutKidizenForm(
     .closest(".DropdownTrigger--required")
     .trigger("click");
   const kidDropDownItem = await domEvent.waitForElementToLoad(
-    "div:contains('Kid Clothing')"
+    "div:contains('Kid Clothing')",
+    5000
   );
   kidDropDownItem.trigger("click");
 
@@ -53,7 +52,7 @@ async function fillOutKidizenForm(
 
     const dropDown = await domEvent.waitForElementToLoad(
       ".Dropdown",
-      100000000,
+      5000,
       brandEl.parent().parent()
     );
 
@@ -79,7 +78,8 @@ async function fillOutKidizenForm(
       .closest(".DropdownTrigger--required")
       .trigger("click");
     const conditionDropDownItem = await domEvent.waitForElementToLoad(
-      `div:contains('${conditionVal}')`
+      `div:contains('${conditionVal}')`,
+      5000
     );
     conditionDropDownItem.trigger("click");
   }

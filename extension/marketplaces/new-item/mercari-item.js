@@ -12,7 +12,7 @@ async function fillOutMercariForm(
   color,
   price
 ) {
-  await domEvent.waitForElementToLoad("#sellName");
+  await domEvent.waitForElementToLoad("#sellName", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   let mercari_title = document.querySelector('input[data-testid="Title"]');
   let mercari_description = document.querySelector(
@@ -40,7 +40,8 @@ async function fillOutMercariForm(
 
     //TODO: //FIX: what is going on here? this giving alot of problems, not working correctly, what
     let brandList = await domEvent.waitForElementToLoad(
-      'div[data-testid="BrandDropdown"] > div > div'
+      'div[data-testid="BrandDropdown"] > div > div',
+      5000
     );
 
     //TODO: handle waitfor element errors, if not found. This brand should not work, but it should still continue running the other code. We should do like a wait for element, but time out after a few seconds. If not it just continues looping forever and blocks the next inputs
@@ -64,7 +65,8 @@ async function fillOutMercariForm(
     color = helpers.capitalize(color);
 
     let searchColor = await domEvent.waitForElementToLoad(
-      `li:contains('${color}')`
+      `li:contains('${color}')`,
+      5000
     );
 
     searchColor.trigger("click");

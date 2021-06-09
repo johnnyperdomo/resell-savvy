@@ -3,26 +3,31 @@
 class DomEvent {
   //waits for the element to be loaded in the page
   //LATER: make this timeout after certain time, to not be blocked forever, change code up a little bit
-  waitForElementToLoad(selector, waitTimeMax, inTree) {
+  waitForElementToLoad(selector, timeoutInMs, inTree) {
     if (!inTree) inTree = $(document.body);
-    let timeStampMax = null;
-    if (waitTimeMax) {
-      timeStampMax = new Date();
-      timeStampMax.setSeconds(timeStampMax.getSeconds() + waitTimeMax);
-    }
+    var startTimeInMs = Date.now();
+
     return new Promise((resolve) => {
       let interval = setInterval(() => {
-        let node = inTree.find(selector);
-        if (node.length > 0) {
-          console.log("node is ready");
+        let element = inTree.find(selector);
+        if (element.length > 0) {
+          console.log("element is detected: ", selector);
           clearInterval(interval);
-          resolve(node);
+          resolve(element);
         } else {
-          console.log("node is not ready yet");
-        }
-        if (timeStampMax && new Date() > timeStampMax) {
-          clearInterval(interval);
-          resolve(false);
+          console.log("element is not detected: ", selector);
+
+          //optional timeout after a few seconds; used to exit function after a set period of time, instead of blocking ui forever.
+          if (timeoutInMs && Date.now() - startTimeInMs > timeoutInMs) {
+            console.log(
+              `selector: [${selector}], could not be detected. Timed out after the following milliseconds: `,
+              timeoutInMs
+            );
+            clearInterval(interval);
+            resolve(element);
+
+            //LATER: if selector times out bcuz it can't be found, send an error message to sentry
+          }
         }
       }, 50);
     });

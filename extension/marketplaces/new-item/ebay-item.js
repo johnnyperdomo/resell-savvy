@@ -135,8 +135,7 @@ async function fillOutEbayFormOne(
 ) {
   //LATER: check to see if element is found before buying?
 
-  //TODO: //FIX: inputs not detecting change, not working!!!!!
-  await domEvent.waitForElementToLoad("#editpane_title");
+  await domEvent.waitForElementToLoad("#editpane_title", 10000); //timeout after 10 seconds if undetected
 
   let ebay_title = document.querySelector("input[id='editpane_title']");
   let ebay_sku = document.querySelector("input[id='editpane_skuNumber']");
@@ -230,6 +229,8 @@ async function fillOutEbayFormTwo(
   sku
 ) {
   console.log(title);
+  await domEvent.waitForElementToLoad("input[name='title']", 10000); //timeout after 10 seconds if undetected
+
   //LATER: fill out color in next update
   let ebay_title = document.querySelector("input[name='title']");
   let ebay_sku = document.querySelector("input[name='customLabel']");
@@ -277,7 +278,8 @@ async function fillOutEbayFormTwo(
     $(item_specifics_edit_button).trigger("click");
 
     let sidepane = await domEvent.waitForElementToLoad(
-      "div[_track*='ATTRIBUTES']#dialog-sidepane"
+      "div[_track*='ATTRIBUTES']#dialog-sidepane",
+      5000
     );
 
     if (sidepane.length > 0) {
@@ -296,7 +298,8 @@ async function fillOutEbayFormTwo(
 
       //input page
       let searchBoxInput = await domEvent.waitForElementToLoad(
-        "#dialog-sidepane .search-box__field input"
+        "#dialog-sidepane .search-box__field input",
+        5000
       );
 
       if (searchBoxInput.length > 0) {
@@ -334,9 +337,9 @@ async function fillOutEbayFormTwo(
 
     $(condition_edit_button).trigger("click");
 
-    //LATER: in the wait for element function, we are going to wait for sidepane for 5 seconds, if not found, we are going to exit out of function, return the await, and just continue on with our code
     let sidepane = await domEvent.waitForElementToLoad(
-      "div[_track*='CONDITION']#dialog-sidepane"
+      "div[_track*='CONDITION']#dialog-sidepane",
+      5000
     );
 
     if (sidepane.length > 0) {
@@ -359,7 +362,8 @@ async function fillOutEbayFormTwo(
       }
 
       let radio = await domEvent.waitForElementToLoad(
-        `#dialog-sidepane input[type='radio'][value='${conditionValue}']`
+        `#dialog-sidepane input[type='radio'][value='${conditionValue}']`,
+        5000
       );
 
       //input page

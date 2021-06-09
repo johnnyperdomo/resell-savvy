@@ -13,7 +13,7 @@ async function fillOutGrailedForm(
   brand,
   price
 ) {
-  await domEvent.waitForElementToLoad("input[name='title']");
+  await domEvent.waitForElementToLoad("input[name='title']", 10000);
   const inputFiles = $('input[type="file"]');
   console.log("input files, ", inputFiles);
 
@@ -32,7 +32,7 @@ async function fillOutGrailedForm(
     $(grailed_brand).trigger("focus");
     domEvent.fillInputValue(grailed_brand, brand);
 
-    await domEvent.waitForElementToLoad("ul.autocomplete li");
+    await domEvent.waitForElementToLoad("ul.autocomplete li", 5000);
 
     let li = document.querySelector("ul.autocomplete li"); //grab first list item
 

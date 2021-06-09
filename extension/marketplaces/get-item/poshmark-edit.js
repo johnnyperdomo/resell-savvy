@@ -16,8 +16,8 @@ function formatCondition(condition) {
   }
 }
 
-async function formatItemPropertiesVersion1() {
-  await domEvent.waitForElementToLoad("input[data-vv-name='title']");
+async function formatItemProperties() {
+  await domEvent.waitForElementToLoad("input[data-vv-name='title']", 10000); //timeout after 10 seconds if undetected
 
   //wait for page to render
   await helpers.delay(100);
@@ -58,14 +58,15 @@ async function formatItemPropertiesVersion1() {
     sku: poshmark_sku,
     cost: poshmark_cost,
   };
-
-  return properties;
+  console.log(properties);
+  return new Promise((resolve, reject) => {
+    resolve(properties);
+  });
 }
 
 async function getItemDetails() {
-  //TODO: get item details, convert to rs-savvy-format
   //send message to background script
-  const properties = await formatItemPropertiesVersion1();
+  const properties = await formatItemProperties();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,

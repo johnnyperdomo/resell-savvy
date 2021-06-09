@@ -26,8 +26,8 @@ function formatCondition(condition) {
   }
 }
 
-async function formatItemPropertiesVersion1() {
-  await domEvent.waitForElementToLoad("#description");
+async function formatItemProperties() {
+  await domEvent.waitForElementToLoad("#description", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind, so create a function that waits for element to load, but doesn't freeze ui, or cause to await, if it shows up, manually input(user will see this, but there's nothing you can do about it)
 
@@ -66,13 +66,15 @@ async function formatItemPropertiesVersion1() {
     cost: "", //null
   };
 
-  return properties;
+  return new Promise((resolve, reject) => {
+    resolve(properties);
+  });
 }
 
 async function getItemDetails() {
   //TODO: get item details, convert to rs-savvy-format
   //send message to background script
-  const properties = await formatItemPropertiesVersion1();
+  const properties = await formatItemProperties();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,

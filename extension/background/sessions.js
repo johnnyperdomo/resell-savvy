@@ -195,13 +195,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: [
-            "depop",
-            "grailed",
-            "kidizen",
-            "poshmark",
-            "etsy",
-          ],
+          copyToMarketplaces: ["grailed"],
           copyFromMarketplace: "mercari",
 
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",

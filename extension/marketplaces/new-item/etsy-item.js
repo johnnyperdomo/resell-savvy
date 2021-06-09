@@ -4,7 +4,7 @@ var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 
 async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
-  await domEvent.waitForElementToLoad("input[name='title']");
+  await domEvent.waitForElementToLoad("input[name='title']", 10000); //timeout after 10 seconds if undetected
 
   const inputFiles = $('input[type="file"]');
 

@@ -29,7 +29,7 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad("#item_title");
+  await domEvent.waitForElementToLoad("#item_title", 10000);
 
   //wait for page to render
   await helpers.delay(100);
@@ -67,7 +67,9 @@ async function formatItemProperties() {
     cost: "", //null
   };
 
-  return properties;
+  return new Promise((resolve, reject) => {
+    resolve(properties);
+  });
 }
 
 async function getItemDetails() {

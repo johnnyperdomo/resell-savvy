@@ -68,11 +68,7 @@ async function fillOutDepopForm(
   color,
   price
 ) {
-  //LATER: append brand
-  console.log("waiting on form filler");
-
-  await domEvent.waitForElementToLoad("#description");
-  console.log("called form filler");
+  await domEvent.waitForElementToLoad("#description", 10000); //timeout after 10 seconds if undetected
 
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'
@@ -91,11 +87,11 @@ async function fillOutDepopForm(
   //TODO: this works!!!!!!
   //Tested Successfully on major platforms.
   //Execute Command
-  await UploadImage(
-    url,
-    fname,
-    document.querySelectorAll("input[type=file]")[0]
-  );
+  // await UploadImage(
+  //   url,
+  //   fname,
+  //   document.querySelectorAll("input[type=file]")[0]
+  // );
 
   //description
   $(depop_description).trigger("focus");
@@ -111,7 +107,8 @@ async function fillOutDepopForm(
     $(depop_condition).trigger("focus");
     domEvent.fillInputValue(depop_condition, conditionValue);
     let conditionList = await domEvent.waitForElementToLoad(
-      ".listingSelect__menu-list > div"
+      ".listingSelect__menu-list > div",
+      5000
     );
 
     if (conditionList.length) {
@@ -126,7 +123,8 @@ async function fillOutDepopForm(
 
     //get first color
     let searchColor = await domEvent.waitForElementToLoad(
-      `[class*=ColourSelectstyles__Colour]`
+      `[class*=ColourSelectstyles__Colour]`,
+      5000
     );
     //closet traverses up the dom to find the closest element in the parent
     searchColor.closest(".listingSelect__option").trigger("click");

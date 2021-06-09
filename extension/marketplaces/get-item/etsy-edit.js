@@ -2,8 +2,8 @@ var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
 
-async function formatItemPropertiesVersion1() {
-  await domEvent.waitForElementToLoad("input[name='title']");
+async function formatItemProperties() {
+  await domEvent.waitForElementToLoad("input[name='title']", 10000);
 
   //wait for page to render
   await helpers.delay(100);
@@ -37,12 +37,14 @@ async function formatItemPropertiesVersion1() {
     cost: "", //null
   };
 
-  return properties;
+  return new Promise((resolve, reject) => {
+    resolve(properties);
+  });
 }
 
 async function getItemDetails() {
   //send message to background script
-  const properties = await formatItemPropertiesVersion1();
+  const properties = await formatItemProperties();
 
   const data = {
     copyToMarketplaces: retrievalObject.copyToMarketplaces,
