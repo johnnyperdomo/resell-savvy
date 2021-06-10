@@ -73,4 +73,12 @@ class DomEvent {
     var textAreaEvent = new Event("input", { bubbles: true });
     textArea.dispatchEvent(textAreaEvent);
   }
+
+  //dispatch dom events manually
+  dispatchEvent(element, type) {
+    var event = new Event(type, {
+      bubbles: !0,
+    });
+    element.dispatchEvent(event);
+  }
 }

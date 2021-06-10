@@ -1,7 +1,7 @@
 //LATER: create files by pages to make code cleaner
 
-var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
+var domEvent = new DomEvent();
 var helpers = new Helpers();
 
 async function fillOutGrailedForm(
@@ -13,23 +13,30 @@ async function fillOutGrailedForm(
   brand,
   price
 ) {
+  //NOTE: use pure dom on this one, since jquery is throwing some errors on this if tab is multiple tabs opened at the same time //LATER: use pure js, and remove jquery, this causes unexpected errors
   await domEvent.waitForElementToLoad("input[name='title']", 10000);
-  const inputFiles = $('input[type="file"]');
-  console.log("input files, ", inputFiles);
 
-  let grailed_title = $("input[name='title']");
-  let grailed_description = $("textarea[name='description']");
-  let grailed_color = $("input[name='color']");
+  //FIX: it seems to me like when grailed is called last when opening chrome tabs, idk, but maybe jquery isn't loading fast enough bcuz its not adding values. wait for page to render on every function, try with 100 or 500 least. or remove jquery all together, bcuz that works and is fast
+  // const inputFiles = $('input[type="file"]');
+  // console.log("input files, ", inputFiles);
+
+  let grailed_title = document.querySelector("input[name='title']");
+  let grailed_description = document.querySelector(
+    "textarea[name='description']"
+  );
+  let grailed_color = document.querySelector("input[name='color']");
   let grailed_brand = document.querySelector("#designer-autocomplete"); //fillinput
-  let grailed_condition = $("select[name='condition']");
-  let grailed_price = $("input[name='price']");
+  let grailed_condition = document.querySelector("select[name='condition']");
+  let grailed_price = document.querySelector("input[name='price']");
 
   //title
-  grailed_title.trigger("focus").val(title).trigger("input").trigger("blur");
+  domEvent.dispatchEvent(grailed_title, "focus");
+  domEvent.fillInputValue(grailed_title, title);
+  domEvent.dispatchEvent(grailed_title, "blur");
 
   //brand
   if (brand != "") {
-    $(grailed_brand).trigger("focus");
+    domEvent.dispatchEvent(grailed_brand, "focus");
     domEvent.fillInputValue(grailed_brand, brand);
 
     await domEvent.waitForElementToLoad("ul.autocomplete li", 5000);
@@ -37,40 +44,41 @@ async function fillOutGrailedForm(
     let li = document.querySelector("ul.autocomplete li"); //grab first list item
 
     if (li) {
-      //'mousedown', bcuz 'click' doesn't trigger on this element on grailed form.
+      //NOTE: 'mousedown' event, bcuz 'click' doesn't trigger on this element on grailed form.
       var clickEvent = document.createEvent("MouseEvents");
       clickEvent.initEvent("mousedown", true, true);
       li.dispatchEvent(clickEvent);
     }
   }
 
+  //color
   if (color != "") {
     color = helpers.capitalize(color);
 
-    grailed_color.trigger("focus").val(color).trigger("input").trigger("blur");
+    domEvent.dispatchEvent(grailed_color, "focus");
+    domEvent.fillInputValue(grailed_color, color);
+    domEvent.dispatchEvent(grailed_color, "blur");
   }
 
   //condition
   if (condition != "") {
     let conditionValue = matchCondition(condition);
 
-    grailed_condition
-      .trigger("focus")
-      .val(conditionValue)
-      .trigger("change")
-      .trigger("blur");
+    domEvent.dispatchEvent(grailed_condition, "focus");
+    grailed_condition.value = conditionValue;
+    domEvent.dispatchEvent(grailed_condition, "blur");
   }
 
   //description
-  grailed_description
-    .trigger("focus")
-    .val(description)
-    .trigger("input")
-    .trigger("blur");
+  domEvent.dispatchEvent(grailed_description, "focus");
+  domEvent.fillTextAreaValue(grailed_description, description);
+  domEvent.dispatchEvent(grailed_description, "blur");
 
   //LATER: currency/price validation
   //price
-  grailed_price.trigger("focus").val(price).trigger("input").trigger("blur");
+  domEvent.dispatchEvent(grailed_price, "focus");
+  domEvent.fillInputValue(grailed_price, price);
+  domEvent.dispatchEvent(grailed_price, "blur");
 
   swalAlert.showCrosslistSuccessAlert();
 }

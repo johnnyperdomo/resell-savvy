@@ -9,6 +9,8 @@
 
 //LATER: create shared class for scraping data, all in one place, make's it easier to read.
 
+//LATER: remove jquery, pure js. jquery can take longer to load and unexpected consequences. we would need to maniuplate dom using normal dom selector api
+
 var ebaySetListingActiveTabs = {};
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
@@ -195,7 +197,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["grailed"],
+          copyToMarketplaces: [
+            "depop",
+            "mercari",
+            "kidizen",
+            "etsy",
+            "grailed",
+            "poshmark",
+          ],
           copyFromMarketplace: "mercari",
 
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",

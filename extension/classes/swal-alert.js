@@ -44,7 +44,7 @@ class SwalAlert {
       icon: "success",
       title: "Almost done!",
       html: `Item successfully crosslisted. Finish adding a few details unique to this marketplace to finish your listing.`,
-      timer: 7500,
+      timer: 5000,
       timerProgressBar: true,
       toast: true,
       position: "top-end",
