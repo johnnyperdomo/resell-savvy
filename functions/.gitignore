@@ -10,3 +10,6 @@ typings/
 
 # Node.js dependency directory
 node_modules/
+
+# Local config file for testing local server keys
+functions/.runtimeconfig.json
