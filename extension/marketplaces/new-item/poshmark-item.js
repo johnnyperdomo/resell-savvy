@@ -38,6 +38,12 @@ async function fillOutPoshmarkForm(
     'input[data-vv-name="costPriceAmount"]'
   );
 
+  await UploadImage(
+    imageUrls[0],
+    "cat.png",
+    document.querySelectorAll("input[type=file]")[0]
+  );
+
   //title
   $(poshmark_title).trigger("focus");
   domEvent.fillInputValue(poshmark_title, title);
@@ -160,3 +166,28 @@ document.onreadystatechange = function () {
 //   fname,
 //   document.querySelectorAll("input[type=file]")[0]
 // );
+
+function event_dispatcher(t) {
+  var e = new Event("change", {
+    bubbles: !0,
+  });
+  t.dispatchEvent(e);
+}
+
+function uploadImage_trigger(t) {
+  console.log("Uploaded Success.");
+  var e = t.file,
+    n = t.targetInput,
+    i = new DataTransfer();
+  i.items.add(e), (n.files = i.files), event_dispatcher(n);
+}
+
+async function UploadImage(url, file_name, input_Element) {
+  fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((blob) => {
+      u = new Uint8Array(blob);
+      myfile = new File([u.buffer], file_name, { type: "image/png" });
+      uploadImage_trigger({ file: myfile, targetInput: input_Element });
+    });
+}

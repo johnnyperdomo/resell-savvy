@@ -69,4 +69,3 @@ function unlinkItemFromListing(id) {
 }
 
 createLinkButton();
-console.log("yooo");

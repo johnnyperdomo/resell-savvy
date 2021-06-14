@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 function formatCondition(condition) {
   //return rs condition value from condition value
@@ -36,6 +37,8 @@ async function formatItemProperties() {
     return $(image).attr("src");
   });
 
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
+
   let mercari_title = $('input[data-testid="Title"]').val();
   let mercari_description = $('textarea[data-testid="Description"]').val();
 
@@ -45,7 +48,7 @@ async function formatItemProperties() {
   let mercari_condition = $('[name="sellCondition"]:checked').attr("id");
 
   let properties = {
-    imageUrls: imageURLs, //kidizen doesn't show on edit page
+    imageUrls: convertedImages,
     title: mercari_title,
     description: mercari_description,
     color: mercari_color, //null

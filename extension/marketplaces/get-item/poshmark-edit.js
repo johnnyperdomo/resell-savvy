@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 function formatCondition(condition) {
   //return rs condition value from condition value
@@ -29,9 +30,12 @@ async function formatItemProperties() {
     return $(image).attr("src");
   });
 
+  console.log("imgs original: ", imageURLs);
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
+
   let poshmark_title = $("input[data-vv-name='title']").val();
   let poshmark_description = $("textarea[data-vv-name='description']").val();
-  let poshmark_color = $("div[data-et-name='color'] li")
+  let poshmark_color = $("div[data-et-name='color'] li") //LATER: //FIX: if item has multiple colors, it gets both of them, just get the first one separate
     .text()
     .trim()
     .toLowerCase();
@@ -45,10 +49,10 @@ async function formatItemProperties() {
   let poshmark_cost = $('input[data-vv-name="costPriceAmount"]').val();
   let poshmark_sku = $('input[data-vv-name="sku"]').val();
 
-  console.log(poshmark_condition);
+  console.log("converted images: ", convertedImages);
 
   let properties = {
-    imageUrls: imageURLs,
+    imageUrls: convertedImages,
     title: poshmark_title,
     description: poshmark_description,
     color: poshmark_color,
@@ -58,6 +62,7 @@ async function formatItemProperties() {
     sku: poshmark_sku,
     cost: poshmark_cost,
   };
+
   console.log(properties);
   return new Promise((resolve, reject) => {
     resolve(properties);

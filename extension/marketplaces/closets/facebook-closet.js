@@ -1,5 +1,4 @@
 ///////////////
-//FIX: css error blue not working, btnprimary not working either, maybe inherits from parent
 //LATER: set timeout node
 
 // function insertModal() {

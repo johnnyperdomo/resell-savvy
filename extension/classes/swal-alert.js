@@ -3,9 +3,8 @@
 class SwalAlert {
   //when page loads
   showPageLoadingAlert() {
-    //LATER: change background color to make it more presentable, maybe a opaque white?
-    //LATER: show gif, or lottie image instead of just a simple loading spinner?
-    //FIX: add to shadow dom
+    //LATER: FIX: add to shadow dom
+    //TODO: set 30 second timer to this just in case, if something happens, it won't block the user forever.
     Swal.fire({
       title: "Waiting on page to finish loading...",
       html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
@@ -37,8 +36,6 @@ class SwalAlert {
   }
 
   //when listing details have been filled out successfully
-  //LATER: add shadow dom
-  //TODO: add option to autotimeout in 30 seconds for filling autofill form, just  in case the form hangs
   showCrosslistSuccessAlert() {
     Swal.fire({
       icon: "success",

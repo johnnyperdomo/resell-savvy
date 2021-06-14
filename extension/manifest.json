@@ -1,6 +1,6 @@
 {
   "name": "ResellSavvy - Crosslisting tool for sellers",
-  "version": "0.01",
+  "version": "1",
   "description": "Crosslisting tool for sellers",
   "icons": {
     "16": "assets/icons/icon-16.png",
@@ -33,18 +33,6 @@
 
   "content_scripts": [
     {
-      "matches": [
-        "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
-        "https://www.ebay.com/lstng*"
-      ],
-      "js": [
-        "third-party/jquery-3.6.0.min.js",
-        "marketplaces/new-item/ebay-item.js"
-      ],
-      "all_frames": true
-    },
-
-    {
       "matches": ["https://bulkedit.ebay.com/*"],
       "js": [
         "third-party/jquery-3.6.0.min.js",
@@ -59,7 +47,8 @@
         "third-party/sweetalert.min.js",
         "classes/swal-alert.js",
         "classes/dom-event.js",
-        "classes/helpers.js"
+        "classes/helpers.js",
+        "classes/image-renderer.js"
       ],
       "css": [
         "third-party/bootstrap.min.css",

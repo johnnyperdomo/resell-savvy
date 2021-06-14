@@ -1,5 +1,4 @@
 //handling communication between marketplaces
-//LATER: maybe have some type of ui response so that users can keep know when their item will be tracked.
 
 //LATER: when starting crosslist session, make sure if user is logged in, if not, show error message telling them to login
 
@@ -10,6 +9,8 @@
 //LATER: create shared class for scraping data, all in one place, make's it easier to read.
 
 //LATER: remove jquery, pure js. jquery can take longer to load and unexpected consequences. we would need to maniuplate dom using normal dom selector api
+
+//LATER: for bug reporting on user's side, console.log errors with a specific message like "RS-SAVVY CROSSLISTING ERRORS", if present, they can copy/paste it the value and give it to the customer service.
 
 var ebaySetListingActiveTabs = {};
 
@@ -82,12 +83,12 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     //TODO: set data id
     chrome.tabs.create(
       {
-        url: "https://www.depop.com/products/edit/johnnyperdomo-this-is-the-coolest-nike/", //TODO: what they will get data from
+        url: "https://www.depop.com/products/edit/johnnyperdomo-nike-limited-edition-shirt/", //TODO: what they will get data from
         active: false,
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["poshmark"],
+          copyToMarketplaces: ["depop", "poshmark"],
           copyFromMarketplace: "depop",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji", //TODO: the actual listing url
           tab: tab,
@@ -108,7 +109,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["poshmark", "mercari", "kidizen"],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "ebay",
           listingURL: "https://www.ebay.com/itm/363389338870", //TODO: the actual listing url
           tab: tab,
@@ -128,7 +129,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "mercari", "kidizen"],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "etsy",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -149,14 +150,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: [
-            "depop",
-            "mercari",
-            "kidizen",
-            "etsy",
-            "grailed",
-            "poshmark",
-          ],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "grailed",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -177,7 +171,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["mercari"],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "kidizen",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -197,16 +191,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: [
-            "depop",
-            "mercari",
-            "kidizen",
-            "etsy",
-            "grailed",
-            "poshmark",
-          ],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "mercari",
-
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
         };
@@ -219,15 +205,17 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //poshmark
   if (msg.command == "get-listing-from-poshmark") {
     //TODO: set data id
+
     chrome.tabs.create(
       {
-        url: "https://poshmark.com/edit-listing/608042cbfdcbf63ef23959f6",
+        url: "https://poshmark.com/edit-listing/609710852b46b502a60b0194",
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["grailed"],
+          copyToMarketplaces: ["depop"],
           copyFromMarketplace: "poshmark",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
+          listingURL:
+            "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",
           tab: tab,
         };
 
@@ -546,3 +534,27 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     );
   }
 });
+
+//images
+
+let url1 =
+  "https://assets.adidas.com/images/w_600,f_auto,q_auto/4e894c2b76dd4c8e9013aafc016047af_9366/Superstar_Shoes_White_FV3284_01_standard.jpg";
+let url2 =
+  "https://di2ponv0v5otw.cloudfront.net/posts/2021/05/08/609710852b46b502a60b0194/m_60c277f012d880e99e359463.jpeg";
+let url3 =
+  "https://n.shopify.com/s/files/1/0156/6146/products/GEO_LIGHTWEIGHT_SS_T-SHIRT_-_BLACK_A-EditEdit_DW_750x.jpg?v=1571263132";
+
+// Promise.allSettled([getDataUri(url1), getDataUri(url2), getDataUri(url3)]).then(
+//   ([result]) => {
+//     //reach here regardless
+
+//     console.log("result of the promises: ", result);
+//     // {status: "fulfilled", value: 33}
+//   }
+// );
+
+//TODO: on crosslist popup, let user sort by 1)'name'a-z,z-a, or 2) first/last,
+//LATER: later on crosslist modal, add search functionality, when they user starts typing, it goes to the row of what the text is, so if he types "adida", go to the 5th row where that word is that. Find row # and go there, if no row # found, don't go anywhere, but don't filter out results, that way it doesn't make it hard to find the list items that follow, ,  - let users know they can only see or search for items that have been loaded when clicking on the modal(load more to see more)
+
+//NOTE: when showing crosslist modal, don't run a query to compare if user has already crosslisted or if they have that item in their inventory. I've done the research and this can get very expensive, very fast, since this can fetch multiple times. They can do the work themselves of seeing which items need to be imported or not, or which ones have been crosslisted.
+//LATER: later on, when a user clicks the crosslist blue button, we can send a request to bigquery, and get a query of all the items(average should be like 100-10,000 max){don't block the modal, just start the modal and in a small corner have a loading spinner that says something like "fetching data"} - big query is pretty affordable, all of this should cost like pennies, even if the user spams, bcuz bigquery caches results. (hopefully function should take like 2-3s i assume.) FIRESTORE can get expensive bcuz it charges on the number of docs retreived, so if it retrieves 10,000. That will be very expensive as hell

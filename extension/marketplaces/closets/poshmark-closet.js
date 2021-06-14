@@ -1,4 +1,4 @@
-// //FIX: detect changes, when urls change like from new tab change, crosslist button should be removed
+// //LATER: FIX: detect changes, when urls change like from new tab change, crosslist button should be removed
 
 // function insertModal() {
 //   //TODO

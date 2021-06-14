@@ -13,4 +13,11 @@ class Helpers {
     if (typeof s !== "string") return "";
     return s.charAt(0).toUpperCase() + s.slice(1);
   };
+
+  //TODO: firebase cloud functions cors, get different keys for prod/dev servers
 }
+
+// function getCorsProxyPath() {
+//   //TODO: get chrome runtime for dev/prod keys, return a key
+
+// }

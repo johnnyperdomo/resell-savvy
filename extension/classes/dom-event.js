@@ -2,7 +2,6 @@
 //NOTE: use 'var' when declaring class, since it can be redeclared across different scopes
 class DomEvent {
   //waits for the element to be loaded in the page
-  //LATER: make this timeout after certain time, to not be blocked forever, change code up a little bit
   waitForElementToLoad(selector, timeoutInMs, inTree) {
     if (!inTree) inTree = $(document.body);
     var startTimeInMs = Date.now();

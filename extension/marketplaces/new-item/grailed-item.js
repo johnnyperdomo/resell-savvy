@@ -16,10 +16,6 @@ async function fillOutGrailedForm(
   //NOTE: use pure dom on this one, since jquery is throwing some errors on this if tab is multiple tabs opened at the same time //LATER: use pure js, and remove jquery, this causes unexpected errors
   await domEvent.waitForElementToLoad("input[name='title']", 10000);
 
-  //FIX: it seems to me like when grailed is called last when opening chrome tabs, idk, but maybe jquery isn't loading fast enough bcuz its not adding values. wait for page to render on every function, try with 100 or 500 least. or remove jquery all together, bcuz that works and is fast
-  // const inputFiles = $('input[type="file"]');
-  // console.log("input files, ", inputFiles);
-
   let grailed_title = document.querySelector("input[name='title']");
   let grailed_description = document.querySelector(
     "textarea[name='description']"

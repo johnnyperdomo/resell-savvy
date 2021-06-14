@@ -34,7 +34,7 @@ async function formatItemProperties() {
   //wait for page to render
   await helpers.delay(100);
 
-  let imageURLs = []; //LATER: kidizen doens't show on edit page
+  let imageURLs = []; //LATER: kidizen doens't show on edit page, maybe wait till later when they update page
 
   let kidizen_title = $("#item_title").val();
   let kidizen_description = $("#item_description").val();

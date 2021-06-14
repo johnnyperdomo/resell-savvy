@@ -1,65 +1,10 @@
-//LATER: add progress states to page when it starts the crosslist session, - white blurry modal that stops the user from editing the page. i.e. waiting for page to load "check internet connection" (make funny animation) -> pasting in progress -> etc.... timeout in a few seconds by default just in case it doesn't get stuck. (that way they know the crosslist is not the reason it's slow, it's because of your internet)
-
 //LATER: after items finish crosslisting, add a little popup(like how honey coupon has), at the top right corner. and mention something like - "we were able to fill the following properties based on listing details - "title", "description", "images", etc...." so everytime we fill a new item successfully, append it successfully to a property of sorts. (make it small and not annoying, and it doesn't block the ui, just like a small notication, they can leave it there or dismiss, but it shouldn't affect them )
 
 //LATER: watch for elements that are not yet loaded, and add them when they are actvated by their previous elements. i.e., brand is not available until the category is filled. watch and then fill as soon as it becomes available.
 
-// function toDataUrl(url, callback) {
-//   var xhr = new XMLHttpRequest();
-//   xhr.onload = function () {
-//     callback(xhr.response);
-//   };
-//   xhr.open("GET", url);
-//   xhr.responseType = "blob";
-//   xhr.send();
-// }
-
-// function convertImgToBase64URL(url, callback, outputFormat) {
-//   var img = new Image();
-//   img.crossOrigin = "Anonymous";
-//   img.onload = function () {
-//     var canvas = document.createElement("CANVAS"),
-//       ctx = canvas.getContext("2d"),
-//       dataURL;
-//     canvas.height = img.height;
-//     canvas.width = img.width;
-//     ctx.drawImage(img, 0, 0);
-//     dataURL = canvas.toDataURL(outputFormat);
-//     callback(dataURL);
-//     canvas = null;
-//   };
-//   img.src = url;
-// }
-
-// function getBase64Image(img) {
-//   // Create an empty canvas element
-//   var canvas = document.createElement("canvas");
-//   canvas.width = img.width;
-//   canvas.height = img.height;
-
-//   // Copy the image contents to the canvas
-//   var ctx = canvas.getContext("2d");
-//   ctx.drawImage(img, 0, 0);
-
-//   // Get the data-URL formatted image
-//   // Firefox supports PNG and JPEG. You could check img.src to
-//   // guess the original format, but be aware the using "image/jpg"
-//   // will re-encode the image.
-//   var dataURL = canvas.toDataURL("image/png");
-
-//   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-// }
-
-// function datablob(item) {
-//   const dataTransfer = new DataTransfer();
-
-//   dataTransfer.items.add(new File(["hello world"], "This_Works.txt"));
-
-//   return dataTransfer.files;
-// }
-
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
+var helpers = new Helpers();
 
 async function fillOutDepopForm(
   imageUrls,
@@ -81,17 +26,53 @@ async function fillOutDepopForm(
 
   let depop_image_input = document.querySelector("input[type=file]");
 
-  url =
-    "https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg"; // url of image
-
   //TODO: this works!!!!!!
   //Tested Successfully on major platforms.
   //Execute Command
-  // await UploadImage(
-  //   url,
-  //   fname,
-  //   document.querySelectorAll("input[type=file]")[0]
-  // );
+
+  //TODO: make this a promise that we have to wait for,
+
+  //TODO: wait for the first element to be present and that it has a source present at index
+
+  //TODO: this will be a for loop
+  //TODO: don't just look for next input, query select all the outer input boxes, and then query select the inputs in those boxes at the index . box -> input, that way we can't get the same one
+  await domEvent.waitForElementToLoad("input[type=file]", 3000);
+
+  await UploadImage(
+    imageUrls[0],
+    fname,
+    document.querySelectorAll("input[type=file]")[0]
+  );
+
+  await helpers.delay(1000); //let it re-render new input
+  //wait for new input element to be present,
+  await domEvent.waitForElementToLoad("input[type=file]", 3000);
+
+  await UploadImage(
+    imageUrls[1],
+    fname,
+    document.querySelector("input[type=file]")
+  );
+
+  await helpers.delay(1000); //TODO: make it like 100 ms
+
+  await domEvent.waitForElementToLoad("input[type=file]", 3000); //timeout after 10 seconds if undetected
+
+  await UploadImage(
+    imageUrls[2],
+    fname,
+    document.querySelector("input[type=file]")
+  );
+
+  await helpers.delay(1000);
+
+  await domEvent.waitForElementToLoad("input[type=file]", 3000); //timeout after 10 seconds if undetected
+
+  await UploadImage(
+    imageUrls[3],
+    fname,
+    document.querySelector("input[type=file]")
+  );
 
   //description
   $(depop_description).trigger("focus");

@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 function detectEbayListingVersion() {
   //detect using a unique element from each version
@@ -9,8 +10,6 @@ function detectEbayListingVersion() {
   domEvent.waitForElementToDisplay(
     "#editpane_form",
     function () {
-      //itemData inherited from execute script
-      // getItemDetails(itemData);
       console.log("detected ebay v1");
       getItemDetails("one");
     },
@@ -22,8 +21,6 @@ function detectEbayListingVersion() {
   domEvent.waitForElementToDisplay(
     ".summary__container",
     function () {
-      //itemData inherited from execute script
-      // getItemDetails(itemData);
       console.log("detected ebay v2");
       getItemDetails("two");
     },
@@ -83,6 +80,7 @@ document.onreadystatechange = function () {
   if (document.readyState === "complete") {
     swalAlert.showProcessingAlert(); //swal alert ui waiting
     detectEbayListingVersion();
+    console.log("hi");
   }
 };
 
@@ -96,8 +94,10 @@ async function formatItemPropertiesVersionOne() {
   //wait 3 seconds for iframe to load
   await helpers.delay(100);
 
-  //hidden uploader form with input values
-  let imageURLS = $("#epsUrls").val().split(";");
+  //hidden uploader form with input values, alternative solution would be in iframe
+  let imageURLs = $("#epsUrls").val().split(";");
+
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
 
   let ebay_title = $("#editpane_title").val();
   let ebay_description = $('iframe[id*="txtEdit_st"]')
@@ -111,7 +111,7 @@ async function formatItemPropertiesVersionOne() {
   console.log(ebay_description);
 
   let properties = {
-    imageUrls: imageURLS,
+    imageUrls: convertedImages,
     title: ebay_title,
     description: ebay_description,
     color: "", //null
@@ -122,7 +122,10 @@ async function formatItemPropertiesVersionOne() {
     cost: "", //null
   };
 
-  return properties;
+  console.log(properties);
+  return new Promise((resolve, reject) => {
+    resolve(properties);
+  });
 }
 
 function formatConditionVersionOne(condition) {
@@ -163,9 +166,11 @@ async function formatItemPropertiesVersionTwo() {
     return cleanURL.replace(/_[\d]+\.JPG/, "_57.JPG");
   });
 
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
+
   let ebay_title = $("input[name='title']").val();
 
-  //LATER: desc only works after iframe has been loaded in, this loads dynamically a little bit after page, so we have to wait for it. using 5 seconds in not the best way, see how you can use a wait for iframe to load function or something.
+  //LATE
   let ebay_description = $(".summary__description iframe")
     .contents()
     .find("body")[0].innerText;
@@ -173,14 +178,11 @@ async function formatItemPropertiesVersionTwo() {
   let ebay_brand = $('button[_track*="_Brand."]').text();
   //LATER: get condition by checking if it says new, if not default to used
   let ebay_condition = $('button[_track*=".condition."]').text().toLowerCase();
-  let ebay_price = $("input[name='price']").val(); //TODO: check ebay to see what would it be for an auction listing
+  let ebay_price = $("input[name='price']").val(); //LATER: check ebay to see what would it be for an auction listing
   let ebay_sku = $("input[name='customLabel']").val();
 
-  // console.log(ebay_description);
-
-  console.log("ebay condition, ", ebay_condition);
   let properties = {
-    imageUrls: imageURLs,
+    imageUrls: convertedImages,
     title: ebay_title,
     description: ebay_description,
     color: "", //null
@@ -191,6 +193,7 @@ async function formatItemPropertiesVersionTwo() {
     cost: "", //null
   };
 
+  console.log(properties);
   return new Promise((resolve, reject) => {
     resolve(properties);
   });
@@ -211,3 +214,15 @@ function formatConditionVersionTwo(condition) {
       return "";
   }
 }
+
+// {
+//   "matches": [
+//     "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
+//     "https://www.ebay.com/lstng*"
+//   ],
+//   "js": [
+//     "third-party/jquery-3.6.0.min.js",
+//     "marketplaces/new-item/ebay-item.js"
+//   ],
+//   "all_frames": true
+// },

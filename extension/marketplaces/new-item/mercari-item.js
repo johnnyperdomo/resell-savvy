@@ -72,7 +72,7 @@ async function fillOutMercariForm(
     searchColor.trigger("click");
   }
 
-  //LATER: any number if available, round up, bcuz mercari doesn't accept decimals //FIX
+  //LATER: any number if available, round up/down, bcuz mercari doesn't accept decimals //FIX
   //price
   $(mercari_price).trigger("focus");
   domEvent.fillInputValue(mercari_price, price);

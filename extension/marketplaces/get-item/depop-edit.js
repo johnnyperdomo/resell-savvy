@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 function formatCondition(condition) {
   //return rs condition value from condition value
@@ -32,12 +33,17 @@ async function formatItemProperties() {
   //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind, so create a function that waits for element to load, but doesn't freeze ui, or cause to await, if it shows up, manually input(user will see this, but there's nothing you can do about it)
 
   //wait for page to render
-  await helpers.delay(100);
+  await helpers.delay(3000); //TODO: //FIX fix this, should not be 3 secs, and we should wait for image to load instead of description
 
   let imagesEl = document.querySelectorAll('[data-testid*="imageInput"] img');
   let imageURLs = Array.from(imagesEl).map((image) => {
     return $(image).attr("src");
   });
+
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "blob"); //convert type: url => base64
+
+  console.log("converted: ", convertedImages);
+  console.log("cvrt: ", convertedImages[0]);
 
   let depop_description = $("#description").val();
   let depop_color = $(
@@ -55,7 +61,7 @@ async function formatItemProperties() {
   let depop_price = $('input[data-testid="price__input"]').val();
 
   let properties = {
-    imageUrls: imageURLs,
+    imageUrls: convertedImages,
     title: "", //null
     description: depop_description, //
     color: depop_color,
@@ -65,6 +71,8 @@ async function formatItemProperties() {
     sku: "", //null
     cost: "", //null
   };
+
+  console.log(properties);
 
   return new Promise((resolve, reject) => {
     resolve(properties);
@@ -99,12 +107,12 @@ function sendMessageToBackground(data) {
 document.onreadystatechange = function () {
   //doc tree is loaded
   if (document.readyState === "interactive") {
-    swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+    //  swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
   //doc tree is fully ready to be manipulated
   if (document.readyState === "complete") {
-    swalAlert.showProcessingAlert(); //swal alert ui waiting
+    //  swalAlert.showProcessingAlert(); //swal alert ui waiting
     getItemDetails();
   }
 };

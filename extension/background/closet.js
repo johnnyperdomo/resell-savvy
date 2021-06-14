@@ -1,10 +1,9 @@
 //listen to when user lands on a closet
-//FIX: in wait for load elements functions, we should set a timeout time, because it could run forever, and it won't let us reload page if it starts to 'wait for node, but then it doesn't find'
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //   console.log("updated, ", tabId, changeInfo, tab);
 
   //depop closet
-  //TODO: //FIX: gives some error cuz of node loading
   if (tab.url.indexOf("depop.com/") > -1) {
     console.log("depop page is reloaded");
     chrome.tabs.executeScript(tab.id, {
@@ -13,7 +12,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //ebay closet
-  //TODO: bulk sell page works so don't worry about it
   if (tab.url.indexOf("ebay.com/sh/lst/active") > -1) {
     console.log("ebay closet detected, tab = ", tabId);
 
@@ -23,7 +21,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //etsy closet
-  //TODO: wait for element to load, heading, before detecting closet
   if (tab.url.indexOf("etsy.com/your/shops") > -1) {
     console.log("etsy closet detected, tab = ", tabId);
 
@@ -78,8 +75,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
-
-  //TODO: if success page, get the listing url, and then call cloud function api to post to firebase (verify the successs data in the cloud function, if new, upload data to item. else, if already created, jsut save new url.) - api to make it super fast
 });
 
 // "*://*.facebook.com/*",
@@ -90,3 +85,4 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 //LATER: see how you can make your web scraping more robust, since data can change on any given page
 // https://codeburst.io/two-simple-technique-for-web-scraping-pages-with-dynamically-created-css-class-names-72eaca8c1304
+//LATER: your websraping tools should also be done in a way of importance and availability, 'id'(99% of the time unique, and rarely changes), if not available -> 'name'(not necessarily unique, but it can be, and it changes less), 'class'(sometimes not unique, and it can change more often than the other two). i.e., if we're looking for an input, better to look for type input with an id attached rather than a class name: see this tut for more explanation: https://www.youtube.com/watch?v=b5jt2bhSeXs

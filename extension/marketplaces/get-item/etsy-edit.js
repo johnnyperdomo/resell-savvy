@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function formatItemProperties() {
   await domEvent.waitForElementToLoad("input[name='title']", 10000);
@@ -20,13 +21,15 @@ async function formatItemProperties() {
     return cleanURL;
   });
 
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
+
   let etsy_title = $("input[name='title']").val();
   let etsy_description = $("textarea[name='description-text-area']").val();
   let etsy_price = $("input[name='price-input']").val();
   let etsy_sku = $("input[name='sku-input']").val();
 
   let properties = {
-    imageUrls: imageURLs,
+    imageUrls: convertedImages,
     title: etsy_title, //null
     description: etsy_description, //
     color: "", //LATER: get color later

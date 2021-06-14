@@ -1,6 +1,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 function formatCondition(condition) {
   //return rs condition value from condition value
@@ -30,8 +31,18 @@ async function formatItemProperties() {
 
   let imagesEl = document.querySelectorAll(".photo img");
   let imageURLs = Array.from(imagesEl).map((image) => {
-    return $(image).attr("src");
+    var url = $(image).attr("src");
+
+    //check if it's the compression url //i.e. https://process.fs.grailed.com/AJdAgnqCST4iPtnUxiGtTz/auto_image/cache=expiry:max/rotate=deg:exif/resize=height:700/output=quality:90/compress/https://cdn.fs.grailed.com/api/file/65ADtJK6SfSJb6YYROG2
+    if (url.indexOf("compress/") >= 0) {
+      let originalSourceImg = url.split("compress/").pop(); //seperate urls, remove image that is not originalSrc
+      url = originalSourceImg;
+    }
+
+    return url;
   });
+
+  let convertedImages = await imageRenderer.convertImages(imageURLs, "url"); //convert type: url => base64
 
   let grailed_title = $("input[name='title']").val();
   let grailed_description = $("textarea[name='description']").val();
@@ -40,17 +51,8 @@ async function formatItemProperties() {
   let grailed_condition = $("select[name='condition']").val();
   let grailed_price = $("input[name='price']").val();
 
-  console.log(
-    grailed_title,
-    grailed_description,
-    grailed_color,
-    grailed_brand,
-    grailed_condition,
-    grailed_price
-  );
-
   let properties = {
-    imageUrls: imageURLs,
+    imageUrls: convertedImages,
     title: grailed_title,
     description: grailed_description,
     color: grailed_color,
@@ -60,6 +62,8 @@ async function formatItemProperties() {
     sku: "", //null
     cost: "", //null
   };
+
+  console.log(properties);
 
   return new Promise((resolve, reject) => {
     resolve(properties);

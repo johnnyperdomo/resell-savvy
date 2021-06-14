@@ -1,9 +1,4 @@
 //TODO: just in case, autotimeout "sweet alert crosslisting modal to 30 seconds, if there is an error or something stalls, they can still access the page after 30 seconds"
-//TODO: have window flag, but only set value to true once detected
-//LATER: await for element should time out to not freeze ui
-
-//TODO: //FIX: inputs not detecting change, not working!!!!!
-//TODO: remove new item from manifest.json
 
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();

@@ -5,6 +5,7 @@ import { NavigationStart, Router } from '@angular/router';
 //LATER: add error handling and red error responses
 
 //LATER: change favicon
+//LATER: add loading spinners, but have a simple library that you can just call, instead of having to deal with a bunch of html and ngifs, just a simple, set/remove global loading bar, i just need to get that done fast!
 
 @Component({
   selector: 'app-root',
