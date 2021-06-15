@@ -26,7 +26,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       condition: "nwt",
       color: "",
       sku: "123edfgreet",
-      cost: "",
     };
     createItem(itemData, "ebay");
   }
@@ -212,7 +211,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["etsy", "kidizen", "mercari", "grailed"],
+          copyToMarketplaces: [
+            "etsy",
+            "kidizen",
+            "mercari",
+            "grailed",
+            "depop",
+            "poshmark",
+          ],
           copyFromMarketplace: "poshmark",
           listingURL:
             "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",

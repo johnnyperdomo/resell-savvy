@@ -56,7 +56,6 @@ async function formatItemProperties() {
     condition: formatCondition(mercari_condition),
     price: mercari_price,
     sku: "", //null
-    cost: "", //null
   };
 
   console.log(properties);

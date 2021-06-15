@@ -119,7 +119,6 @@ async function formatItemPropertiesVersionOne() {
     condition: formatConditionVersionOne(ebay_condition),
     price: ebay_price,
     sku: ebay_sku,
-    cost: "", //null
   };
 
   console.log(properties);

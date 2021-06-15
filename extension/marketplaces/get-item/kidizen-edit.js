@@ -64,7 +64,6 @@ async function formatItemProperties() {
     condition: formatCondition(kidizen_condition),
     price: kidizen_price,
     sku: "", //null
-    cost: "", //null
   };
 
   return new Promise((resolve, reject) => {

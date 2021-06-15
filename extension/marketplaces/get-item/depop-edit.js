@@ -69,7 +69,6 @@ async function formatItemProperties() {
     condition: formatCondition(depop_condition),
     price: depop_price,
     sku: "", //null
-    cost: "", //null
   };
 
   console.log(properties);

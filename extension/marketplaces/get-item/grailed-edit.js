@@ -60,7 +60,6 @@ async function formatItemProperties() {
     condition: formatCondition(grailed_condition),
     price: grailed_price,
     sku: "", //null
-    cost: "", //null
   };
 
   console.log(properties);

@@ -37,7 +37,6 @@ async function formatItemProperties() {
     condition: "", //null
     price: etsy_price,
     sku: etsy_sku, //null
-    cost: "", //null
   };
 
   return new Promise((resolve, reject) => {

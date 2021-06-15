@@ -60,7 +60,6 @@ async function formatItemProperties() {
     condition: formatCondition(poshmark_condition),
     price: poshmark_price,
     sku: poshmark_sku,
-    cost: poshmark_cost,
   };
 
   console.log(properties);

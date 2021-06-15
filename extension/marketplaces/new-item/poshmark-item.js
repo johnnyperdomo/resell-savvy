@@ -19,7 +19,6 @@ async function fillOutPoshmarkForm(
   condition,
   color,
   listPrice,
-  costPrice,
   sku
 ) {
   await domEvent.waitForElementToLoad("input[data-vv-name='title']");
@@ -73,11 +72,6 @@ async function fillOutPoshmarkForm(
   domEvent.fillInputValue(poshmark_sku, sku);
   $(poshmark_sku).trigger("blur");
 
-  //costPrice
-  $(poshmark_costPrice).trigger("focus");
-  domEvent.fillInputValue(poshmark_costPrice, costPrice);
-  $(poshmark_costPrice).trigger("blur");
-
   if (condition != "") {
     let conditionValue = formatCondition(condition);
 
@@ -95,7 +89,8 @@ async function fillOutPoshmarkForm(
     searchColor.trigger("click");
   }
 
-  swalAlert.showCrosslistSuccessAlert();
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function formatCondition(condition) {
@@ -119,10 +114,15 @@ async function uploadImages(images, targetElement) {
   //upload array of images simultaneously
   await imageRenderer.uploadImages(splicedImages, targetElement);
 
-  //wait 1000ms for poshmark image popup to display
-  await helpers.delay(1000);
-
   //find popup button; usually is presented on first image upload
+  await domEvent.waitForElementToLoad(
+    ".image-edit-modal button[data-et-name='apply']",
+    5000
+  ); //timeout in 5 seconds
+
+  //wait 500ms for the images to render
+  await helpers.delay(500);
+
   let editImageModalButton = document.querySelector(
     ".image-edit-modal button[data-et-name='apply']"
   );
@@ -155,7 +155,6 @@ document.onreadystatechange = function () {
       itemData.condition,
       itemData.color,
       itemData.price,
-      itemData.cost,
       itemData.sku
     );
   }
