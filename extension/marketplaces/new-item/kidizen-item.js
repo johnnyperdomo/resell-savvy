@@ -17,6 +17,9 @@ async function fillOutKidizenForm(
   await domEvent.waitForElementToLoad("#item_title");
   console.log("images, ", imageUrls);
 
+  //wait for page to render
+  await helpers.delay(100);
+
   //LATER: //FIX: empty values showing undefined, this should just be empty
   let kidizen_image_input = document.querySelector("input[type='file']");
   let kidizen_title = document.querySelector("#item_title");

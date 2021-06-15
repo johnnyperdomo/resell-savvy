@@ -8,6 +8,9 @@ var helpers = new Helpers();
 async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   await domEvent.waitForElementToLoad("input[name='title']");
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let etsy_image_input = document.querySelector("input[type='file']");
   let etsy_title = document.querySelector("input[name='title']");
   let etsy_description = document.querySelector(

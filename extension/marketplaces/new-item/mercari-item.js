@@ -15,6 +15,9 @@ async function fillOutMercariForm(
 ) {
   await domEvent.waitForElementToLoad("#sellName");
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let mercari_image_input = document.querySelector('input[type="file"]');
   let mercari_title = document.querySelector('input[data-testid="Title"]');
   let mercari_description = document.querySelector(
@@ -40,16 +43,16 @@ async function fillOutMercariForm(
 
   //brand
   if (brand != "") {
-    // $(mercari_brand).trigger("focus");
+    //wait 1000s for the input to render
+    await helpers.delay(1000);
+
+    domEvent.dispatchEvent(mercari_brand, "focus");
     domEvent.fillInputValue(mercari_brand, brand);
 
-    //TODO: //FIX: what is going on here? this giving alot of problems, not working correctly, what
     let brandList = await domEvent.waitForElementToLoad(
       'div[data-testid="BrandDropdown"] > div > div',
-      5000
+      3000
     );
-
-    //TODO: handle waitfor element errors, if not found. This brand should not work, but it should still continue running the other code. We should do like a wait for element, but time out after a few seconds. If not it just continues looping forever and blocks the next inputs
 
     if (brandList.length) {
       brandList.eq(0).trigger("click");
@@ -83,7 +86,8 @@ async function fillOutMercariForm(
   domEvent.fillInputValue(mercari_price, price);
   $(mercari_price).trigger("blur");
 
-  swalAlert.showCrosslistSuccessAlert();
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function matchCondition(condition) {
@@ -128,8 +132,14 @@ async function uploadImages(images, targetElement) {
 
 //detect if document is ready
 document.onreadystatechange = function () {
-  //TODO: swal, after fixing mercari brand
+  //TODO: after swal working
+  //doc tree is loaded
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
     fillOutMercariForm(
       itemData.imageUrls,
       itemData.title,

@@ -23,6 +23,9 @@ async function fillOutPoshmarkForm(
 ) {
   await domEvent.waitForElementToLoad("input[data-vv-name='title']");
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let poshmark_image_input = document.querySelector("input[type='file']");
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(

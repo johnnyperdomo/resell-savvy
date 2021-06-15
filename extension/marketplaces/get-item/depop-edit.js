@@ -28,12 +28,12 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad("#description"); //timeout after 10 seconds if undetected, give time for initial page to render completely
+  await domEvent.waitForElementToLoad('[data-testid*="imageInput"] img'); //NOTE: await for imgs here, since they load after the title
 
   //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind, so create a function that waits for element to load, but doesn't freeze ui, or cause to await, if it shows up, manually input(user will see this, but there's nothing you can do about it)
 
   //wait for page to render
-  await helpers.delay(3000); //TODO: //FIX fix this, should not be 3 secs, and we should wait for image to load instead of description
+  await helpers.delay(100);
 
   let imagesEl = document.querySelectorAll('[data-testid*="imageInput"] img');
   let imageURLs = Array.from(imagesEl).map((image) => {
@@ -41,9 +41,6 @@ async function formatItemProperties() {
   });
 
   let convertedImages = await imageRenderer.convertImages(imageURLs, "blob"); //convert type: url => base64
-
-  console.log("converted: ", convertedImages);
-  console.log("cvrt: ", convertedImages[0]);
 
   let depop_description = $("#description").val();
   let depop_color = $(

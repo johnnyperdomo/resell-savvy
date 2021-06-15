@@ -132,6 +132,9 @@ async function fillOutEbayFormOne(
 
   await domEvent.waitForElementToLoad("#editpane_title"); //timeout after 10 seconds if undetected
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let ebay_title = document.querySelector("input[id='editpane_title']");
   let ebay_sku = document.querySelector("input[id='editpane_skuNumber']");
   let ebay_condition = document.querySelector("select[id='itemCondition']");
@@ -223,8 +226,10 @@ async function fillOutEbayFormTwo(
   price,
   sku
 ) {
-  console.log(title);
   await domEvent.waitForElementToLoad("input[name='title']"); //timeout after 10 seconds if undetected
+
+  //wait for page to render
+  await helpers.delay(100);
 
   //LATER: fill out color in next update
   let ebay_title = document.querySelector("input[name='title']");

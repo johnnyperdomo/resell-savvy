@@ -16,6 +16,9 @@ async function fillOutDepopForm(
 ) {
   await domEvent.waitForElementToLoad("#description");
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let depop_image_input = document.querySelector("input[type='file']");
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'

@@ -17,6 +17,9 @@ async function fillOutGrailedForm(
   //NOTE: use pure dom on this one, since jquery is throwing some errors on this if tab is multiple tabs opened at the same time //LATER: use pure js, and remove jquery, this causes unexpected errors
   await domEvent.waitForElementToLoad("input[name='title']");
 
+  //wait for page to render
+  await helpers.delay(100);
+
   let grailed_image_input = document.querySelector("input[type='file']");
   let grailed_title = document.querySelector("input[name='title']");
   let grailed_description = document.querySelector(
