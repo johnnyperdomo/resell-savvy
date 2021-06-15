@@ -24,7 +24,7 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad("input[name='title']", 10000);
+  await domEvent.waitForElementToLoad("input[name='title']");
 
   //wait for page to render
   await helpers.delay(100);

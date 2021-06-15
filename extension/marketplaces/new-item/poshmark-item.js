@@ -9,6 +9,7 @@
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function fillOutPoshmarkForm(
   imageUrls,
@@ -21,8 +22,9 @@ async function fillOutPoshmarkForm(
   costPrice,
   sku
 ) {
-  await domEvent.waitForElementToLoad("input[data-vv-name='title']", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
+  await domEvent.waitForElementToLoad("input[data-vv-name='title']");
 
+  let poshmark_image_input = document.querySelector("input[type='file']");
   let poshmark_title = document.querySelector('input[data-vv-name="title"]');
   let poshmark_description = document.querySelector(
     'textarea[data-vv-name="description"]'
@@ -38,11 +40,8 @@ async function fillOutPoshmarkForm(
     'input[data-vv-name="costPriceAmount"]'
   );
 
-  await UploadImage(
-    imageUrls[0],
-    "cat.png",
-    document.querySelectorAll("input[type=file]")[0]
-  );
+  //images
+  await uploadImages(imageUrls, poshmark_image_input);
 
   //title
   $(poshmark_title).trigger("focus");
@@ -110,11 +109,44 @@ function formatCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let splicedImages = images.slice(0, 16); //poshmark only allows 16 image uploads
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(splicedImages, targetElement);
+
+  //wait 1000ms for poshmark image popup to display
+  await helpers.delay(1000);
+
+  //find popup button; usually is presented on first image upload
+  let editImageModalButton = document.querySelector(
+    ".image-edit-modal button[data-et-name='apply']"
+  );
+
+  if (editImageModalButton) {
+    //click button
+    editImageModalButton.click();
+  }
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //LATER: do more error checking for fields, example like price/currency validation
 
 // //detect if document is ready
 document.onreadystatechange = function () {
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
     fillOutPoshmarkForm(
       itemData.imageUrls,
       itemData.title,
@@ -128,66 +160,3 @@ document.onreadystatechange = function () {
     );
   }
 };
-
-/////
-
-// url2 =
-//   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
-
-// fname = "cat.png"; //File name to be submitted
-
-// function event_dispatcher(t) {
-//   var e = new Event("change", {
-//     bubbles: !0,
-//   });
-//   t.dispatchEvent(e);
-// }
-
-// function uploadImage_trigger(t) {
-//   console.log("Uploaded Success.");
-//   var e = t.file,
-//     n = t.targetInput,
-//     i = new DataTransfer();
-//   i.items.add(e), (n.files = i.files), event_dispatcher(n);
-// }
-
-// async function UploadImage(url, file_name, input_Element) {
-//   fetch(url)
-//     .then((res) => res.arrayBuffer())
-//     .then((blob) => {
-//       u = new Uint8Array(blob);
-//       myfile = new File([u.buffer], file_name, { type: "image/png" });
-//       uploadImage_trigger({ file: myfile, targetInput: input_Element });
-//     });
-// }
-
-// UploadImage(
-//   imageUrls[0],
-//   fname,
-//   document.querySelectorAll("input[type=file]")[0]
-// );
-
-function event_dispatcher(t) {
-  var e = new Event("change", {
-    bubbles: !0,
-  });
-  t.dispatchEvent(e);
-}
-
-function uploadImage_trigger(t) {
-  console.log("Uploaded Success.");
-  var e = t.file,
-    n = t.targetInput,
-    i = new DataTransfer();
-  i.items.add(e), (n.files = i.files), event_dispatcher(n);
-}
-
-async function UploadImage(url, file_name, input_Element) {
-  fetch(url)
-    .then((res) => res.arrayBuffer())
-    .then((blob) => {
-      u = new Uint8Array(blob);
-      myfile = new File([u.buffer], file_name, { type: "image/png" });
-      uploadImage_trigger({ file: myfile, targetInput: input_Element });
-    });
-}

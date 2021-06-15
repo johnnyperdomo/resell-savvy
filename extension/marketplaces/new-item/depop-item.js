@@ -5,6 +5,7 @@
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function fillOutDepopForm(
   imageUrls,
@@ -13,8 +14,9 @@ async function fillOutDepopForm(
   color,
   price
 ) {
-  await domEvent.waitForElementToLoad("#description", 10000); //timeout after 10 seconds if undetected
+  await domEvent.waitForElementToLoad("#description");
 
+  let depop_image_input = document.querySelector("input[type='file']");
   let depop_description = document.querySelector(
     'textarea[data-testid="description__input"]'
   );
@@ -24,55 +26,8 @@ async function fillOutDepopForm(
   );
   let depop_color = document.querySelector("#listing__colour__select");
 
-  let depop_image_input = document.querySelector("input[type=file]");
-
-  //TODO: this works!!!!!!
-  //Tested Successfully on major platforms.
-  //Execute Command
-
-  //TODO: make this a promise that we have to wait for,
-
-  //TODO: wait for the first element to be present and that it has a source present at index
-
-  //TODO: this will be a for loop
-  //TODO: don't just look for next input, query select all the outer input boxes, and then query select the inputs in those boxes at the index . box -> input, that way we can't get the same one
-  await domEvent.waitForElementToLoad("input[type=file]", 3000);
-
-  await UploadImage(
-    imageUrls[0],
-    fname,
-    document.querySelectorAll("input[type=file]")[0]
-  );
-
-  await helpers.delay(1000); //let it re-render new input
-  //wait for new input element to be present,
-  await domEvent.waitForElementToLoad("input[type=file]", 3000);
-
-  await UploadImage(
-    imageUrls[1],
-    fname,
-    document.querySelector("input[type=file]")
-  );
-
-  await helpers.delay(1000); //TODO: make it like 100 ms
-
-  await domEvent.waitForElementToLoad("input[type=file]", 3000); //timeout after 10 seconds if undetected
-
-  await UploadImage(
-    imageUrls[2],
-    fname,
-    document.querySelector("input[type=file]")
-  );
-
-  await helpers.delay(1000);
-
-  await domEvent.waitForElementToLoad("input[type=file]", 3000); //timeout after 10 seconds if undetected
-
-  await UploadImage(
-    imageUrls[3],
-    fname,
-    document.querySelector("input[type=file]")
-  );
+  //images
+  await uploadImages(imageUrls, depop_image_input);
 
   //description
   $(depop_description).trigger("focus");
@@ -111,12 +66,13 @@ async function fillOutDepopForm(
     searchColor.closest(".listingSelect__option").trigger("click");
   }
 
+  //LATER: price validation
   $(depop_price).trigger("focus");
   domEvent.fillInputValue(depop_price, price);
   $(depop_price).trigger("blur");
 
-  swalAlert.showCrosslistSuccessAlert();
-  //LATER: price validation
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function matchCondition(condition) {
@@ -142,11 +98,31 @@ function matchCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let splicedImages = images.slice(0, 4); //depop only allows 4 image uploads
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(splicedImages, targetElement);
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //LATER: do more error checking for fields, example like price/currency validation, splices, and maximum length values
 
 //detect if document is ready
 document.onreadystatechange = function () {
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
     fillOutDepopForm(
       itemData.imageUrls,
       itemData.description,
@@ -156,35 +132,3 @@ document.onreadystatechange = function () {
     );
   }
 };
-
-//TODO: test image
-
-url2 =
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JDZg_z9AvlVGUNG0S7YzzlYEtyax1jkhFQ&usqp=CAU";
-
-fname = "cat.png"; //File name to be submitted
-
-function event_dispatcher(t) {
-  var e = new Event("change", {
-    bubbles: !0,
-  });
-  t.dispatchEvent(e);
-}
-
-function uploadImage_trigger(t) {
-  console.log("Uploaded Success.");
-  var e = t.file,
-    n = t.targetInput,
-    i = new DataTransfer();
-  i.items.add(e), (n.files = i.files), event_dispatcher(n);
-}
-
-async function UploadImage(url, file_name, input_Element) {
-  fetch(url)
-    .then((res) => res.arrayBuffer())
-    .then((blob) => {
-      u = new Uint8Array(blob);
-      myfile = new File([u.buffer], file_name, { type: "image/png" });
-      uploadImage_trigger({ file: myfile, targetInput: input_Element });
-    });
-}

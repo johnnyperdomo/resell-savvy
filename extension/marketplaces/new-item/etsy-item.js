@@ -2,14 +2,13 @@
 
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
+var imageRenderer = new ImageRenderer();
+var helpers = new Helpers();
 
 async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
-  await domEvent.waitForElementToLoad("input[name='title']", 10000); //timeout after 10 seconds if undetected
+  await domEvent.waitForElementToLoad("input[name='title']");
 
-  const inputFiles = $('input[type="file"]');
-
-  console.log("input files, ", inputFiles);
-
+  let etsy_image_input = document.querySelector("input[type='file']");
   let etsy_title = document.querySelector("input[name='title']");
   let etsy_description = document.querySelector(
     "textarea[name='description-text-area']"
@@ -17,6 +16,8 @@ async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   let etsy_price = document.querySelector("input[name='price-input']");
   let etsy_sku = document.querySelector("input[name='sku-input']");
 
+  //images
+  await uploadImages(imageUrls, etsy_image_input);
   //title
   $(etsy_title).trigger("focus");
   domEvent.fillInputValue(etsy_title, title);
@@ -38,7 +39,8 @@ async function fillOutEtsyForm(imageUrls, title, description, price, sku) {
   domEvent.fillInputValue(etsy_sku, sku);
   $(etsy_sku).trigger("blur");
 
-  swalAlert.showCrosslistSuccessAlert();
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function matchCondition(condition) {
@@ -61,11 +63,32 @@ function matchCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let splicedImages = images.slice(0, 10); //kidizen only allows 10 image uploads
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(splicedImages, targetElement);
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //LATER: do more error checking for fields, example like price/currency validation
 
 //detect if document is ready
 document.onreadystatechange = function () {
+  //doc tree is loaded
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
     fillOutEtsyForm(
       itemData.imageUrls,
       itemData.title,

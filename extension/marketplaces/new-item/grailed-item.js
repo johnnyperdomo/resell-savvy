@@ -3,6 +3,7 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function fillOutGrailedForm(
   imageUrls,
@@ -14,8 +15,9 @@ async function fillOutGrailedForm(
   price
 ) {
   //NOTE: use pure dom on this one, since jquery is throwing some errors on this if tab is multiple tabs opened at the same time //LATER: use pure js, and remove jquery, this causes unexpected errors
-  await domEvent.waitForElementToLoad("input[name='title']", 10000);
+  await domEvent.waitForElementToLoad("input[name='title']");
 
+  let grailed_image_input = document.querySelector("input[type='file']");
   let grailed_title = document.querySelector("input[name='title']");
   let grailed_description = document.querySelector(
     "textarea[name='description']"
@@ -24,6 +26,9 @@ async function fillOutGrailedForm(
   let grailed_brand = document.querySelector("#designer-autocomplete"); //fillinput
   let grailed_condition = document.querySelector("select[name='condition']");
   let grailed_price = document.querySelector("input[name='price']");
+
+  //images
+  await uploadImages(imageUrls, grailed_image_input);
 
   //title
   domEvent.dispatchEvent(grailed_title, "focus");
@@ -76,7 +81,8 @@ async function fillOutGrailedForm(
   domEvent.fillInputValue(grailed_price, price);
   domEvent.dispatchEvent(grailed_price, "blur");
 
-  swalAlert.showCrosslistSuccessAlert();
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function matchCondition(condition) {
@@ -103,11 +109,32 @@ function matchCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let splicedImages = images.slice(0, 9); //grailed only allows 9 image uploads
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(splicedImages, targetElement);
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //LATER: do more error checking for fields, example like price/currency validation
 
 //detect if document is ready
 document.onreadystatechange = function () {
+  //doc tree is loaded
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
     fillOutGrailedForm(
       itemData.imageUrls,
       itemData.title,

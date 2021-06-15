@@ -88,7 +88,7 @@ document.onreadystatechange = function () {
 
 async function formatItemPropertiesVersionOne() {
   //LATER: some categories have color property(such as handbags), search to see if color exists, if it does, get
-  await domEvent.waitForElementToLoad("#editpane_title", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
+  await domEvent.waitForElementToLoad("#editpane_title"); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   //wait for page to render,
   //wait 3 seconds for iframe to load
@@ -147,7 +147,7 @@ function formatConditionVersionOne(condition) {
 
 async function formatItemPropertiesVersionTwo() {
   //LATER: some categories have color property(such as handbags), search to see if color exists, if it does, get
-  await domEvent.waitForElementToLoad("input[name='title']", 10000);
+  await domEvent.waitForElementToLoad("input[name='title']");
 
   //wait for page to render,
   //wait 3 seconds for iframe to load

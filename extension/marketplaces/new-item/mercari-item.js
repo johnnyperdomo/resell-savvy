@@ -2,6 +2,7 @@
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function fillOutMercariForm(
   imageUrls,
@@ -12,8 +13,9 @@ async function fillOutMercariForm(
   color,
   price
 ) {
-  await domEvent.waitForElementToLoad("#sellName", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
+  await domEvent.waitForElementToLoad("#sellName");
 
+  let mercari_image_input = document.querySelector('input[type="file"]');
   let mercari_title = document.querySelector('input[data-testid="Title"]');
   let mercari_description = document.querySelector(
     'textarea[data-testid="Description"]'
@@ -22,6 +24,9 @@ async function fillOutMercariForm(
   let mercari_brand = document.querySelector('input[data-testid="Brand"]');
   let mercari_price = document.querySelector('input[data-testid="Price"]');
   let mercari_color = document.querySelector('button[data-testid="Color"]');
+
+  //images
+  await uploadImages(imageUrls, mercari_image_input);
 
   //title
   $(mercari_title).trigger("focus"); //simulate user inputs
@@ -104,10 +109,26 @@ function matchCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let sliced = images.slice(0, 12); //mercari only allows 12 image uploads
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(sliced, targetElement);
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //LATER: do more error checking for fields, example like price/currency validation
 
 //detect if document is ready
 document.onreadystatechange = function () {
+  //TODO: swal, after fixing mercari brand
   if (document.readyState === "complete") {
     fillOutMercariForm(
       itemData.imageUrls,

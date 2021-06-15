@@ -27,7 +27,7 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad('input[data-testid="Title"]', 10000); //timeout after 10 seconds if undetected
+  await domEvent.waitForElementToLoad('input[data-testid="Title"]'); //timeout after 10 seconds if undetected
 
   //wait for page to render
   await helpers.delay(100);

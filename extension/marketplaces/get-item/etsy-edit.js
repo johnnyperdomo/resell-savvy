@@ -4,7 +4,7 @@ var helpers = new Helpers();
 var imageRenderer = new ImageRenderer();
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad("input[name='title']", 10000);
+  await domEvent.waitForElementToLoad("input[name='title']"); //wait until el is present
 
   //wait for page to render
   await helpers.delay(100);

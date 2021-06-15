@@ -28,7 +28,7 @@ function formatCondition(condition) {
 }
 
 async function formatItemProperties() {
-  await domEvent.waitForElementToLoad("#description", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
+  await domEvent.waitForElementToLoad("#description"); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   //LATER: get brand, brand is optional, bcuz it will only show up if user picks category, so keep that in mind, so create a function that waits for element to load, but doesn't freeze ui, or cause to await, if it shows up, manually input(user will see this, but there's nothing you can do about it)
 
@@ -107,12 +107,12 @@ function sendMessageToBackground(data) {
 document.onreadystatechange = function () {
   //doc tree is loaded
   if (document.readyState === "interactive") {
-    //  swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
   //doc tree is fully ready to be manipulated
   if (document.readyState === "complete") {
-    //  swalAlert.showProcessingAlert(); //swal alert ui waiting
+    swalAlert.showProcessingAlert(); //swal alert ui waiting
     getItemDetails();
   }
 };

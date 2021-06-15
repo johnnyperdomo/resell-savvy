@@ -4,6 +4,7 @@
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
+var imageRenderer = new ImageRenderer();
 
 async function fillOutKidizenForm(
   imageUrls,
@@ -13,12 +14,17 @@ async function fillOutKidizenForm(
   brand,
   price
 ) {
-  await domEvent.waitForElementToLoad("#item_title", 10000); //timeout after 10 seconds if undetected, give time for initial page to render completely
-  console.log("called form filler");
+  await domEvent.waitForElementToLoad("#item_title");
+  console.log("images, ", imageUrls);
 
+  //LATER: //FIX: empty values showing undefined, this should just be empty
+  let kidizen_image_input = document.querySelector("input[type='file']");
   let kidizen_title = document.querySelector("#item_title");
   let kidizen_description = document.querySelector("#item_description");
   let kidizen_price = document.querySelector("#item_list_price");
+
+  //images
+  await uploadImages(imageUrls, kidizen_image_input);
 
   //title
   $(kidizen_title).trigger("focus");
@@ -47,8 +53,6 @@ async function fillOutKidizenForm(
     );
 
     brandEl.trigger("click");
-
-    console.log(brandEl.parent().parent().find("div"));
 
     const dropDown = await domEvent.waitForElementToLoad(
       ".Dropdown",
@@ -91,7 +95,8 @@ async function fillOutKidizenForm(
   domEvent.fillInputValue(kidizen_price, price);
   $(kidizen_price).trigger("blur");
 
-  swalAlert.showCrosslistSuccessAlert();
+  swalAlert.closeSwal(); //close modal
+  swalAlert.showCrosslistSuccessAlert(); //show success alert
 }
 
 function matchCondition(condition) {
@@ -117,9 +122,31 @@ function matchCondition(condition) {
   }
 }
 
+async function uploadImages(images, targetElement) {
+  //wait 100ms for inputs to render
+  await helpers.delay(100);
+
+  //truncate image array;
+  let splicedImages = images.slice(0, 16); //kidizen only allows 16 < image uploads, but we will only work with 16 images
+
+  //upload array of images simultaneously
+  await imageRenderer.uploadImages(splicedImages, targetElement);
+
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+
 //detect if document is ready
 document.onreadystatechange = function () {
+  //doc tree is loaded
+  if (document.readyState === "interactive") {
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+  }
+
   if (document.readyState === "complete") {
+    swalAlert.showProcessingAlert(); //swal alert ui waiting;
+
     fillOutKidizenForm(
       itemData.imageUrls,
       itemData.title,

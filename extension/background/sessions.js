@@ -88,7 +88,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop", "poshmark"],
+          copyToMarketplaces: ["grailed"],
           copyFromMarketplace: "depop",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji", //TODO: the actual listing url
           tab: tab,
@@ -109,7 +109,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["poshmark"],
           copyFromMarketplace: "ebay",
           listingURL: "https://www.ebay.com/itm/363389338870", //TODO: the actual listing url
           tab: tab,
@@ -166,12 +166,12 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     //TODO: set data id
     chrome.tabs.create(
       {
-        url: "https://www.kidizen.com/items/lightning-bolt-8383962/edit",
+        url: "https://www.kidizen.com/items/memoji-sticker-8376797/edit",
         active: false,
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["grailed"],
           copyFromMarketplace: "kidizen",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -191,7 +191,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["poshmark"],
           copyFromMarketplace: "mercari",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -212,7 +212,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["etsy", "kidizen", "mercari", "grailed"],
           copyFromMarketplace: "poshmark",
           listingURL:
             "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",
