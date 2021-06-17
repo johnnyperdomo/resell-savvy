@@ -2,6 +2,8 @@ var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 var helpers = new Helpers();
 
+console.log("detected ebay stage 1");
+
 async function enterEbayItemTitle() {
   //wait half a second for dom to render
   await helpers.delay(500);
@@ -18,9 +20,24 @@ async function enterEbayItemTitle() {
     "*"
   );
 
-  //TODO: after iframe dom is manipulated successfully, when the other pages load, and the dom is successfully added as well after crosslist, send message to remove tab from being listened to, since this won't do it automatically. since the tab won't close right away, this could cause some leaks if not handled properly (OUTDATED METHOD)
+  // update ebay listing stage to "form"
+  updateEbayListingStage();
+}
 
-  //TODO: use wait for display to show, wait for the listing forms to be present, and check if v1 or v2 before proceeding
+//ebay listing will now advanced to stage 'form'
+function updateEbayListingStage() {
+  let tabId = itemData.tab;
+  let newStage = "form";
+
+  let data = {
+    tab: tabId,
+    stage: newStage,
+  };
+
+  chrome.runtime.sendMessage({
+    command: "update-ebay-active-tab-stage",
+    data: data,
+  });
 }
 
 function fillInputValue(input, value) {
@@ -41,10 +58,8 @@ document.onreadystatechange = function () {
   }
 
   if (document.readyState === "complete") {
-    console.log(itemData);
     swalAlert.showProcessingAlert();
     enterEbayItemTitle(itemData.title);
-    console.log("page complete");
   }
 };
 

@@ -12,7 +12,7 @@
 
 //LATER: for bug reporting on user's side, console.log errors with a specific message like "RS-SAVVY CROSSLISTING ERRORS", if present, they can copy/paste it the value and give it to the customer service.
 
-var ebaySetListingActiveTabs = {};
+//LATER: when crosslisting, open tabs in queue, instead of opening all the tabs all at once, since this can make the computer very slow when opening the tabs all at once in chrome, and can even freeze the browser. For now, open 10 simultaneously, but later on, let users crosspost a max of 25 items at a time when it auto-queues [chrome hogs alot of resources, so we don't want to have too many tabs open]. you need to add a queue for getting items(so we don't get at the same time,) and setting item. (so we don't set at the same time). Queue should work like this. (1. get item => set item 1 in marketplace, wait for page to finish loading, watch tab updates to see when it's status is complete, go on to marketplace 2 => set => wait => marketplace 3, etc....., when you finish going through all marketplaces, go to item 2, => set item marketplace 1, etc....) That way users can start editing item information, while the pages load. The problem with all at once, is that the tabs all finish loading at the same time which can take a few minutes before we see anything, instead, where if we queue it up in order, it will load a new page every few seconds and be even faster, and users can start editing right away. In the popup js, we will have a loading spinner that says something like "items processing in queue 3/25", they can have the option to cancel the queue if they want. If an item is in queue, they won't be able to crosslist any more items until the queue finishes. (make sure to remove from queue if the tab is taking too long to load, so like give it a minute max for each tab to reach the complete status, if not auto-exit that queue item. Also, if the user closes tab while it's loading, exit out the queue item.)
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //TODO: test remove this later on, just for testing set...
@@ -32,14 +32,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
   //LATER: maybe a better way to do this later on?
   if (msg.command == "remove-ebay-active-tab") {
-    //TODO: set the tab above for ebay create listing
-
     console.log("remove ebay active tab called", msg.data);
 
     let tabId = msg.data.tab;
 
-    if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
-      console.log();
+    if (
+      ebaySetListingActiveTabs.hasOwnProperty(tabId) &&
+      ebaySetListingActiveTabs[tabId].stage === "form"
+    ) {
       //remove tabId from object
       delete ebaySetListingActiveTabs[tabId];
 
@@ -48,6 +48,20 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
         ebaySetListingActiveTabs
       );
     }
+  }
+
+  //let the browser know in what stage the ebay creation multiprocess listing in, 'title', or 'form'
+  if (msg.command == "update-ebay-active-tab-stage") {
+    let stage = msg.data.stage;
+    let tabId = msg.data.tab.id;
+
+    console.log("before: ", ebaySetListingActiveTabs);
+
+    ebaySetListingActiveTabs[tabId].stage = stage;
+
+    console.log(tabId, stage);
+    console.log("update tab listing stage", msg.data);
+    console.log("after: ", ebaySetListingActiveTabs);
   }
 
   //Start Crosspost session
@@ -149,7 +163,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["depop"],
+          copyToMarketplaces: ["ebay"],
           copyFromMarketplace: "grailed",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -190,7 +204,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["poshmark"],
+          copyToMarketplaces: ["ebay"],
           copyFromMarketplace: "mercari",
           listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
           tab: tab,
@@ -218,6 +232,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
             "grailed",
             "depop",
             "poshmark",
+            "etsy",
+            "kidizen",
+            "mercari",
+            "grailed",
           ],
           copyFromMarketplace: "poshmark",
           listingURL:
@@ -229,8 +247,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       }
     );
   }
-
-  //LATER: wait for listing data to be retrieved successfully, that way we can tell the client that it is processing, and show them different progress states
 });
 
 //Functions ====>
@@ -261,59 +277,23 @@ function createItem(properties, marketplace) {
         active: false,
       },
       (tab) => {
-        // let data = { properties: { title: "gymshark pants" }, tab: tab };
-
-        // const itemData = JSON.stringify(data);
-        // chrome.tabs.executeScript(
-        //   tab.id,
-        //   {
-        //     file: `third-party/jquery-3.6.0.min.js`,
-        //   },
-        //   () => {
-        //     chrome.tabs.executeScript(
-        //       tab.id,
-        //       {
-        //         //TODO: pass in tab as well
-        //         code: `const itemData = ${itemData};`,
-        //       },
-        //       () => {
-        //         chrome.tabs.executeScript(tab.id, {
-        //           file: `marketplaces/new-item/ebay-bulksell-item.js`,
-        //         });
-        //       }
-        //     );
-        //   }
-        // );
-
         injectScriptInNewTab(tab, properties, "ebay-bulksell");
 
-        //set active tab to be listened to, and watch page updates since this listing is a multistep process.
-        ebaySetListingActiveTabs[tab.id] = properties;
+        //NOTE: Ebay has multiple listing stages since it's a multiprocess creation, stage 'title': when user has to enter title to create listing -> stage 'form', after title is created, user is taken to form stage //set active tab to be listened to, and watch page updates since this listing is a multistep process.
+        ebaySetListingActiveTabs[tab.id] = { stage: "title", properties };
       }
     );
   }
 
   //etsy
   if (marketplace == "etsy") {
-    //'me' is converted into shop name in url
+    //'me' is converted into shop name in etsy url
     chrome.tabs.create(
       {
         url: "https://www.etsy.com/your/shops/me/tools/listings/create",
         active: false,
       },
       (tab) => {
-        const itemData = {
-          imageUrls: properties.imageUrls,
-          title: properties.title,
-          description: properties.description,
-          price: properties.price,
-          brand: properties.brand,
-          condition: properties.condition,
-          color: properties.color,
-          sku: properties.sku,
-          cost: properties.cost,
-        };
-
         injectScriptInNewTab(tab, properties, "etsy");
       }
     );
@@ -443,7 +423,7 @@ function createItem(properties, marketplace) {
 
 function injectScriptInNewTab(tab, data, marketplace) {
   data["tab"] = tab; //add tab properties to data object
-  const itemData = JSON.stringify(data);
+  var itemData = JSON.stringify(data);
 
   console.log("script inject");
 
@@ -506,22 +486,24 @@ function getListingDetails(tab, data, marketplace) {
 }
 
 //listen to active ebay tabs
+var ebaySetListingActiveTabs = {};
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //TODO: be careful and make sure we don't post double content script while it's loading, because this event listener can fire multiple times, just once
+
   console.log("active tabs get, ", ebaySetListingActiveTabs);
 
-  if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
-    console.log("this tab is active, script will be inject into tab:", tabId);
+  console.log("tab info:", tab);
 
+  //if this is an active ebay tab, and, if the tab is at the ('form' - stage), inject script in tab that fills in ebay form
+  if (
+    ebaySetListingActiveTabs.hasOwnProperty(tabId) &&
+    ebaySetListingActiveTabs[tabId].stage === "form"
+  ) {
+    console.log("this tab is active, script will be inject into tab:", tabId);
     let data = ebaySetListingActiveTabs[tabId];
 
-    //  injectScriptInNewTab(tabId, data, "ebay");
-
-    // chrome.tabs.executeScript(tab.id, {
-    //   file: `marketplaces/new-item/ebay-item.js`,
-    // });
-
-    //TODO: inject script to active tab
+    injectScriptInNewTab(tabId, data, "ebay");
   }
 });
 
@@ -540,24 +522,6 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     );
   }
 });
-
-//images
-
-let url1 =
-  "https://assets.adidas.com/images/w_600,f_auto,q_auto/4e894c2b76dd4c8e9013aafc016047af_9366/Superstar_Shoes_White_FV3284_01_standard.jpg";
-let url2 =
-  "https://di2ponv0v5otw.cloudfront.net/posts/2021/05/08/609710852b46b502a60b0194/m_60c277f012d880e99e359463.jpeg";
-let url3 =
-  "https://n.shopify.com/s/files/1/0156/6146/products/GEO_LIGHTWEIGHT_SS_T-SHIRT_-_BLACK_A-EditEdit_DW_750x.jpg?v=1571263132";
-
-// Promise.allSettled([getDataUri(url1), getDataUri(url2), getDataUri(url3)]).then(
-//   ([result]) => {
-//     //reach here regardless
-
-//     console.log("result of the promises: ", result);
-//     // {status: "fulfilled", value: 33}
-//   }
-// );
 
 //TODO: on crosslist popup, let user sort by 1)'name'a-z,z-a, or 2) first/last,
 //LATER: later on crosslist modal, add search functionality, when they user starts typing, it goes to the row of what the text is, so if he types "adida", go to the 5th row where that word is that. Find row # and go there, if no row # found, don't go anywhere, but don't filter out results, that way it doesn't make it hard to find the list items that follow, ,  - let users know they can only see or search for items that have been loaded when clicking on the modal(load more to see more)

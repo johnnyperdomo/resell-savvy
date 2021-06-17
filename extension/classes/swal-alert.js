@@ -7,7 +7,7 @@ class SwalAlert {
 
     Swal.fire({
       title: "Waiting on page to finish loading...",
-      html: "Please wait a few seconds while we start processing your listing soon. <b>Closing this tab will stop your item from being crosslisted</b>.",
+      html: "Please wait a few seconds while we start processing your listing soon. <b>Closing or reloading this tab will stop your item from being crosslisted</b>.",
       footer:
         "Page loading time is affected by your internet speed.💡 Tip: Make sure you have a stable internet connection to crosslist items faster.",
       allowOutsideClick: false,
@@ -24,7 +24,7 @@ class SwalAlert {
   showProcessingAlert() {
     Swal.fire({
       title: "Processing...",
-      html: "Please wait a few seconds while we finish processing your listing. <b>Closing this tab will stop your item from being crosslisted</b>.",
+      html: "Please wait a few seconds while we finish processing your listing. <b>Closing or reloading this tab will stop your item from being crosslisted</b>.",
       footer:
         "Processing time is affected by your internet speed.💡 Tip: Make sure you have a stable internet connection to crosslist items faster.",
       allowOutsideClick: false,
