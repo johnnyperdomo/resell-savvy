@@ -323,27 +323,33 @@ export class ItemComponent implements OnInit {
     const sku = this.trimStr(formValue.sku);
     const cost = formValue.cost;
     const notes = this.trimStr(formValue.notes);
-    const ebay = this.setMarketplaceValue(this.trimStr(formValue.ebay), 'ebay');
-    const poshmark = this.setMarketplaceValue(
+    const ebay = this.extractMarketplaceValue(
+      this.trimStr(formValue.ebay),
+      'ebay'
+    );
+    const poshmark = this.extractMarketplaceValue(
       this.trimStr(formValue.poshmark),
       'poshmark'
     );
-    const mercari = this.setMarketplaceValue(
+    const mercari = this.extractMarketplaceValue(
       this.trimStr(formValue.mercari),
       'mercari'
     );
     // const facebook = this.trimStr(formValue.facebook); //LATER
-    const etsy = this.setMarketplaceValue(this.trimStr(formValue.etsy), 'etsy');
+    const etsy = this.extractMarketplaceValue(
+      this.trimStr(formValue.etsy),
+      'etsy'
+    );
     // const tradesy = this.trimStr(formValue.tradesy); //LATER
-    const grailed = this.setMarketplaceValue(
+    const grailed = this.extractMarketplaceValue(
       this.trimStr(formValue.grailed),
       'grailed'
     );
-    const depop = this.setMarketplaceValue(
+    const depop = this.extractMarketplaceValue(
       this.trimStr(formValue.depop),
       'depop'
     );
-    const kidizen = this.setMarketplaceValue(
+    const kidizen = this.extractMarketplaceValue(
       this.trimStr(formValue.kidizen),
       'kidizen'
     );
@@ -415,6 +421,52 @@ export class ItemComponent implements OnInit {
     window.open(externalURL, '_blank');
   }
 
+  goToEditItem(link: string, marketplaceType: MarketplaceType) {
+    //extract item id
+    let itemID = this.extractMarketplaceValue(
+      link,
+      marketplaceType
+    ).extractedID;
+
+    let editLink = '';
+
+    //create edit link by itemID
+    switch (marketplaceType) {
+      case 'depop':
+        editLink = `https://www.depop.com/products/edit/${itemID}/`;
+        break;
+
+      case 'ebay':
+        editLink = `https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&sellingMode=ReviseItem&lineID=${itemID}`;
+        break;
+
+      case 'etsy':
+        editLink = `https://www.etsy.com/your/shops/me/tools/listings/${itemID}`;
+        break;
+
+      case 'grailed':
+        editLink = `https://www.grailed.com/listings/${itemID}/edit`;
+        break;
+
+      case 'kidizen':
+        editLink = `https://www.kidizen.com/items/${itemID}/edit`;
+        break;
+
+      case 'mercari':
+        editLink = `https://www.mercari.com/sell/edit/${itemID}`;
+        break;
+
+      case 'poshmark':
+        editLink = `https://poshmark.com/edit-listing/${itemID}`;
+        break;
+
+      default:
+        break;
+    }
+
+    window.open(editLink, '_blank');
+  }
+
   onListItems() {
     //TODO: chrome extension should list this item
     //TODO: disable if no chrome extension present
@@ -425,7 +477,7 @@ export class ItemComponent implements OnInit {
     this.saveItem();
   }
 
-  setMarketplaceValue(url: string, marketplace: MarketplaceType) {
+  extractMarketplaceValue(url: string, marketplace: MarketplaceType) {
     switch (marketplace) {
       case 'depop':
         if (url === '') {
@@ -532,11 +584,12 @@ export class ItemComponent implements OnInit {
     Swal.default
       .fire({
         title: 'Are you sure you?',
-        text: `Unlinking this listing won't delist it from ${marketplace.toUpperCase()}. Please remember to delist it manually.`,
+        html: `Unlinking this listing <b>won't</b> delist it from ${marketplace.toUpperCase()}. Please remember to delist it <b>manually</b>`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Unlink listing',
+        footer: `<a href="${url}" target="_blank">View item on marketplace to delist ↗️</a>`,
         reverseButtons: true,
       })
       .then((result) => {

@@ -308,15 +308,6 @@
               <div class="form-group">
                 <label>Ebay</label>
 
-                <!-- <button
-                  *ngIf="item && item.marketplaces.ebay != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.ebay)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
-
                 <div class="input-group input-group-merge">
                   <input
                     type="text"
@@ -331,9 +322,9 @@
                       *ngIf="ebayInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(ebayInput.value)"
+                      (click)="goToEditItem(ebayInput.value, 'ebay')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -346,6 +337,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.ebay.com/itm/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="ebayInput.value != ''"
+                  (click)="goToLink(ebayInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
 
                 <button
                   class="small btn btn-link"
@@ -384,9 +383,9 @@
                       *ngIf="poshmarkInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(poshmarkInput.value)"
+                      (click)="goToEditItem(poshmarkInput.value, 'poshmark')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -398,6 +397,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.poshmark.com/listing/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="poshmarkInput.value != ''"
+                  (click)="goToLink(poshmarkInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
 
                 <button
                   class="small btn btn-link"
@@ -416,15 +423,6 @@
               <div class="form-group">
                 <label>Etsy</label>
 
-                <!-- <button
-                  *ngIf="item && item.marketplaces.etsy != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.etsy)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
-
                 <div class="input-group input-group-merge">
                   <input
                     type="text"
@@ -438,9 +436,9 @@
                       *ngIf="etsyInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(etsyInput.value)"
+                      (click)="goToEditItem(etsyInput.value, 'etsy')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -457,6 +455,14 @@
                 <button
                   class="small btn btn-link"
                   *ngIf="etsyInput.value != ''"
+                  (click)="goToLink(etsyInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="etsyInput.value != ''"
                   (click)="unlinkMarketplace('etsy', etsyInput.value)"
                 >
                   <u>Unlink Marketplace</u>
@@ -468,15 +474,6 @@
             <div class="col-12 col-md-6">
               <div class="form-group">
                 <label>Kidizen</label>
-
-                <!-- <button
-                  *ngIf="item && item.marketplaces.kidizen != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.kidizen)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -491,9 +488,9 @@
                       *ngIf="kidizenInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(kidizenInput.value)"
+                      (click)="goToEditItem(kidizenInput.value, 'kidizen')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -506,6 +503,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.kidizen.com/items/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="kidizenInput.value != ''"
+                  (click)="goToLink(kidizenInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
 
                 <button
                   class="small btn btn-link"
@@ -525,15 +530,6 @@
               <div class="form-group">
                 <label>Grailed</label>
 
-                <!-- <button
-                  *ngIf="item && item.marketplaces.grailed != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.grailed)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
-
                 <div class="input-group input-group-merge">
                   <input
                     type="text"
@@ -547,9 +543,9 @@
                       *ngIf="grailedInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(grailedInput.value)"
+                      (click)="goToEditItem(grailedInput.value, 'grailed')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -566,6 +562,14 @@
                 <button
                   class="small btn btn-link"
                   *ngIf="grailedInput.value != ''"
+                  (click)="goToLink(grailedInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="grailedInput.value != ''"
                   (click)="unlinkMarketplace('grailed', grailedInput.value)"
                 >
                   <u>Unlink Marketplace</u>
@@ -577,15 +581,6 @@
             <div class="col-12 col-md-6">
               <div class="form-group">
                 <label>Depop</label>
-
-                <!-- <button
-                  *ngIf="item && item.marketplaces.depop != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.depop)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
 
                 <div class="input-group input-group-merge">
                   <input
@@ -600,9 +595,9 @@
                       *ngIf="depopInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(depopInput.value)"
+                      (click)="goToEditItem(depopInput.value, 'depop')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -615,6 +610,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.depop.com/products/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="depopInput.value != ''"
+                  (click)="goToLink(depopInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
 
                 <button
                   class="small btn btn-link"
@@ -633,15 +636,6 @@
               <div class="form-group">
                 <label>Mercari</label>
 
-                <!-- <button
-                  *ngIf="item && item.marketplaces.mercari != ''"
-                  class="text-muted btn btn-link"
-                  (click)="goToLink(item.marketplaces.mercari)"
-                  target="_blank"
-                >
-                  <span class="fe fe-eye"></span>
-                </button> -->
-
                 <div class="input-group input-group-merge">
                   <input
                     type="text"
@@ -655,9 +649,9 @@
                       *ngIf="mercariInput.value != ''"
                       class="btn btn-light"
                       type="button"
-                      (click)="goToLink(mercariInput.value)"
+                      (click)="goToEditItem(mercariInput.value, 'mercari')"
                     >
-                      View Item
+                      Edit Item
                     </button>
                   </div>
                 </div>
@@ -670,6 +664,14 @@
                   Please enter a valid listing url such as:
                   <b>https://www.mercari.com/us/item/1234</b>
                 </span>
+
+                <button
+                  class="small btn btn-link"
+                  *ngIf="mercariInput.value != ''"
+                  (click)="goToLink(mercariInput.value)"
+                >
+                  <u>View Item</u>
+                </button>
 
                 <button
                   class="small btn btn-link"
