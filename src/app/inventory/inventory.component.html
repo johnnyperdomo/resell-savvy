@@ -167,7 +167,11 @@
                     Fees
                   </u>
                 </th>
-                <th scope="col">Date</th>
+                <th scope="col">
+                  <u matTooltip="Last Updated" matTooltipPosition="above">
+                    Date
+                  </u>
+                </th>
                 <th scope="col">Sold On</th>
                 <th colspan="2" scope="col  text-right ">Listed On</th>
               </tr>
@@ -342,8 +346,6 @@
                       <i class="fe fe-more-vertical"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <!-- TODO: ngif, mark as sold/unmark as sold based on status -->
-
                       <button
                         (click)="onUnmarkItemSold(item.id)"
                         class="dropdown-item"
