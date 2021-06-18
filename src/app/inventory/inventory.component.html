@@ -259,12 +259,24 @@
 
                 <!-- Price: with currency pipe modifier: shows currency symbol -->
                 <td class="text-secondary font-weight-bold">
-                  {{ item.price || 0 | currency: "USD" }}
+                  <span *ngIf="item.price; else priceEmpty">
+                    {{ item.price | currency: "USD" }}
+                  </span>
+
+                  <ng-template #priceEmpty>
+                    <span>--</span>
+                  </ng-template>
                 </td>
 
                 <!-- Cost: with currency pipe modifier: shows currency symbol -->
                 <td class="text-muted">
-                  {{ item.cost || 0 | currency: "USD" }}
+                  <span *ngIf="item.cost; else costEmpty">
+                    {{ item.cost | currency: "USD" }}
+                  </span>
+
+                  <ng-template #costEmpty>
+                    <span>--</span>
+                  </ng-template>
                 </td>
 
                 <!-- Fees: with currency pipe modifier: shows currency symbol  -->
