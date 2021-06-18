@@ -298,9 +298,8 @@
                   <span
                     *ngIf="item.sold"
                     class="avatar avatar-xs text-center"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="{{ item.marketplace }}"
+                    [matTooltip]="item.sold.marketplace"
+                    matTooltipPosition="above"
                   >
                     <img
                       src="assets/marketplace-logos/{{
@@ -318,9 +317,8 @@
                     <span
                       *ngFor="let marketplace of listedMarketplaces[item.id]"
                       class="avatar avatar-xs"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="{{ marketplace }}"
+                      [matTooltip]="marketplace"
+                      matTooltipPosition="above"
                     >
                       <img
                         src="assets/marketplace-logos/{{ marketplace }}.png"
