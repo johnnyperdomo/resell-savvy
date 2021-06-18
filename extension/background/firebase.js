@@ -1,15 +1,45 @@
 // Your web app's Firebase configuration
-//TODO: this should be a different key for production
-var firebaseConfig = {
-  apiKey: "AIzaSyAbbTWPL-KsWsYT18EDJMNq4fhYwQL-kFY",
-  authDomain: "reseller-savvy-dev.firebaseapp.com",
-  projectId: "reseller-savvy-dev",
-  storageBucket: "reseller-savvy-dev.appspot.com",
-  messagingSenderId: "51437845156",
-  appId: "1:51437845156:web:561cc5e2d812ad808f8431",
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+var firebaseConfig = {};
+var firebaseServerUrl = "";
+
+//get extension state
+chrome.management.get(chrome.runtime.id, (extensionInfo) => {
+  if (extensionInfo.installType === "development") {
+    //development keys
+
+    firebaseConfig = {
+      apiKey: "AIzaSyAbbTWPL-KsWsYT18EDJMNq4fhYwQL-kFY",
+      authDomain: "reseller-savvy-dev.firebaseapp.com",
+      projectId: "reseller-savvy-dev",
+      storageBucket: "reseller-savvy-dev.appspot.com",
+      messagingSenderId: "51437845156",
+      appId: "1:51437845156:web:561cc5e2d812ad808f8431",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    firebaseServerUrl =
+      "https://us-central1-reseller-savvy-dev.cloudfunctions.net/";
+  } else if (extensionInfo.installType === "production") {
+    //production keys
+
+    firebaseConfig = {
+      apiKey: "AIzaSyDtCBELRoPX5_yROLsHyYjJB0ruc-M5Pjo",
+      authDomain: "reseller-savvy.firebaseapp.com",
+      projectId: "reseller-savvy",
+      storageBucket: "reseller-savvy.appspot.com",
+      messagingSenderId: "377665812888",
+      appId: "1:377665812888:web:de58d14adfbaf5f9c5d3ed",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    firebaseServerUrl =
+      "https://us-central1-reseller-savvy.cloudfunctions.net/";
+  }
+});
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //check user authentication
