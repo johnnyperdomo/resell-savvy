@@ -41,6 +41,14 @@
       "all_frames": true
     },
     {
+      "matches": ["*://www.picupload.ebay.com/*"],
+      "js": [
+        "third-party/jquery-3.6.0.min.js",
+        "marketplaces/new-item/ebay-picupload-iframe.js"
+      ],
+      "all_frames": true
+    },
+    {
       "js": [
         "third-party/jquery-3.6.0.min.js",
         "third-party/bootstrap.min.js",

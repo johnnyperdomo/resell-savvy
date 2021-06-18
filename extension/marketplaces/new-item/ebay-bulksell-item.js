@@ -8,7 +8,7 @@ async function enterEbayItemTitle() {
   //wait half a second for dom to render
   await helpers.delay(500);
 
-  //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to
+  //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to iframe with data
   let iframe = document.querySelector("iframe[name='findprod_iframe']");
   console.log("iframe: ", iframe);
 

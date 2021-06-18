@@ -426,7 +426,7 @@ function injectScriptInNewTab(tab, data, marketplace) {
         {
           //TODO: pass data in here
           //TODO: not really working
-          code: `const itemData = ${itemData};`,
+          code: `var itemData = ${itemData};`,
           runAt: "document_start",
         },
         () => {

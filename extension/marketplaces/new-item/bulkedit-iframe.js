@@ -10,35 +10,14 @@ window.addEventListener("message", function (event) {
   const properties = data.data;
 
   if (command == "add-ebay-title-iframe") {
-    // let searchBar = document.querySelector(
-    //   "input[id*='find-product-search-bar']"
-    // );
-
-    // //TODO: wait for node to show list after we insert text
-    // //TODO: click on first one ,
-
-    // //TODO: send message back to bull-sell-item-page
-
-    // fillInputValue(searchBar, properties.title);
-    // $(searchBar).trigger("focus");
-
     setTitle(properties.title);
-    // let autocompleteList = await domEvent.waitForElementToLoad(
-    //   'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
-    // );
   }
 });
 
 async function setTitle(title) {
-  console.log("set titel called");
   let searchBar = document.querySelector(
     "input[id*='find-product-search-bar']"
   );
-
-  //TODO: wait for node to show list after we insert text
-  //TODO: click on first one ,
-
-  //TODO: send message back to bull-sell-item-page
 
   fillInputValue(searchBar, title);
   $(searchBar).trigger("focus");

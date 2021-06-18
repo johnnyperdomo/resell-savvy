@@ -2,26 +2,21 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG = true;
 
   var domEvent = new DomEvent();
-  var swalAlert = new SwalAlert(); //TODO: show processing alert
+  var swalAlert = new SwalAlert();
   var helpers = new Helpers();
   var imageRenderer = new ImageRenderer();
 
-  console.log("ebay stage 2 detected page");
+  //LATER: some inputs only exist on certain categories, before inputing, make sure input exists if available, if so then apply input
 
   document.onreadystatechange = function () {
     if (document.readyState === "interactive") {
-      console.log("page is interactive");
+      swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
     }
 
     if (document.readyState === "complete") {
-      console.log("page complete");
+      swalAlert.closeSwal(); //close modal: //NOTE: processing alert stops ebay from uploading images for some reason, so don't show processing swal. maybe later try to fix this: //LATER
 
-      //LATER: some inputs only exist on certain categories, before inputing, make sure input exists if available, if so then apply input
-
-      //look for subtitle, which is unique from the bulksell title search bar
-      //Ebay listing version 1
-
-      console.log("itemData: ", itemData);
+      //Ebay listing version 1; look for subtitle, which is unique from the bulksell title search bar
       domEvent.waitForElementToDisplay(
         "#editpane_subtitle",
         function () {
@@ -50,8 +45,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   async function getItemDetails(version) {
     switch (version) {
       case "one":
-        //TODO
-
         //wait for iframe to load
         await helpers.delay(1000);
 
@@ -65,17 +58,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
           itemData.properties.price,
           itemData.properties.sku
         );
-
-        // fillOutEbayFormOne(
-        //   [],
-        //   "Gucci shirt",
-        //   "Yo, Gucci is the coolest brand my bro. I love that brand.",
-        //   "Gucci",
-        //   "used",
-        //   "Red",
-        //   "123",
-        //   "abc"
-        // );
 
         break;
       case "two":
@@ -92,17 +74,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
           itemData.properties.price,
           itemData.properties.sku
         );
-
-        // fillOutEbayFormTwo(
-        //   [],
-        //   "Gucci shirt",
-        //   "Yo, Gucci is the coolest brand my bro. I love that brand.",
-        //   "Gucci",
-        //   "used",
-        //   "Red",
-        //   "123",
-        //   "abc"
-        // );
 
         break;
       default:
@@ -131,9 +102,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     price,
     sku
   ) {
-    //LATER: check to see if element is found before buying?
-
-    await domEvent.waitForElementToLoad("#editpane_title"); //timeout after 10 seconds if undetected
+    await domEvent.waitForElementToLoad("#editpane_title");
 
     //wait for page to render
     await helpers.delay(100);
@@ -148,12 +117,14 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     let ebay_color = document.querySelector(
       "input[id='Listing.Item.ItemSpecific[Color]']"
     );
-
     let ebay_price = document.querySelector("input[id='binPrice']");
 
-    ////TODO: clean up code and make it function as normal
-    //TODO: remove values from manifest.json
-    //TODO: fix timeout on waitforElement
+    let ebayUploaderIframe = document.querySelector(
+      'iframe[id="uploader_iframe"]'
+    );
+
+    //images; inject data into iframe to upload images
+    uploadEbayImagesFromIframe(ebayUploaderIframe);
 
     //title
     $(ebay_title).trigger("focus");
@@ -196,7 +167,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
       $(ebay_condition).trigger("blur");
     }
 
-    swalAlert.showCrosslistSuccessAlert();
+    swalAlert.closeSwal(); //close modal
+    swalAlert.showCrosslistSuccessAlert(); //show success alert
   }
 
   function formatConditionVersionOne(condition) {
@@ -249,6 +221,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     );
 
     //images
+    console.log("ebay images: ", imageUrls);
     await uploadImages(imageUrls, ebay_image_input);
 
     //title
@@ -389,6 +362,9 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
         $(sidepane).trigger("click");
       }
     }
+
+    swalAlert.closeSwal(); //close modal
+    swalAlert.showCrosslistSuccessAlert(); //show success alert
   }
 
   function formatConditionVersionTwo(condition) {
@@ -437,7 +413,23 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     document.querySelector("a[id*='_ind']").click(); //click 'decrease indent, option in html editing; to trigger action'
   }
 
+  async function uploadEbayImagesFromIframe(iframe) {
+    //wait half a second for dom to render
+    await helpers.delay(500);
+
+    //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to iframe with data
+    iframe.contentWindow.postMessage(
+      {
+        data: itemData.properties,
+        command: "upload-ebay-images",
+      },
+      "*"
+    );
+  }
+
   async function uploadImages(images, targetElement) {
+    console.log("upload images: ", images);
+
     //wait 100ms for inputs to render
     await helpers.delay(100);
 
@@ -451,16 +443,4 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
       resolve();
     });
   }
-
-  // {
-  //   "matches": [
-  //     "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
-  //     "https://www.ebay.com/lstng*"
-  //   ],
-  //   "js": [
-  //     "third-party/jquery-3.6.0.min.js",
-  //     "marketplaces/new-item/ebay-item.js"
-  //   ],
-  //   "all_frames": true
-  // },
 }
