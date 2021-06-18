@@ -4,6 +4,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   var domEvent = new DomEvent();
   var swalAlert = new SwalAlert(); //TODO: show processing alert
   var helpers = new Helpers();
+  var imageRenderer = new ImageRenderer();
 
   console.log("ebay stage 2 detected page");
 
@@ -234,6 +235,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     await helpers.delay(100);
 
     //LATER: fill out color in next update
+
+    let ebay_image_input = document.querySelector("input[type='file']");
     let ebay_title = document.querySelector("input[name='title']");
     let ebay_sku = document.querySelector("input[name='customLabel']");
     let ebay_price = document.querySelector("input[name='price']");
@@ -244,6 +247,9 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     let ebay_desc_iframe_textarea = ebay_desc_iframe.querySelector(
       '[contenteditable="true"]'
     );
+
+    //images
+    await uploadImages(imageUrls, ebay_image_input);
 
     //title
     $(ebay_title).trigger("focus");
@@ -431,6 +437,21 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     document.querySelector("a[id*='_ind']").click(); //click 'decrease indent, option in html editing; to trigger action'
   }
 
+  async function uploadImages(images, targetElement) {
+    //wait 100ms for inputs to render
+    await helpers.delay(100);
+
+    //truncate image array;
+    let sliced = images.slice(0, 16); //ebay only allows 16< image uploads, but we will only work with 16.
+
+    //upload array of images simultaneously
+    await imageRenderer.uploadImages(sliced, targetElement);
+
+    return new Promise((resolve, reject) => {
+      resolve();
+    });
+  }
+
   // {
   //   "matches": [
   //     "https://bulksell.ebay.com/ws/eBayISAPI.dll*",
@@ -442,6 +463,4 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   //   ],
   //   "all_frames": true
   // },
-} else {
-  console.log("already injected flag");
 }

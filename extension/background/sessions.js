@@ -225,18 +225,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: [
-            "etsy",
-            "kidizen",
-            "mercari",
-            "grailed",
-            "depop",
-            "poshmark",
-            "etsy",
-            "kidizen",
-            "mercari",
-            "grailed",
-          ],
+          copyToMarketplaces: ["ebay"],
           copyFromMarketplace: "poshmark",
           listingURL:
             "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",
@@ -269,8 +258,6 @@ function createItem(properties, marketplace) {
   //ebay
   //NOTE: ebay has special configurations since the listing creation pages is paginated
   if (marketplace == "ebay") {
-    //TODO: ebay has some special configuration
-
     chrome.tabs.create(
       {
         url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList",
