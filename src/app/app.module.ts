@@ -26,6 +26,7 @@ import { PaywallComponent } from './shared/paywall/paywall.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SoldDialogComponent } from './shared/sold-dialog/sold-dialog.component';
 import { CouponDialogComponent } from './shared/coupon-dialog/coupon-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -58,6 +59,7 @@ firebase.initializeApp(environment.firebaseConfig);
     MatGridListModule,
     MatProgressBarModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

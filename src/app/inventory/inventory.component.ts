@@ -117,11 +117,12 @@ export class InventoryComponent implements OnInit {
         this.itemSub = this.db
           .collection('users')
           .doc(user.uid)
-          .collection<Item>('items')
+          .collection<Item>('items', (ref) => {
+            // order by latest updated: //LATER: let user decide to order by title,price,cost etc... and also filter by price range, cost range, profit range, marketplace listed ons,etc...(Filter options)
+            return ref.orderBy('modified', 'desc');
+          })
           .valueChanges()
           .subscribe((data) => {
-            //LATER: does this just push the objects, or wait till objects finish mapping before pushing, check later with multiple items in array, we dont want the push effect, we want the wait effect
-
             this.items = data.map((i) => {
               //loop over listed marketplaces
               this.iterateMarketplaces(i);

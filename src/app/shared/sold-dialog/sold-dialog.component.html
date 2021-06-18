@@ -34,7 +34,7 @@
   <!-- Row -->
   <div class="row">
     <!-- SellPrice -->
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-4">
       <div class="form-group">
         <label> Sell Price </label>
         <div class="input-group input-group-merge">
@@ -53,8 +53,27 @@
       </div>
     </div>
 
+    <!-- Cost -->
+    <div class="col-12 col-md-4">
+      <div class="form-group">
+        <label> Cost Of Item(Optional)</label>
+        <div class="input-group input-group-merge">
+          <input
+            type="number"
+            class="form-control form-control-prepended"
+            formControlName="cost"
+          />
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <span class="fe fe-dollar-sign"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Fees -->
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-4">
       <div class="form-group">
         <label> Marketplace Fees (Optional) </label>
         <div class="input-group input-group-merge">

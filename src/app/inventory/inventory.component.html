@@ -96,10 +96,18 @@
             <div class="row align-items-center">
               <div class="col">
                 <!-- Title -->
-                <h6 class="text-uppercase text-muted mb-2">Total Sales</h6>
+                <h6 class="text-uppercase text-muted mb-2">
+                  <u
+                    matTooltip="Not including cost/fees"
+                    matTooltipPosition="above"
+                  >
+                    <!-- LATER: show profit -->
+                    Total Sales
+                  </u>
+                </h6>
 
-                <!-- Heading -->
-                <span class="h2 mb-0">${{ totalSales }} </span>
+                <!-- Heading: with currency pipe modifier: shows currency symbol -->
+                <span class="h2 mb-0">{{ totalSales | currency: "USD" }} </span>
               </div>
 
               <div class="col-auto">
@@ -144,8 +152,21 @@
               <tr>
                 <th scope="col">Item</th>
                 <th scope="col">Status</th>
+                <th scope="col">
+                  <u
+                    matTooltip="Sales Price - (Cost + Fees) = Profit"
+                    matTooltipPosition="above"
+                  >
+                    Profit
+                  </u>
+                </th>
                 <th scope="col">Price</th>
                 <th scope="col">Cost</th>
+                <th scope="col">
+                  <u matTooltip="Marketplace Fees" matTooltipPosition="above">
+                    Fees
+                  </u>
+                </th>
                 <th scope="col">Date</th>
                 <th scope="col">Sold On</th>
                 <th colspan="2" scope="col  text-right ">Listed On</th>
@@ -202,7 +223,11 @@
                 <td>
                   <span
                     *ngIf="item.sold; else showStatus"
-                    class="badge badge-soft-primary font-weight-bold text-capitalize"
+                    class="
+                      badge badge-soft-primary
+                      font-weight-bold
+                      text-capitalize
+                    "
                   >
                     Sold
                   </span>
@@ -218,14 +243,45 @@
                     >
                   </ng-template>
                 </td>
-                <!-- Price -->
-                <td class="font-weight-bold">${{ item.price || 0 }}</td>
-                <!-- Cost -->
+                <!-- Profit: with currency pipe modifier: shows currency symbol -->
+                <td class="text-dark font-weight-bold">
+                  <span *ngIf="item.sold; else profitEmpty">
+                    {{
+                      item.price - (item.cost + item.sold.fees)
+                        | currency: "USD"
+                    }}
+                  </span>
 
-                <!-- LATER: maybe let user know about the item.sold.fees -->
-                <td>${{ item.cost || 0 }}</td>
+                  <ng-template #profitEmpty>
+                    <span>--</span>
+                  </ng-template>
+                </td>
+
+                <!-- Price: with currency pipe modifier: shows currency symbol -->
+                <td class="text-secondary font-weight-bold">
+                  {{ item.price || 0 | currency: "USD" }}
+                </td>
+
+                <!-- Cost: with currency pipe modifier: shows currency symbol -->
+                <td class="text-muted">
+                  {{ item.cost || 0 | currency: "USD" }}
+                </td>
+
+                <!-- Fees: with currency pipe modifier: shows currency symbol  -->
+                <td class="text-muted">
+                  <span *ngIf="item.sold && item.sold.fees; else feesEmpty">
+                    {{ item.sold.fees | currency: "USD" }}
+                  </span>
+
+                  <ng-template #feesEmpty>
+                    <span>--</span>
+                  </ng-template>
+                </td>
+
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
-                <td>{{ item.modified.seconds * 1000 | date }}</td>
+                <td>{{ item.modified.seconds * 1000 | date: "shortDate" }}</td>
+
+                <!-- Marketplace Sold -->
                 <td>
                   <span
                     *ngIf="item.sold"
@@ -243,6 +299,8 @@
                     />
                   </span>
                 </td>
+
+                <!-- Marketplace Listed On -->
                 <td class="text-left">
                   <div class="avatar-group">
                     <span
