@@ -93,7 +93,7 @@ function getCardInfo() {
     var listingURL = $(item).find("a").attr("href");
 
     //first paragraph element, title
-    var title = $(item).find("a p").first().text().trim();
+    var title = $(item).find("img").attr("title");
 
     if (listingURL === undefined) {
       listingURL = "";
