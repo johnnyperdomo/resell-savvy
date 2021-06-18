@@ -302,7 +302,7 @@
                   <span
                     *ngIf="item.sold"
                     class="avatar avatar-xs text-center"
-                    [matTooltip]="item.sold.marketplace"
+                    [matTooltip]="item.sold.marketplace | titlecase"
                     matTooltipPosition="above"
                   >
                     <img
@@ -310,7 +310,7 @@
                         item.sold.marketplace
                       }}.png"
                       class="avatar-img rounded-circle"
-                      alt="{{ item.marketplace }}"
+                      alt="{{ item.marketplace | titlecase }}"
                     />
                   </span>
                 </td>
@@ -321,13 +321,13 @@
                     <span
                       *ngFor="let marketplace of listedMarketplaces[item.id]"
                       class="avatar avatar-xs"
-                      [matTooltip]="marketplace"
+                      [matTooltip]="marketplace | titlecase"
                       matTooltipPosition="above"
                     >
                       <img
                         src="assets/marketplace-logos/{{ marketplace }}.png"
                         class="avatar-img rounded-circle"
-                        alt="{{ marketplace }}"
+                        alt="{{ marketplace | titlecase }}"
                       />
                     </span>
                   </div>
