@@ -31,8 +31,6 @@ import * as Swal from 'sweetalert2';
 //LATER: see how you can download images with cdn path, to reduce bandwidth, and increase performance, faster load time etc...
 //LATER: load html after data input, since the transition looks kind of ugly (bad ux)
 export class ItemComponent implements OnInit {
-  @ViewChild('mercariInput') mercariInput;
-
   itemForm: FormGroup;
 
   item: Item;
@@ -111,15 +109,34 @@ export class ItemComponent implements OnInit {
       sku: item.sku,
       cost: item.cost,
       notes: item.notes,
-      ebay: item.marketplaces.ebay ? item.marketplaces.ebay.url : '',
-      poshmark: item.marketplaces.poshmark
-        ? item.marketplaces.poshmark.url
-        : '',
-      mercari: item.marketplaces.mercari ? item.marketplaces.mercari.url : '',
-      etsy: item.marketplaces.etsy ? item.marketplaces.etsy.url : '',
-      grailed: item.marketplaces.grailed ? item.marketplaces.grailed.url : '',
-      depop: item.marketplaces.depop ? item.marketplaces.depop.url : '',
-      kidizen: item.marketplaces.kidizen ? item.marketplaces.kidizen.url : '',
+      ebay:
+        item.marketplaces && item.marketplaces.ebay
+          ? item.marketplaces.ebay.url
+          : '',
+      poshmark:
+        item.marketplaces && item.marketplaces.poshmark
+          ? item.marketplaces.poshmark.url
+          : '',
+      mercari:
+        item.marketplaces && item.marketplaces.mercari
+          ? item.marketplaces.mercari.url
+          : '',
+      etsy:
+        item.marketplaces && item.marketplaces.etsy
+          ? item.marketplaces.etsy.url
+          : '',
+      grailed:
+        item.marketplaces && item.marketplaces.grailed
+          ? item.marketplaces.grailed.url
+          : '',
+      depop:
+        item.marketplaces && item.marketplaces.depop
+          ? item.marketplaces.depop.url
+          : '',
+      kidizen:
+        item.marketplaces && item.marketplaces.kidizen
+          ? item.marketplaces.kidizen.url
+          : '',
       // facebook: item.marketplaces.facebook,
       // tradesy: item.marketplaces.tradesy,
     });

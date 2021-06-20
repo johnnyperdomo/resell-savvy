@@ -19,40 +19,40 @@ export class Item {
   public brand: string;
   public condition: string; //nwt, nwot, good, pre-owned, poor
   public notes: string; //these are internal notes
-  public marketplaces: {
-    ebay: {
+  public marketplaces?: {
+    ebay?: {
       url: string;
       extractedID: string;
     };
-    etsy: {
+    etsy?: {
       url: string;
       extractedID: string;
     };
-    poshmark: {
+    poshmark?: {
       url: string;
       extractedID: string;
     };
-    grailed: {
+    grailed?: {
       url: string;
       extractedID: string;
     };
-    depop: {
+    depop?: {
       url: string;
       extractedID: string;
     };
-    kidizen: {
+    kidizen?: {
       url: string;
       extractedID: string;
     };
-    facebook: {
+    facebook?: {
       url: string;
       extractedID: string;
     };
-    mercari: {
+    mercari?: {
       url: string;
       extractedID: string;
     };
-    tradesy: {
+    tradesy?: {
       url: string;
       extractedID: string;
     };
