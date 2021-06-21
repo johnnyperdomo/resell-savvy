@@ -241,6 +241,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 //Functions ====>
 
 function createItem(properties, marketplace) {
+  //TODO: when crosslisting, make sure properties like color, condition, etc... are in lowercase letters
   if (marketplace == "depop") {
     chrome.tabs.create(
       { url: "https://www.depop.com/products/create/", active: false },
