@@ -12,7 +12,7 @@ import * as mime from 'mime-types';
 const db = admin.firestore();
 
 const azure_blob_connection_string =
-  'DefaultEndpointsProtocol=https;AccountName=resellsavvydev;AccountKey=ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==;EndpointSuffix=core.windows.net'; //TODO, set in firebase config
+  'DefaultEndpointsProtocol=https;AccountName=resellsavvydev;AccountKey=ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==;EndpointSuffix=core.windows.net'; //TODO, set in firebase config/ for dev/prod
 
 const app = express();
 app.use(cors({ origin: true })); //cors => any other url can access this api
