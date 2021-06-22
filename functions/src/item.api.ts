@@ -18,21 +18,21 @@ const app = express();
 app.use(cors({ origin: true })); //cors => any other url can access this api
 
 //get the authenticated user
-// const authenticate = async (tokenId: string) => {
-//   return admin
-//     .auth()
-//     .verifyIdToken(tokenId)
-//     .then((decoded) => {
-//       return decoded;
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       throw new functions.https.HttpsError(
-//         'unauthenticated',
-//         'You are not authorized to make this request.'
-//       );
-//     });
-// };
+const authenticate = async (tokenId: string) => {
+  return admin
+    .auth()
+    .verifyIdToken(tokenId)
+    .then((decoded) => {
+      return decoded;
+    })
+    .catch((err) => {
+      console.error(err);
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'You are not authorized to make this request.'
+      );
+    });
+};
 
 const runtimeOpts: functions.RuntimeOptions = {
   memory: '256MB',
@@ -43,23 +43,23 @@ const runtimeOpts: functions.RuntimeOptions = {
 
 //{api-url}/item/create
 app.post('/create', async (req: express.Request, res: express.Response) => {
-  //TODO: 1. authorize/authenticate
+  //if no firebase token present, return error
+  if (!req.headers.authorization) {
+    res
+      .status(403)
+      .json({ error: 'You must be logged in to make this request.' });
 
-  //   if (!req.headers.authorization) {
-  //     res
-  //       .status(403)
-  //       .json({ error: 'You must be logged in to make this request.' });
-  //   }
+    throw Error('You must be logged in to make this request.');
+  }
 
-  //   const tokenId = req.headers.authorization!.split('Bearer ')[1];
+  const tokenId = req.headers.authorization.split('Bearer ')[1];
 
   try {
-    //   const authenticated = await authenticate(tokenId);
+    const authenticated = await authenticate(tokenId);
 
-    //TODO: get real uid, from authenticated function response
     //1. Create New Firestore Document
     const firestoreDocID = await createNewItemInFirestore(
-      'yqoyyllFJVVCKSC4EvoYqc3CI2B2',
+      authenticated.uid,
       req.body.properties,
       req.body.listing
     );
@@ -69,13 +69,14 @@ app.post('/create', async (req: express.Request, res: express.Response) => {
 
     //3. Update firestore doc with new blobs
     const imageValues = await addImageFilesToFirestoreDoc(
-      'yqoyyllFJVVCKSC4EvoYqc3CI2B2', //TODO
+      authenticated.uid,
       firestoreDocID,
       uploadedBlobs
     );
 
     res.status(200).send({
       response: 'successfully created item',
+      user: authenticated,
       firestoreDocID: firestoreDocID,
       imageValues: imageValues,
       blobs: uploadedBlobs,
