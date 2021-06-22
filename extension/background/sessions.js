@@ -485,13 +485,13 @@ function createItemInServer(
     brand: brand,
     condition: condition,
     price: price,
-  };
+  }; //NOTE: don't edit keys, modeled after api
 
   const listing = {
     from_marketplace: from_marketplace,
     url: listingUrl,
     id: listingId,
-  };
+  }; //NOTE: don't edit keys, modeled after api
 
   apiCreateItem(properties, listing); //file: firebase.js
 

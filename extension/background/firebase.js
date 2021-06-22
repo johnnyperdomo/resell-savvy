@@ -27,19 +27,19 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
     //production keys
 
     firebaseConfig = {
-      apiKey: "AIzaSyDtCBELRoPX5_yROLsHyYjJB0ruc-M5Pjo",
-      authDomain: "reseller-savvy.firebaseapp.com",
-      projectId: "reseller-savvy",
-      storageBucket: "reseller-savvy.appspot.com",
-      messagingSenderId: "377665812888",
-      appId: "1:377665812888:web:de58d14adfbaf5f9c5d3ed",
+      apiKey: "AIzaSyB0NJRwgphk79xSOJ9j6vh2-PP0xSPJxg4",
+      authDomain: "resell-savvy.firebaseapp.com",
+      projectId: "resell-savvy",
+      storageBucket: "resell-savvy.appspot.com",
+      messagingSenderId: "624998877316",
+      appId: "1:624998877316:web:9b8222b4eca78adbb45ad1",
+      measurementId: "G-7E7J9FLK9Y",
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
-    firebaseServerUrl =
-      "https://us-central1-reseller-savvy.cloudfunctions.net/";
+    firebaseServerUrl = "https://us-central1-resell-savvy.cloudfunctions.net/";
   }
 });
 
