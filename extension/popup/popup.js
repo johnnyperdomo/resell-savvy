@@ -186,7 +186,6 @@ if (grailed) {
   grailed.addEventListener("click", copyFromGrailed);
 }
 
-//
 function copyFromGrailed() {
   chrome.runtime.sendMessage({ command: "get-listing-from-grailed" });
 }
@@ -228,50 +227,36 @@ if (ebayOpen) {
 }
 
 function openEbay() {
-  chrome.runtime.sendMessage({
-    command: "test-ebay",
-  });
+  chrome.runtime.sendMessage(
+    {
+      command: "api-create-item",
+      data: "tester",
+      // data: {
+      //   properties: {
+      //     imageUrls: imageUrls,
+      //     title: title,
+      //     desc: desc,
+      //     sku: sku,
+      //     color: color,
+      //     brand: brand,
+      //     condition: condition,
+      //     price: price,
+      //   },
+      //   listing: {
+      //     from_marketplace: from_marketplace,
+      //     listingUrl: listingUrl,
+      //     listingId: listingId,
+      //   },
+      // },
+    },
+    (response) => {
+      console.log("yoooooooooo; ", response);
+    }
+  );
+
+  // chrome.runtime.sendMessage({
+  //   command: "test-ebay",
+  // });
 }
 
 //LATER: if user wants to crosslist but they are in different countries other than the us, add an options tab on the popup, and they can specify where they want to crosslist to(poshmark us, or poshmark canada for example). This will only be a change on the localhost, but if users crosslist to poshmark us for example, and then later change the settings, on firebase it will still showed up as already crosslisted, because it will take the 'poshmark' marketplace in general. The countries specificity only is for local user and crosslist destination. (later make sure that regex for marketplace links in dashboard aren't country specific, they just need to include the poshmark name.)
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/poshmark.js"],
-//   "matches": ["*://poshmark.com/*"],
-//   "run_at": "document_start"
-// },
-
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/facebook.js"],
-//   "matches": ["*://www.facebook.com/*"],
-//   "run_at": "document_start"
-// },
-
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/kidizen.js"],
-//   "matches": ["*://www.kidizen.com/*"],
-//   "run_at": "document_start"
-// },
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/grailed.js"],
-//   "matches": ["*://www.grailed.com/*"],
-//   "run_at": "document_start"
-// },
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/etsy.js"],
-//   "matches": ["*://www.etsy.com/*"],
-//   "run_at": "document_start"
-// }
-
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/mercari.js"],
-//   "matches": ["*://www.mercari.com/*"],
-//   "run_at": "document_start"
-// },
-
-// {
-//   "js": ["jquery-3.6.0.min.js", "marketplaces/ebay.js"],
-//   "matches": [
-//     "*://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&&DraftURL=*"
-//   ],
-//   "run_at": "document_start"
-// }

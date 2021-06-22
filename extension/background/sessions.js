@@ -1,5 +1,7 @@
 //handling communication between marketplaces
 
+//LATER: seperate into seperate functions, and different files to make it cleaner
+
 //LATER: when starting crosslist session, make sure if user is logged in, if not, show error message telling them to login
 
 //LATER: learn how to simulate typing like puppeteer, so you can make inputs work better
@@ -69,7 +71,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.command == "start-crosslist-session") {
     let tab = msg.data.tab;
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
-    let copyFromMarketplace = msg.data.copyFromMarketplace;
+    let fromMarketplace = msg.data.copyFromMarketplace;
     let listingURL = msg.data.listingURL;
     let itemProperties = msg.data.properties;
 
@@ -77,15 +79,27 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     //1. Close Tab
     chrome.tabs.remove(tab.id);
 
-    //TODO: send data request to firebase cloud function api
+    //TODO: initilialize after project ready to be launched
     //2. Send Data to firebase cloud function
+    // createItemInServer(
+    //   itemProperties.imageUrls,
+    //   itemProperties.title,
+    //   itemProperties.description,
+    //   itemProperties.sku,
+    //   itemProperties.color,
+    //   itemProperties.brand,
+    //   itemProperties.condition,
+    //   itemProperties.price,
+    //   fromMarketplace,
+    //   listingURL,
+    //   "123423453"
+    // ); //TODO: get real listing id
 
     //3. Open marketplace for each item in array
     copyToMarketplaces.forEach((marketplace) => {
       createItem(itemProperties, marketplace);
-    });
+    }); //TODO
 
-    //TODO: open new tabs with marketplaces array
     console.log("message received: ", msg.data);
   }
 
@@ -225,7 +239,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       },
       (tab) => {
         let retrievalObject = {
-          copyToMarketplaces: ["ebay"],
+          copyToMarketplaces: [
+            "depop",
+            "grailed",
+            "etsy",
+            "mercari",
+            "kidizen",
+          ],
           copyFromMarketplace: "poshmark",
           listingURL:
             "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",
@@ -442,6 +462,42 @@ function injectScriptInNewTab(tab, data, marketplace) {
 }
 
 //Functions ====>
+
+function createItemInServer(
+  imageUrls,
+  title,
+  desc,
+  sku,
+  color,
+  brand,
+  condition,
+  price,
+  from_marketplace,
+  listingUrl,
+  listingId
+) {
+  const properties = {
+    imageUrls: imageUrls,
+    title: title,
+    description: desc,
+    sku: sku,
+    color: color,
+    brand: brand,
+    condition: condition,
+    price: price,
+  };
+
+  const listing = {
+    from_marketplace: from_marketplace,
+    url: listingUrl,
+    id: listingId,
+  };
+
+  apiCreateItem(properties, listing); //file: firebase.js
+
+  console.log("called server from session.js; ");
+}
+
 function getListingDetails(tab, data, marketplace) {
   const retrievalObject = JSON.stringify(data);
 

@@ -1,5 +1,9 @@
 <!-- Works as a bridge for the chrome extension and how they communicate with each other -->
 
+<!-- NOTE: Communication between our background scripts are handled as if it was a single script, since the bckground scripts are combined. So we don't use the chrome.runtime api, just call a regular function normally -->
+
+<!-- LATER: maybe we can see how we can convert this into typescript -->
+
 <!-- Firebase scripts-->
 <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-firestore.js"></script>

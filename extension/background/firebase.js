@@ -1,3 +1,5 @@
+//LATER: separate into its own functions
+
 // Your web app's Firebase configuration
 var firebaseConfig = {};
 var firebaseServerUrl = "";
@@ -88,6 +90,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       );
   }
 
+  //check subscription
   if (msg.command == "check-subscription") {
     //LATER: handle errors
     let user = firebase.auth().currentUser;
@@ -143,3 +146,42 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
   return true;
 });
+
+//functions ======>
+
+//create item in server
+//LATER: handle errors
+async function apiCreateItem(properties, listing) {
+  const user = firebase.auth().currentUser;
+
+  if (user) {
+    //1. get token
+    user.getIdToken().then((tokenId) => {
+      console.log("token is: ", tokenId);
+
+      const server = firebaseServerUrl + "item/create";
+      const options = {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${tokenId}`,
+        },
+        body: JSON.stringify({
+          listing: listing,
+          properties: properties,
+        }),
+      };
+
+      //LATER: handle errors
+      fetch(server, options).then((res) => {
+        if (res.ok) {
+          console.log("successfully created item in server: ", res);
+        } else {
+          console.log("error creating item: ", res);
+        }
+      });
+    });
+  }
+
+  console.log("server creation message received: ", properties, listing);
+}
