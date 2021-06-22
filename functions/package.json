@@ -7,7 +7,7 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy-functions": "firebase deploy --only functions",
-    "local-server": "npm run build:watch | firebase emulators:start --only functions",
+    "local-server": "firebase functions:config:get > .runtimeconfig.json ; npm run build:watch |  firebase emulators:start --only functions",
     "functions-location": "firebase use",
     "config-get-functions": "firebase functions:config:get",
     "config-set-functions": "firebase functions:config:set",

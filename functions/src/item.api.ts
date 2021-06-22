@@ -1,6 +1,3 @@
-//TODO: create api here to save to firebase using api
-//TODO: authenticate using auth token
-
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
@@ -11,8 +8,9 @@ import * as mime from 'mime-types';
 
 const db = admin.firestore();
 
+const config = functions.config();
 const azure_blob_connection_string =
-  'DefaultEndpointsProtocol=https;AccountName=resellsavvydev;AccountKey=ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==;EndpointSuffix=core.windows.net'; //TODO, set in firebase config/ for dev/prod
+  config.azure.blob_storage.connection_string;
 
 const app = express();
 app.use(cors({ origin: true })); //cors => any other url can access this api
@@ -76,7 +74,7 @@ app.post('/create', async (req: express.Request, res: express.Response) => {
 
     res.status(200).send({
       response: 'successfully created item',
-      user: authenticated,
+      user: authenticated.uid,
       firestoreDocID: firestoreDocID,
       imageValues: imageValues,
       blobs: uploadedBlobs,
