@@ -1,9 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as Azure from '@azure/storage-blob';
-
 import { ItemImageInterface } from './interface';
 
-//TODO: redo these functions
 const config = functions.config();
 const azure_blob_storage = config.azure.blob_storage; //config path
 
@@ -40,7 +38,7 @@ export const deleteAllItemImages = functions.firestore
       }
     });
 
-    return;
+    return null;
   });
 
 export const deleteIndividualItemImages = functions.firestore
@@ -73,5 +71,62 @@ export const deleteIndividualItemImages = functions.firestore
       }
     });
 
-    return;
+    return null;
   });
+
+//when a document is written to, we update the searchable index based on the item title; allowing us to search through the docs by partial title substrings.
+//NOTE: Any time you write to the same document that triggered a function, you are at risk of creating an infinite loop. Use caution and ensure that you safely exit the function when no change is needed. Make sure to exit out of function already written. If data is the same, it won't be updated.
+export const writeSearchableTitleIndex = functions.firestore
+  .document('/users/{user_id}/items/{item_id}')
+  .onWrite(async (change, context) => {
+    const prevSnap = change.before;
+    const currentSnap = change.after;
+
+    const prevDoc = prevSnap.exists ? prevSnap.data() : null;
+    const document = currentSnap.exists ? currentSnap.data() : null;
+
+    if (!document) {
+      //if document is null, it means it has been deleted, and we return out of this function
+      return null;
+    }
+
+    if (document.title === undefined) {
+      functions.logger.log('exit out function cuz no title present');
+      return null;
+    }
+
+    if (prevDoc && document.title === prevDoc.title) {
+      functions.logger.log('exit out function cuz title is the same');
+      return null;
+    }
+
+    try {
+      const title = document.title;
+      const searchableIndex = _generateSearchableKeys(title);
+
+      const ref = change.after.ref;
+
+      return await ref.update({
+        searchableIndex: searchableIndex,
+      });
+    } catch (error) {
+      throw new functions.https.HttpsError('unknown', error);
+    }
+  });
+
+function _generateSearchableKeys(text: string) {
+  const stringOnly = text.replace(/[^a-zA-Z ]/g, '');
+
+  const array = stringOnly.toLowerCase().split('');
+  const searchableIndex: string[] = [];
+
+  let prevKey = '';
+
+  for (const char of array) {
+    const key = prevKey + char;
+    searchableIndex.push(key);
+    prevKey = key;
+  }
+
+  return searchableIndex;
+}

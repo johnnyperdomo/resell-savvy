@@ -2,6 +2,7 @@ export class Item {
   public id: string; //system generated
   public sku: string; //user generated
   public title: string;
+  public searchableIndex: string[]; //used to generate keywords from the title to be able to search through later
   public description: string;
   public status: string; //draft, active. sold status is set based on sold object below
   public images: [

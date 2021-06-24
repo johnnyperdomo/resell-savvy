@@ -114,6 +114,7 @@ async function createNewItemInFirestore(
     await db.collection('users').doc(uid).collection('items').doc(itemID).set({
       id: itemID,
       title: title,
+      searchableIndex: [],
       description: description,
       status: 'active',
       images: [],

@@ -10,6 +10,7 @@
   },
   "projects": {
     "development": "reseller-savvy-dev",
-    "production": "resell-savvy"
+    "production": "resell-savvy",
+    "default": "reseller-savvy-dev"
   }
 }

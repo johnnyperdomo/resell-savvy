@@ -12,6 +12,7 @@ admin.initializeApp();
 export { uploadSignature } from './azure/sas';
 export { deleteAllItemImages } from './item.triggers';
 export { deleteIndividualItemImages } from './item.triggers';
+export { writeSearchableTitleIndex } from './item.triggers';
 export { createBillingPortalSession, createCheckoutSession } from './stripe';
 export { corsanywhere } from './cors-anywhere';
 export { item } from './item.api';

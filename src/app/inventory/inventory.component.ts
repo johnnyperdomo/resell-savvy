@@ -64,6 +64,7 @@ export class InventoryComponent implements OnInit {
           .set({
             id: itemID,
             title: '',
+            searchableIndex: [],
             description: '',
             status: 'draft',
             images: [],
@@ -171,6 +172,7 @@ export class InventoryComponent implements OnInit {
   }
 
   onSearchKey(event) {
+    //LATER: instead of downloading all the files and then searching, you can use the searchableIndex array, and use the array contains field. And then you can search through the docs, and paginate with lazy loading(like 40 docs at a time). We already created the index, you just need to get the data on our end now.
     const titleInput = event.target.value.toLowerCase();
 
     if (titleInput == '') {
