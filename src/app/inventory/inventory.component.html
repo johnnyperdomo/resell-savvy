@@ -250,7 +250,6 @@
                 <!-- Profit: with currency pipe modifier: shows currency symbol -->
                 <td class="text-dark font-weight-bold">
                   <span *ngIf="item.profit; else profitEmpty">
-                    <!--TODO: item.price - (item.cost + item.sold.fees) -->
                     {{ item.profit | currency: "USD" }}
                   </span>
 

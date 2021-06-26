@@ -76,8 +76,6 @@ export class Item {
 //LATER: once I figure out how to simulate user inputting, such as puppeteer has, I will include the 'tag feature at least'
 
 //LATER: Specifics to add:
-//tags(array)
-//msrp
-//upc
+//tags(array); NOTE: for some reason, I'm having a hard time trying to simulate this typing, cuz poshmark and grailed, you have to input with input event or keypress event(such as space or enter key), and I can't seem to get it to work. The only place where I need tags are [poshmark, mercari, grailed, etsy.] Maybe pay someone like $100-150 dollars on upwork to figure out this solution. (this is possible bcuz vendoo can do it)
 
-//Note: we won't have specifics such as packaging details, sizes, or tags. (mostly because inputing them on form fields is very complex since there are so many different use cases/variables when it comes to categories/Brands. also they require special dropdown and native browser elements to pull off, which can get very complex. Also, depending on what the user is reselling, different items have different requirements. So just keep it generic.)
+//Note: we won't have specifics such as packaging details, sizes. (mostly because inputing them on form fields is very complex since there are so many different use cases/variables when it comes to categories/Brands. also they require special dropdown and native browser elements to pull off, which can get very complex. Also, depending on what the user is reselling, different items have different requirements. So just keep it generic.)

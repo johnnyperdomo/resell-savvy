@@ -116,7 +116,7 @@ export const writeSearchableTitleIndex = functions.firestore
   });
 
 function _generateSearchableKeys(text: string) {
-  const stringOnly = text.replace(/[^a-zA-Z ]/g, '');
+  const stringOnly = text.replace(/[^a-zA-Z0-9 ]/g, '');
 
   const array = stringOnly.toLowerCase().split('');
   const searchableIndex: string[] = [];
