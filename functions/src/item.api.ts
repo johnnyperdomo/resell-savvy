@@ -127,6 +127,7 @@ async function createNewItemInFirestore(
       notes: '',
       marketplaces: marketplaces,
       sold: null,
+      profit: null,
       created: admin.firestore.Timestamp.now(),
       modified: admin.firestore.Timestamp.now(),
     });

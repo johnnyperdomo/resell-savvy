@@ -69,6 +69,7 @@ export class InventoryComponent implements OnInit {
             status: 'draft',
             images: [],
             price: null,
+            profit: null,
             brand: '',
             condition: '',
             color: '',
@@ -103,6 +104,7 @@ export class InventoryComponent implements OnInit {
   }
 
   getItems() {
+    
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
         this.itemSub = this.db
@@ -172,7 +174,7 @@ export class InventoryComponent implements OnInit {
   }
 
   onSearchKey(event) {
-    //LATER: instead of downloading all the files and then searching, you can use the searchableIndex array, and use the array contains field. And then you can search through the docs, and paginate with lazy loading(like 40 docs at a time). We already created the index, you just need to get the data on our end now.
+    //LATER: instead of downloading all the files and then searching, you can use the searchableIndex array, and use the array contains field. And then you can search through the docs, and paginate with lazy loading(like 25 docs at a time, if they want more, you can give them the option of choosing between 50-100 docs at a time temporarily, but the default/permanent value should always be 25, to reduce the number of reads per request). We already created the index, you just need to get the data on our end now.
     const titleInput = event.target.value.toLowerCase();
 
     if (titleInput == '') {

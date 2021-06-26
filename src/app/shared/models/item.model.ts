@@ -16,10 +16,12 @@ export class Item {
   ];
   public price?: number; //value or 0 when fetching property
   public cost?: number;
+  public profit?: number; //calculated from price - (cost + fees)
   public color: string;
   public brand: string;
   public condition: string; //nwt, nwot, good, pre-owned, poor
   public notes: string; //these are internal notes
+  //LATER: later on, you can add "other", to marketplaces, since user might sell outside of these specific marketplace sometimes, they might sell on offerup, or they might sell it to their friends. On other field, you can also let them specificy a specific name if they want. No regex necessary. (add other icon image)
   public marketplaces?: {
     ebay?: {
       url: string;

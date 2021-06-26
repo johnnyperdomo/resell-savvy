@@ -1,9 +1,9 @@
 {
   "azure": {
     "blob_storage": {
+      "account_name": "resellsavvydev",
       "account_key": "ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==",
-      "connection_string": "DefaultEndpointsProtocol=https;AccountName=resellsavvydev;AccountKey=ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==;EndpointSuffix=core.windows.net",
-      "account_name": "resellsavvydev"
+      "connection_string": "DefaultEndpointsProtocol=https;AccountName=resellsavvydev;AccountKey=ZPt8LW8ANbIN2x+VcfEag5uiveNWS8lYCSSWywHDjvumTkstmvCaqxq4z8PP8Y1wtCp0O85r6N2cnz0gyIbP5w==;EndpointSuffix=core.windows.net"
     }
   },
   "stripe": {

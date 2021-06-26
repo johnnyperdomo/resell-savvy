@@ -83,6 +83,7 @@
                 <span class="h2 mb-0"> {{ soldItems }} </span>
               </div>
 
+              <!-- LATER: maybe add a toggle on the quickstats to show all the profit or the sales -->
               <div class="col-auto">
                 <span class="h2 fe fe-shopping-bag text-muted mb-0"></span>
               </div>
@@ -190,7 +191,6 @@
                         class="avatar-img rounded mr-3"
                         src="{{ storagePath }}{{ item.images[0].blobID }}"
                       />
-                      <!-- TODO: update image url path -->
 
                       <ng-template #imagePlaceholder>
                         <img
@@ -249,11 +249,9 @@
                 </td>
                 <!-- Profit: with currency pipe modifier: shows currency symbol -->
                 <td class="text-dark font-weight-bold">
-                  <span *ngIf="item.sold; else profitEmpty">
-                    {{
-                      item.price - (item.cost + item.sold.fees)
-                        | currency: "USD"
-                    }}
+                  <span *ngIf="item.profit; else profitEmpty">
+                    <!--TODO: item.price - (item.cost + item.sold.fees) -->
+                    {{ item.profit | currency: "USD" }}
                   </span>
 
                   <ng-template #profitEmpty>

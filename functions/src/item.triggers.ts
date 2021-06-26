@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as Azure from '@azure/storage-blob';
 import { ItemImageInterface } from './interface';
+import * as currency from 'currency.js';
 
 const config = functions.config();
 const azure_blob_storage = config.azure.blob_storage; //config path
@@ -85,22 +86,22 @@ export const writeSearchableTitleIndex = functions.firestore
     const prevDoc = prevSnap.exists ? prevSnap.data() : null;
     const document = currentSnap.exists ? currentSnap.data() : null;
 
-    if (!document) {
-      //if document is null, it means it has been deleted, and we return out of this function
-      return null;
-    }
-
-    if (document.title === undefined) {
-      functions.logger.log('exit out function cuz no title present');
-      return null;
-    }
-
-    if (prevDoc && document.title === prevDoc.title) {
-      functions.logger.log('exit out function cuz title is the same');
-      return null;
-    }
-
     try {
+      if (!document) {
+        //if document is null, it means it has been deleted, and we return out of this function
+        return null;
+      }
+
+      if (document.title === undefined) {
+        functions.logger.log('exit out function cuz no title present');
+        return null;
+      }
+
+      if (prevDoc && document.title === prevDoc.title) {
+        functions.logger.log('exit out function cuz title is the same');
+        return null;
+      }
+
       const title = document.title;
       const searchableIndex = _generateSearchableKeys(title);
 
@@ -129,4 +130,69 @@ function _generateSearchableKeys(text: string) {
   }
 
   return searchableIndex;
+}
+
+export const calculateProfit = functions.firestore
+  .document('/users/{user_id}/items/{item_id}')
+  .onWrite(async (change, context) => {
+    const prevSnap = change.before;
+    const currentSnap = change.after;
+
+    const prevDoc = prevSnap.exists ? prevSnap.data() : null;
+    const document = currentSnap.exists ? currentSnap.data() : null;
+
+    const ref = change.after.ref;
+
+    try {
+      if (!document) {
+        //if document is null, it means it has been deleted, and we return out of this function
+        functions.logger.log('exit out cuz doc is deleted');
+        return null;
+      }
+
+      if (!document.sold) {
+        functions.logger.log('exit out cuz sold is undefined');
+
+        return await ref.update({
+          profit: null,
+        });
+      }
+
+      if (
+        prevDoc &&
+        document.price === prevDoc.price &&
+        document.cost === prevDoc.cost &&
+        prevDoc.sold &&
+        document.sold.fees === prevDoc.sold.fees
+      ) {
+        functions.logger.log('exit out cuz all the numbers stayed the same');
+        //if all of the numbers stay the same, exit out the function
+
+        return null;
+      }
+
+      const getPrice = document.price;
+      const getCost = document.cost;
+      const getFees = document.sold.fees;
+
+      const profit = _calculateProfit(getPrice, getCost, getFees);
+
+      functions.logger.log('the profit is: ', profit);
+
+      return await ref.update({
+        profit: profit,
+      });
+    } catch (error) {
+      throw new functions.https.HttpsError('unknown', error);
+    }
+  });
+
+function _calculateProfit(price?: number, cost?: number, fees?: null) {
+  const _price = price ? price : 0;
+  const _cost = cost ? cost : 0;
+  const _fees = fees ? fees : 0;
+
+  const totalCost = currency(_cost).add(_fees); //(cost + fees)
+
+  return currency(_price).subtract(totalCost).value; //price - (cost + fees)
 }
