@@ -1,80 +1,31 @@
-//listen to when user lands on a closet
+//Listen to when user lands on a closet
+
+//object of the closets of the different marketplace paths
+const closetPaths = {
+  depop: "depop.com/", //NOTE: depop doesn't have a direct closet path, so we detect it in closet script
+  ebay: "ebay.com/sh/lst/active",
+  etsy: "etsy.com/your/shops",
+  grailed: "grailed.com/users/myitems",
+  kidizen: "kidizen.com/users", //NOTE: kidizen doesn't have a direct closet path, so we detect it in closet script
+  mercari: "mercari.com/mypage/listings",
+  poshmark: "poshmark.com/closet/",
+};
+
+function injectClosetScript(tabId, marketplace) {
+  chrome.tabs.executeScript(tabId, {
+    file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
+  });
+}
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //   console.log("updated, ", tabId, changeInfo, tab);
-
-  //depop closet
-  if (tab.url.indexOf("depop.com/") > -1) {
-    console.log("depop page is reloaded");
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/depop-closet.js",
-    });
+  for (let [marketplace, path] of Object.entries(closetPaths)) {
+    //if closet path detected
+    if (tab.url.indexOf(path) > -1) {
+      console.info("closet path detected: ", marketplace, path, tab);
+      injectClosetScript(tabId, marketplace);
+      break;
+    }
   }
-
-  //ebay closet
-  if (tab.url.indexOf("ebay.com/sh/lst/active") > -1) {
-    console.log("ebay closet detected, tab = ", tabId);
-
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/ebay-closet.js",
-    });
-  }
-
-  //etsy closet
-  if (tab.url.indexOf("etsy.com/your/shops") > -1) {
-    console.log("etsy closet detected, tab = ", tabId);
-
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/etsy-closet.js",
-    });
-  }
-
-  //facebook closet
-  //LATER: this is a little complex
-  // if (tab.url.indexOf("facebook.com/marketplace/you/selling") > -1) {
-  //   console.log("facebook closet detected, tab = ", tabId);
-
-  //   chrome.tabs.executeScript(tab.id, {
-  //     file: "marketplaces/closets/facebook-closet.js",
-  //   });
-  // }
-
-  //grailed closet
-  if (tab.url.indexOf("grailed.com/users/myitems") > -1) {
-    console.log("grailed closet detected, tab = ", tabId);
-
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/grailed-closet.js",
-    });
-  }
-
-  //kidizen closet
-  //LATER: make sure the closet is the personal closet, look for edit button
-  if (tab.url.indexOf("kidizen.com/users") > -1) {
-    console.log("kidizen closet detected, tab = ", tabId);
-
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/kidizen-closet.js",
-    });
-  }
-
-  //mercari closet
-  if (tab.url.indexOf("mercari.com/mypage/listings") > -1) {
-    console.log("mercari closet detected, tab = ", tabId);
-
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/mercari-closet.js",
-    });
-  }
-
-  //poshmark closet
-  if (tab.url.indexOf("poshmark.com/closet") > -1) {
-    chrome.tabs.executeScript(tab.id, {
-      file: "chrome/marketplaces/closets/poshmark-closet.js",
-    });
-  }
-
-  //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
 });
 
 //LATER: see how you can make your web scraping more robust, since data can change on any given page

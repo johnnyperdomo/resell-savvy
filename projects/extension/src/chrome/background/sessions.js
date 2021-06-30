@@ -79,6 +79,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     //1. Close Tab
     chrome.tabs.remove(tab.id);
 
+    //TODO: if user is crosslisting from inventory or just importing inventory, skip some steps
+
     //TODO: initilialize after project ready to be launched
     //2. Send Data to firebase cloud function
     // createItemInServer(
@@ -533,10 +535,7 @@ function getListingDetails(tab, data, marketplace) {
 var ebaySetListingActiveTabs = {};
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //TODO: be careful and make sure we don't post double content script while it's loading, because this event listener can fire multiple times, just once
-
   console.log("active tabs get, ", ebaySetListingActiveTabs);
-
   console.log("tab info:", tab);
 
   //if this is an active ebay tab, and, if the tab is at the ('form' - stage), inject script in tab that fills in ebay form
@@ -571,4 +570,3 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 //LATER: later on crosslist modal, add search functionality, when they user starts typing, it goes to the row of what the text is, so if he types "adida", go to the 5th row where that word is that. Find row # and go there, if no row # found, don't go anywhere, but don't filter out results, that way it doesn't make it hard to find the list items that follow, ,  - let users know they can only see or search for items that have been loaded when clicking on the modal(load more to see more)
 
 //NOTE: when showing crosslist modal, don't run a query to compare if user has already crosslisted or if they have that item in their inventory. I've done the research and this can get very expensive, very fast, since this can fetch multiple times. They can do the work themselves of seeing which items need to be imported or not, or which ones have been crosslisted.
-//LATER: later on, when a user clicks the crosslist blue button, we can send a request to bigquery, and get a query of all the items(average should be like 100-10,000 max){don't block the modal, just start the modal and in a small corner have a loading spinner that says something like "fetching data"} - big query is pretty affordable, all of this should cost like pennies, even if the user spams, bcuz bigquery caches results. (hopefully function should take like 2-3s i assume.) FIRESTORE can get expensive bcuz it charges on the number of docs retreived, so if it retrieves 10,000. That will be very expensive as hell
