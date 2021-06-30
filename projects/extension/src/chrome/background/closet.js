@@ -7,7 +7,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("depop.com/") > -1) {
     console.log("depop page is reloaded");
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/depop-closet.js",
+      file: "chrome/marketplaces/closets/depop-closet.js",
     });
   }
 
@@ -16,7 +16,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("ebay closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/ebay-closet.js",
+      file: "chrome/marketplaces/closets/ebay-closet.js",
     });
   }
 
@@ -25,7 +25,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("etsy closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/etsy-closet.js",
+      file: "chrome/marketplaces/closets/etsy-closet.js",
     });
   }
 
@@ -44,7 +44,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("grailed closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/grailed-closet.js",
+      file: "chrome/marketplaces/closets/grailed-closet.js",
     });
   }
 
@@ -54,7 +54,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("kidizen closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/kidizen-closet.js",
+      file: "chrome/marketplaces/closets/kidizen-closet.js",
     });
   }
 
@@ -63,25 +63,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("mercari closet detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/mercari-closet.js",
+      file: "chrome/marketplaces/closets/mercari-closet.js",
     });
   }
 
   //poshmark closet
   if (tab.url.indexOf("poshmark.com/closet") > -1) {
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/closets/poshmark-closet.js",
+      file: "chrome/marketplaces/closets/poshmark-closet.js",
     });
   }
 
   //TODO: listen for url changes, watch for when user lands on success page (specific for tab), or when
 });
-
-// "*://*.facebook.com/*",
-// {
-//   "css": ["marketplaces/closets/facebook-closet.css"],
-//   "matches": ["*://*.facebook.com/*"]
-// },
 
 //LATER: see how you can make your web scraping more robust, since data can change on any given page
 // https://codeburst.io/two-simple-technique-for-web-scraping-pages-with-dynamically-created-css-class-names-72eaca8c1304

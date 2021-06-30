@@ -28,39 +28,39 @@
   ],
 
   "background": {
-    "page": "background/background.html"
+    "page": "chrome/background/background.html"
   },
 
   "content_scripts": [
     {
       "matches": ["https://bulkedit.ebay.com/*"],
       "js": [
-        "third-party/jquery-3.6.0.min.js",
-        "marketplaces/new-item/bulkedit-iframe.js"
+        "chrome/third-party/jquery-3.6.0.min.js",
+        "chrome/marketplaces/new-item/bulkedit-iframe.js"
       ],
       "all_frames": true
     },
     {
       "matches": ["*://www.picupload.ebay.com/*"],
       "js": [
-        "third-party/jquery-3.6.0.min.js",
-        "marketplaces/new-item/ebay-picupload-iframe.js"
+        "chrome/third-party/jquery-3.6.0.min.js",
+        "chrome/marketplaces/new-item/ebay-picupload-iframe.js"
       ],
       "all_frames": true
     },
     {
       "js": [
-        "third-party/jquery-3.6.0.min.js",
-        "third-party/bootstrap.min.js",
-        "third-party/sweetalert.min.js",
-        "classes/swal-alert.js",
-        "classes/dom-event.js",
-        "classes/helpers.js",
-        "classes/image-renderer.js"
+        "chrome/third-party/jquery-3.6.0.min.js",
+        "chrome/third-party/bootstrap.min.js",
+        "chrome/third-party/sweetalert.min.js",
+        "chrome/classes/swal-alert.js",
+        "chrome/classes/dom-event.js",
+        "chrome/classes/helpers.js",
+        "chrome/classes/image-renderer.js"
       ],
       "css": [
-        "third-party/bootstrap.min.css",
-        "third-party/sweetalert.min.css"
+        "chrome/third-party/bootstrap.min.css",
+        "chrome/third-party/sweetalert.min.css"
       ],
       "matches": [
         "*://*.etsy.com/*",
@@ -79,7 +79,7 @@
   ],
 
   "browser_action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "/index.html#/popup"
   },
 
   "manifest_version": 2,

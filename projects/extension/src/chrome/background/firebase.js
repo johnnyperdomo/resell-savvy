@@ -21,6 +21,8 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
+    console.log("development mode: = ", firebaseConfig);
+
     firebaseServerUrl =
       "https://us-central1-reseller-savvy-dev.cloudfunctions.net/";
   } else if (extensionInfo.installType === "production") {
@@ -35,6 +37,7 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
       appId: "1:624998877316:web:9b8222b4eca78adbb45ad1",
       measurementId: "G-7E7J9FLK9Y",
     };
+    console.log("production mode: = ", firebaseConfig);
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);

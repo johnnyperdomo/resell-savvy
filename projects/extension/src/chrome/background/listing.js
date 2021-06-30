@@ -12,27 +12,25 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("depop item detected");
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/depop-listing.js",
+      file: "chrome/marketplaces/listings/depop-listing.js",
     });
   }
 
   //ebay listing
-  //TODO: bulk sell page works so don't worry about it
   if (tab.url.indexOf("ebay.com/itm") > -1) {
     console.log("ebay listing detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/ebay-listing.js",
+      file: "chrome/marketplaces/listings/ebay-listing.js",
     });
   }
 
   //etsy listing
-  //TODO: wait for element to load, heading, before detecting closet
   if (tab.url.indexOf("etsy.com/listing") > -1) {
     console.log("etsy listing detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/etsy-listing.js",
+      file: "chrome/marketplaces/listings/etsy-listing.js",
     });
   }
 
@@ -51,7 +49,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("grailed listing detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/grailed-listing.js",
+      file: "chrome/marketplaces/listings/grailed-listing.js",
     });
   }
 
@@ -61,7 +59,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("kidizen listing detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/kidizen-listing.js",
+      file: "chrome/marketplaces/listings/kidizen-listing.js",
     });
   }
 
@@ -71,7 +69,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("mercari listing detected, tab = ", tabId);
 
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/mercari-listing.js",
+      file: "chrome/marketplaces/listings/mercari-listing.js",
     });
   }
 
@@ -79,7 +77,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url.indexOf("poshmark.com/listing") > -1) {
     console.log("poshmark listing actived");
     chrome.tabs.executeScript(tab.id, {
-      file: "marketplaces/listings/poshmark-listing.js",
+      file: "chrome/marketplaces/listings/poshmark-listing.js",
     });
   }
 });

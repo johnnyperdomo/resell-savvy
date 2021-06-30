@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { CouponDialogComponent } from '../coupon-dialog/coupon-dialog.component';
 import { Coupon } from '../models/coupon.model';
 import * as firebase from 'firebase';
-import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-paywall',
