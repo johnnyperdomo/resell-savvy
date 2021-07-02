@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { Component, NgZone, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-popup',
@@ -7,23 +6,34 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./popup.component.scss'],
 })
 export class PopupComponent implements OnInit {
-  constructor() {}
+  isLoggedIn: boolean;
+
+  //from child component
+  changeAuthState(state: boolean) {
+    this.zone.run(() => {
+      this.isLoggedIn = state;
+    });
+  }
+
+  constructor(private zone: NgZone) {}
 
   ngOnInit(): void {
-    console.log('popup init');
+    this.verifyAuthentication();
+  }
 
+  verifyAuthentication() {
     chrome.runtime.sendMessage({ command: 'check-auth' }, (response) => {
       console.log('check auth');
-      console.log(response);
-
-      if (response.status == 'success') {
-        console.log('auth sucess on popup');
-      } else {
-        console.log('auth error on popup');
-
-        // loggedIn = false;
-        // validateAuth();
-      }
+      //zone to update angular manually
+      this.zone.run(() => {
+        if (response.status == 'success') {
+          this.isLoggedIn = true;
+          console.info('Popup - User Logged in');
+        } else {
+          this.isLoggedIn = false;
+          console.info('Popup - User not logged in');
+        }
+      });
     });
   }
 }

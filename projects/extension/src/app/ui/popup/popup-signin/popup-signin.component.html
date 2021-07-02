@@ -1,11 +1,11 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 my-6">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 my-5">
       <!-- Heading -->
-      <h1 class="display-4 text-center mb-3">Login</h1>
+      <h1 class="text-center mb-3">Welcome to ResellSavvy 👋</h1>
 
       <!-- Subheading -->
-      <p class="text-muted text-center mb-5">Login to ResellSavvy</p>
+      <p class="text-muted text-center mb-5">Login to Get Started</p>
 
       <!-- Form -->
       <form *ngIf="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -16,16 +16,16 @@
             id="email"
             type="email"
             required
-            placeholder="james@bond.com"
+            placeholder="name@example.com"
             formControlName="email"
             class="form-control"
           />
           <!-- <span
-            class="help-block-invalid"
-            *ngIf="!email.valid && email.touched"
-          >
-            Please enter a valid email.</span
-          > -->
+                class="help-block-invalid"
+                *ngIf="!email.valid && email.touched"
+              >
+                Please enter a valid email.</span
+              > -->
         </div>
 
         <!-- Password -->
@@ -34,16 +34,15 @@
             <div class="col">
               <label for="password">Password</label>
             </div>
-            <!-- Help text -->
-            <!-- LATER -->
+            <!-- LATER: Help text -->
             <!-- <div class="col-auto">
-              <a
-                [routerLink]="['/forgot-password']"
-                class="form-text small text-muted"
-              >
-                Forgot password?
-              </a>
-            </div> -->
+                  <a
+                    [routerLink]="['/forgot-password']"
+                    class="form-text small text-muted"
+                  >
+                    Forgot password?
+                  </a>
+                </div> -->
           </div>
 
           <input
@@ -57,11 +56,11 @@
         </div>
 
         <!-- <div class="help-block-invalid form-group text-center" *ngIf="error">
-          {{ error }}
-        </div> -->
+              {{ error }}
+            </div> -->
         <!-- Submit -->
         <button
-          class="btn btn-lg btn-block btn-primary mb-3"
+          class="btn btn-block btn-primary mb-3"
           [disabled]="!loginForm.valid"
           type="submit"
         >
@@ -72,7 +71,9 @@
         <div class="text-center">
           <small class="text-muted text-center">
             Don't have an account yet?
-            <a [routerLink]="['/signup']"> Sign up</a>
+            <a href="http://app.resellsavvy.com/signup" target="_blank">
+              Sign up</a
+            >
           </small>
         </div>
       </form>

@@ -2,9 +2,8 @@
 
 // chrome extension popup size
 
-//TODO: make sure this doesn't affect the modal sizes or whatever
+//TODO: make sure this doesn't affect the modal sizes or whatever, or make this a minimum, so it can go higher
 
 body {
-  width: 450px;
-  height: 450px;
+  min-width: 325px;
 }

@@ -7,6 +7,9 @@ import { PopupComponent } from './ui/popup/popup.component';
 import { CrosslistComponent } from './ui/crosslist/crosslist.component';
 import { ListingConnectComponent } from './ui/listing-connect/listing-connect.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { PopupSigninComponent } from './ui/popup/popup-signin/popup-signin.component';
+import { PopupDashboardComponent } from './ui/popup/popup-dashboard/popup-dashboard.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -14,8 +17,10 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     PopupComponent,
     CrosslistComponent,
     ListingConnectComponent,
+    PopupSigninComponent,
+    PopupDashboardComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
   providers: [
     // This is needed because the manifest loads the index.html file, followed by a #,
     { provide: LocationStrategy, useClass: HashLocationStrategy },

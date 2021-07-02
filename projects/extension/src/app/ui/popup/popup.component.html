@@ -1,2 +1,14 @@
-<p class="ml-4 font-weight-bold mt-4">popup works!</p>
-<button type="button" class="btn btn-primary ml-4">Primary</button>
+<ng-container *ngIf="isLoggedIn; then loggedIn; else loggedOut"> </ng-container>
+
+<ng-template #loggedIn>
+  <div>
+    <app-popup-dashboard
+      (authState)="changeAuthState($event)"
+    ></app-popup-dashboard>
+  </div>
+</ng-template>
+<ng-template #loggedOut>
+  <div>
+    <app-popup-signin (authState)="changeAuthState($event)"></app-popup-signin>
+  </div>
+</ng-template>

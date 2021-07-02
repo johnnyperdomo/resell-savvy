@@ -1,0 +1,127 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 mt-5 mb-3">
+      <!-- alert: if user not subscribed to an active membership -->
+      <div *ngIf="isUserSubscribed == false" class="text-center">
+        <div class="alert alert-danger" role="alert">
+          ⚠️ ResellSavvy only works with an active subscription.
+          <a
+            href="http://app.resellsavvy.com/paywall"
+            target="_blank"
+            class="alert-link"
+            >Click here to activate.</a
+          >
+        </div>
+      </div>
+
+      <!-- Heading -->
+      <h2 class="text-center mb-3">ResellSavvy</h2>
+
+      <!-- View Dashboard -->
+      <div class="text-center center my-4">
+        <a
+          class="btn btn-primary"
+          href="http://app.resellsavvy.com/inventory"
+          target="_blank"
+        >
+          View Dashboard</a
+        >
+      </div>
+
+      <div class="my-5">
+        <h4 class="text-secondary">Quick Links</h4>
+        <p class="text-muted">
+          💡 Make sure you are logged in to access marketplaces
+        </p>
+        <div class="row">
+          <div class="col-6">
+            <a
+              class="btn btn-block poshmark"
+              href="https://poshmark.com/"
+              target="_blank"
+            >
+              Poshmark</a
+            >
+          </div>
+          <div class="col-6">
+            <a
+              class="btn btn-block mercari"
+              href="https://www.mercari.com/"
+              target="_blank"
+            >
+              Mercari</a
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <a
+              class="btn btn-block ebay"
+              href="https://www.ebay.com/"
+              target="_blank"
+            >
+              Ebay</a
+            >
+          </div>
+          <div class="col-6">
+            <a
+              class="btn btn-block depop"
+              href="https://www.depop.com/"
+              target="_blank"
+            >
+              Depop</a
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <a
+              class="btn btn-block etsy"
+              href="https://www.etsy.com/"
+              target="_blank"
+            >
+              Etsy</a
+            >
+          </div>
+          <div class="col-6">
+            <a
+              class="btn btn-block grailed"
+              href="https://www.grailed.com/"
+              target="_blank"
+            >
+              Grailed</a
+            >
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <a
+              class="btn btn-block kidizen"
+              href="https://www.kidizen.com/"
+              target="_blank"
+            >
+              Kidizen</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <div class="my-3">
+          <a
+            class=""
+            href="https://app.resellsavvy.com/getting-started"
+            target="_blank"
+          >
+            <u>Getting Started Guide</u>
+          </a>
+        </div>
+
+        <button class="btn btn-sm btn-outline-secondary" (click)="onLogout()">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- / .row -->
+</div>
