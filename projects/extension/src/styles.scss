@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+// chrome extension popup size
+
+//TODO: make sure this doesn't affect the modal sizes or whatever
+
+body {
+  width: 450px;
+  height: 450px;
+}

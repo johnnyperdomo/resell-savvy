@@ -25,7 +25,7 @@ function injectListingScript(tabId, marketplace) {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   for (let [marketplace, path] of Object.entries(listingPaths)) {
-    //if closet path detected
+    //if listing path detected
     if (tab.url.indexOf(path) > -1) {
       console.info("listing url path detected: ", marketplace, path, tab);
       injectListingScript(tabId, marketplace);

@@ -155,9 +155,17 @@
               "projects/extension/src/favicon.ico",
               "projects/extension/src/assets",
               "projects/extension/src/chrome",
-              "projects/extension/src/manifest.json"
+              "projects/extension/src/manifest.json",
+              "projects/extension/src/assets/dashkit/img"
             ],
-            "styles": ["projects/extension/src/styles.scss"],
+            "styles": [
+              "projects/extension/src/styles.scss",
+              "projects/extension/src/assets/dashkit/css/theme.min.css",
+              "projects/extension/src/assets/dashkit/fonts/feather/feather.css",
+              "src/assets/dashkit/libs/flatpickr/dist/flatpickr.min.css",
+              "projects/extension/src/assets/dashkit/libs/quill/dist/quill.core.css",
+              "projects/extension/src/assets/dashkit/libs/highlightjs/styles/vs2015.css"
+            ],
             "scripts": []
           },
           "configurations": {
