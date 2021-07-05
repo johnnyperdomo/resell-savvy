@@ -45,9 +45,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   async function getItemDetails(version) {
     switch (version) {
       case "one":
-        //wait for iframe to load
-        await helpers.delay(1000);
-
         fillOutEbayFormOne(
           itemData.properties.imageUrls,
           itemData.properties.title,
@@ -62,7 +59,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
         break;
       case "two":
         //wait for iframe to load
-        await helpers.delay(1000);
 
         fillOutEbayFormTwo(
           itemData.properties.imageUrls,
@@ -105,7 +101,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     await domEvent.waitForElementToLoad("#editpane_title");
 
     //wait for page to render
-    await helpers.delay(100);
+    //wait for iframe to load
+    await helpers.delay(3000);
 
     let ebay_title = document.querySelector("input[id='editpane_title']");
     let ebay_sku = document.querySelector("input[id='editpane_skuNumber']");
@@ -204,7 +201,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     await domEvent.waitForElementToLoad("input[name='title']"); //timeout after 10 seconds if undetected
 
     //wait for page to render
-    await helpers.delay(100);
+    //wait for iframe to load
+    await helpers.delay(3000);
 
     //LATER: fill out color in next update
 

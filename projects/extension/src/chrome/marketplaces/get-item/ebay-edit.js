@@ -91,8 +91,8 @@ async function formatItemPropertiesVersionOne() {
   await domEvent.waitForElementToLoad("#editpane_title"); //timeout after 10 seconds if undetected, give time for initial page to render completely
 
   //wait for page to render,
-  //wait 3 seconds for iframe to load
-  await helpers.delay(100);
+  //NOTE: wait 3 seconds for iframe to load
+  await helpers.delay(3000);
 
   //hidden uploader form with input values, alternative solution would be in iframe
   let imageURLs = $("#epsUrls").val().split(";");
@@ -149,8 +149,8 @@ async function formatItemPropertiesVersionTwo() {
   await domEvent.waitForElementToLoad("input[name='title']");
 
   //wait for page to render,
-  //wait 3 seconds for iframe to load
-  await helpers.delay(100);
+  //NOTE: wait 3 seconds for iframe to load
+  await helpers.delay(3000);
 
   //image is nested inside button as a css background style
   let imagesEl = document.querySelectorAll("button.uploader-thumbnails__image");
@@ -170,9 +170,8 @@ async function formatItemPropertiesVersionTwo() {
   let ebay_title = $("input[name='title']").val();
 
   //LATE
-  let ebay_description = $(".summary__description iframe")
-    .contents()
-    .find("body")[0].innerText;
+  let ebay_description = document.querySelector('iframe[id*="summary"]')
+    .contentDocument.body.innerText;
 
   let ebay_brand = $('button[_track*="_Brand."]').text();
   //LATER: get condition by checking if it says new, if not default to used
