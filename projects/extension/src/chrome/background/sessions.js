@@ -16,6 +16,16 @@
 
 //LATER: when crosslisting, open tabs in queue, instead of opening all the tabs all at once, since this can make the computer very slow when opening the tabs all at once in chrome, and can even freeze the browser. For now, open 10 simultaneously, but later on, let users crosspost a max of 25 items at a time when it auto-queues [chrome hogs alot of resources, so we don't want to have too many tabs open]. you need to add a queue for getting items(so we don't get at the same time,) and setting item. (so we don't set at the same time). Queue should work like this. (1. get item => set item 1 in marketplace, wait for page to finish loading, watch tab updates to see when it's status is complete, go on to marketplace 2 => set => wait => marketplace 3, etc....., when you finish going through all marketplaces, go to item 2, => set item marketplace 1, etc....) That way users can start editing item information, while the pages load. The problem with all at once, is that the tabs all finish loading at the same time which can take a few minutes before we see anything, instead, where if we queue it up in order, it will load a new page every few seconds and be even faster, and users can start editing right away. In the popup js, we will have a loading spinner that says something like "items processing in queue 3/25", they can have the option to cancel the queue if they want. If an item is in queue, they won't be able to crosslist any more items until the queue finishes. (make sure to remove from queue if the tab is taking too long to load, so like give it a minute max for each tab to reach the complete status, if not auto-exit that queue item. Also, if the user closes tab while it's loading, exit out the queue item.)
 
+const marketplaceNewListingFormPaths = {
+  depop: "https://www.depop.com/products/create/",
+  ebay: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList",
+  etsy: "https://www.etsy.com/your/shops/me/tools/listings/create",
+  grailed: "https://www.grailed.com/sell",
+  kidizen: "https://www.kidizen.com/items/new",
+  mercari: "https://www.mercari.com/sell/",
+  poshmark: "https://poshmark.com/create-listing",
+};
+
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //LATER: maybe a better way to do this later on?
   if (msg.command == "remove-ebay-active-tab") {
@@ -52,7 +62,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   }
 
   //Crosslist Item
-
   if (msg.command == "crosslist-item") {
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
     let itemProperties = msg.data.properties;
@@ -261,172 +270,27 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 //Functions ====>
 
 function createItem(properties, marketplace) {
-  //TODO: when crosslisting, make sure properties like color, condition, etc... are in lowercase letters
-  if (marketplace == "depop") {
-    chrome.tabs.create(
-      { url: "https://www.depop.com/products/create/", active: false },
-      (tab) => {
-        //TODO: execute script
+  //LATER: when crosslisting, make sure properties like color, condition, etc... are in lowercase letters
 
-        //TODO get data from message
+  //NOTE: Ebay has multiple listing stages since it's a multiprocess creation, stage 'title': when user has to enter title to create listing -> stage 'form', after title is created, user is taken to form stage //set active tab to be listened to, and watch page updates since this listing is a multistep process.
 
-        injectScriptInNewTab(tab, properties, "depop");
+  chrome.tabs.create(
+    { url: marketplaceNewListingFormPaths[marketplace], active: false },
+    (tab) => {
+      switch (marketplace) {
+        case "ebay":
+          injectScriptInNewTab(tab, properties, "ebay-bulksell");
+          ebaySetListingActiveTabs[tab.id] = { stage: "title", properties };
+
+          break;
+
+        default:
+          injectScriptInNewTab(tab, properties, marketplace);
+
+          break;
       }
-    );
-    //TODO: save tab info to process array
-  }
-
-  //ebay
-  //NOTE: ebay has special configurations since the listing creation pages is paginated
-  if (marketplace == "ebay") {
-    chrome.tabs.create(
-      {
-        url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList",
-        active: false,
-      },
-      (tab) => {
-        injectScriptInNewTab(tab, properties, "ebay-bulksell");
-
-        //NOTE: Ebay has multiple listing stages since it's a multiprocess creation, stage 'title': when user has to enter title to create listing -> stage 'form', after title is created, user is taken to form stage //set active tab to be listened to, and watch page updates since this listing is a multistep process.
-        ebaySetListingActiveTabs[tab.id] = { stage: "title", properties };
-      }
-    );
-  }
-
-  //etsy
-  if (marketplace == "etsy") {
-    //'me' is converted into shop name in etsy url
-    chrome.tabs.create(
-      {
-        url: "https://www.etsy.com/your/shops/me/tools/listings/create",
-        active: false,
-      },
-      (tab) => {
-        injectScriptInNewTab(tab, properties, "etsy");
-      }
-    );
-  }
-
-  //facebook
-  if (marketplace == "facebook") {
-    chrome.tabs.create(
-      {
-        url: "https://www.facebook.com/marketplace/create/item",
-        active: false,
-      },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        injectScriptInNewTab(tab, properties, "facebook");
-      }
-    );
-  }
-
-  //grailed
-  if (marketplace == "grailed") {
-    chrome.tabs.create(
-      { url: "https://www.grailed.com/sell", active: false },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        injectScriptInNewTab(tab, properties, "grailed");
-      }
-    );
-  }
-
-  //kidizen
-  if (marketplace == "kidizen") {
-    console.log("called kidizen");
-    chrome.tabs.create(
-      { url: "https://www.kidizen.com/items/new", active: false },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        injectScriptInNewTab(tab, properties, "kidizen");
-      }
-    );
-  }
-
-  //mercari
-  if (marketplace == "mercari") {
-    chrome.tabs.create(
-      { url: "https://www.mercari.com/sell/", active: false },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "nike shirt premium",
-          description:
-            "This is the coolest nike shirt you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwt",
-          color: "red",
-          sku: "ID456",
-          cost: 5,
-        };
-
-        injectScriptInNewTab(tab, properties, "mercari");
-      }
-    );
-  }
-
-  //poshmark
-  if (marketplace == "poshmark") {
-    console.log("poshmark message received");
-
-    chrome.tabs.create(
-      { url: "https://poshmark.com/create-listing", active: false },
-      (tab) => {
-        const itemData = {
-          imageUrls: [],
-          title: "adidas pants",
-          description:
-            "This is the coolest adidas you have to get it, it's brand new my guy. Check it out.",
-          price: 29,
-          brand: "Adidas",
-          condition: "nwot",
-          color: "green",
-          sku: "",
-          cost: 5,
-        };
-
-        injectScriptInNewTab(tab, properties, "poshmark");
-      }
-    );
-  }
+    }
+  );
 }
 
 function injectScriptInNewTab(tab, data, marketplace) {
