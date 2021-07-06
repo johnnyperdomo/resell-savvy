@@ -25,6 +25,16 @@ function createLinkButton() {
   button.addEventListener("click", onLinkBtnPressed);
 
   root.appendChild(button);
+
+  const modal = document.createElement("dialog");
+  modal.setAttribute("style", "height:80%; width:80%; padding:0px; border: 0");
+  modal.classList = "shadow rounded";
+
+  modal.innerHTML = `<iframe id="listing-connect"style="height:100%; width: 100%"></iframe>
+  <div style="position:absolute; top:5px; left:5px;">  
+  <button class="btn btn-sm btn-light fe fe-x">x</button>
+</div>`;
+  document.body.appendChild(modal);
 }
 
 function onLinkBtnPressed() {
@@ -36,6 +46,19 @@ function onLinkBtnPressed() {
   if (windowURL.indexOf("depop.com/products") > -1) {
     console.log(" closet detected, ", window.location.href);
   }
+
+  //TODO
+  const dialog = document.querySelector("dialog");
+  dialog.showModal();
+  const iframe = document.getElementById("listing-connect");
+  iframe.src = chrome.extension.getURL("index.html?#/listing-connect");
+  iframe.frameBorder = 0;
+  dialog.querySelector("button").addEventListener("click", () => {
+    dialog.close();
+  });
+  dialog.addEventListener("click", () => {
+    dialog.close();
+  });
 
   //open modal,
   //loading spinner

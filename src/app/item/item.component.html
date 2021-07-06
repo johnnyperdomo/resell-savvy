@@ -9,6 +9,8 @@
 <!-- LATER: don't show red error messages when on marketplace url when if the input is only whitespace, so trim it in the validation -->
 <!-- LATER: if item sold, let users update fees and what marketplace it was sold on here -->
 
+<!-- LATER: add image cdn with cloudflare(free, for faster performance + query) -->
+
 <div class="main-content">
   <div class="container-fluid">
     <div class="row justify-content-center">
@@ -68,6 +70,7 @@
                         height: 100%;
                         z-index: 0;
                       "
+                      id="image"
                     />
                     <button
                       class="
@@ -116,6 +119,7 @@
                   class="form-control"
                   placeholder="Item Title"
                   formControlName="title"
+                  id="title"
                 />
               </div>
             </div>
@@ -130,6 +134,7 @@
                     type="number"
                     class="form-control form-control-prepended"
                     formControlName="price"
+                    id="price"
                   />
                   <div class="input-group-prepend">
                     <div class="input-group-text">
@@ -151,6 +156,7 @@
               placeholder="A brief description of your item"
               formControlName="description"
               style="min-height: 100px; max-height: 225px; resize: vertical"
+              id="description"
             ></textarea>
           </div>
 
@@ -165,6 +171,7 @@
                   class="form-control"
                   placeholder="Item Brand"
                   formControlName="brand"
+                  id="brand"
                 />
               </div>
             </div>
@@ -211,6 +218,7 @@
                   <option value="cream">Cream</option>
                   <option value="gold">Gold</option>
                   <option value="gray">Gray</option>
+                  <!-- //LATER: //FIX: on some marketplaces, its gray/grey, so take this into account or it won't work -->
                   <option value="green">Green</option>
                   <option value="orange">Orange</option>
                   <option value="multicolor">Multicolor</option>
@@ -230,7 +238,12 @@
               <div class="form-group">
                 <label> SKU (Optional)</label>
 
-                <input type="text" class="form-control" formControlName="sku" />
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="sku"
+                  id="sku"
+                />
                 <small class="form-text text-muted mt-2">
                   Used for inventory management
                 </small>
@@ -255,6 +268,7 @@
                 type="number"
                 class="form-control form-control-prepended"
                 formControlName="cost"
+                id="cost"
               />
               <div class="input-group-prepend">
                 <div class="input-group-text">
@@ -294,9 +308,8 @@
           <!-- TODO: regex for input urls -->
           <!-- TODO: instead of delist, just let them view the item -->
           <small class="form-text text-muted mt-2">
-            List, manage, and organize all your listings in one click. Link your
-            item from the marketplace's listing page with our extension, or you
-            can enter it manually.
+            List, manage, and organize all your listings in one click. Copy and
+            paste your listing url to keep yourself organized.
           </small>
 
           <!-- LATER: input heights are different on delist inputs -->
@@ -721,16 +734,25 @@
           </div>
 
           <!-- Bulk List -->
+          <!--        [disabled]="!itemForm.valid"-->
+
           <div class="mt-4">
             <button
-              (click)="onListItems()"
               class="btn btn-block btn-primary"
-              [disabled]="!itemForm.valid"
+              disabled
+              (click)="onListItems()"
+              id="rs-crosslist-button"
             >
-              List Items
+              Crosslist Items
             </button>
-            <small class="form-text text-muted mt-2 text-center">
-              Install Chrome Extension to Crosslist
+            <small class="form-text text-muted mt-4 text-center">
+              <!-- //TODO: enter chrome extension url -->
+
+              ⚠️
+              <a href="https://www.google.com" target="_blank">
+                <u>Make sure chrome extension is installed to crosslist</u>
+              </a>
+              ⚠️
               <!-- LATER: add error message when chrome extension not enabled, detect it with a content script -->
             </small>
           </div>

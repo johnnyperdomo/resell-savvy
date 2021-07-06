@@ -44,6 +44,8 @@ export class ItemComponent implements OnInit {
 
   isUploading: boolean = false; //image upload state
 
+  isCrosslistButtonLoading: boolean = false;
+
   constructor(
     private db: AngularFirestore,
     private auth: AngularFireAuth,
@@ -485,12 +487,7 @@ export class ItemComponent implements OnInit {
   }
 
   onListItems() {
-    //TODO: chrome extension should list this item
-    //TODO: disable if no chrome extension present
-
-    //Ope modal
-
-    console.log('list item');
+    //Open modal
     this.saveItem();
   }
 

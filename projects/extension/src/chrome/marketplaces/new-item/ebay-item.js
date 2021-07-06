@@ -206,6 +206,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
 
     //LATER: fill out color in next update
 
+    //LATER: maybe you can use xpath query selectors for some of them: for ebay, since the data changes.
+
     let ebay_image_input = document.querySelector("input[type='file']");
     let ebay_title = document.querySelector("input[name='title']");
     let ebay_sku = document.querySelector("input[name='customLabel']");

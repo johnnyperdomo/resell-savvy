@@ -24,7 +24,9 @@
     "*://*.mercari.com/*",
     "*://*.grailed.com/*",
     "*://*.poshmark.com/*",
-    "*://www.picupload.ebay.com/*"
+    "*://www.picupload.ebay.com/*",
+    "*://localhost:*/*",
+    "*://app.resellsavvy.com/*"
   ],
 
   "background": {
@@ -71,7 +73,9 @@
         "*://*.mercari.com/*",
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
-        "*://www.picupload.ebay.com/*"
+        "*://www.picupload.ebay.com/*",
+        "*://localhost:*/*",
+        "*://app.resellsavvy.com/*"
       ],
       "run_at": "document_start",
       "all_frames": true
@@ -81,6 +85,8 @@
   "browser_action": {
     "default_popup": "/index.html#/popup"
   },
+
+  "web_accessible_resources": ["*.html*"],
 
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"

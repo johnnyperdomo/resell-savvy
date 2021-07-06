@@ -24,12 +24,15 @@ function injectListingScript(tabId, marketplace) {
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  for (let [marketplace, path] of Object.entries(listingPaths)) {
-    //if listing path detected
-    if (tab.url.indexOf(path) > -1) {
-      console.info("listing url path detected: ", marketplace, path, tab);
-      injectListingScript(tabId, marketplace);
-      break;
+  //only inject on when tab is complete: to avoid duplicate code injections
+  if (changeInfo.status === "complete") {
+    for (let [marketplace, path] of Object.entries(listingPaths)) {
+      //if listing path detected
+      if (tab.url.indexOf(path) > -1) {
+        console.info("listing url path detected: ", marketplace, path, tab);
+        injectListingScript(tabId, marketplace);
+        break;
+      }
     }
   }
 });

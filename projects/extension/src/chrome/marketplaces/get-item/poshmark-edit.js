@@ -46,7 +46,6 @@ async function formatItemProperties() {
     ".listing-editor__condition-btn[class*='burgundy']"
   ).attr("data-et-name"); //class of condition button, must include burgundy type, get data et name attribute
   let poshmark_price = $('input[data-vv-name="listingPrice"]').val();
-  let poshmark_cost = $('input[data-vv-name="costPriceAmount"]').val();
   let poshmark_sku = $('input[data-vv-name="sku"]').val();
 
   console.log("converted images: ", convertedImages);

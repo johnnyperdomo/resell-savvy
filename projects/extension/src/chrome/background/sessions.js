@@ -17,21 +17,6 @@
 //LATER: when crosslisting, open tabs in queue, instead of opening all the tabs all at once, since this can make the computer very slow when opening the tabs all at once in chrome, and can even freeze the browser. For now, open 10 simultaneously, but later on, let users crosspost a max of 25 items at a time when it auto-queues [chrome hogs alot of resources, so we don't want to have too many tabs open]. you need to add a queue for getting items(so we don't get at the same time,) and setting item. (so we don't set at the same time). Queue should work like this. (1. get item => set item 1 in marketplace, wait for page to finish loading, watch tab updates to see when it's status is complete, go on to marketplace 2 => set => wait => marketplace 3, etc....., when you finish going through all marketplaces, go to item 2, => set item marketplace 1, etc....) That way users can start editing item information, while the pages load. The problem with all at once, is that the tabs all finish loading at the same time which can take a few minutes before we see anything, instead, where if we queue it up in order, it will load a new page every few seconds and be even faster, and users can start editing right away. In the popup js, we will have a loading spinner that says something like "items processing in queue 3/25", they can have the option to cancel the queue if they want. If an item is in queue, they won't be able to crosslist any more items until the queue finishes. (make sure to remove from queue if the tab is taking too long to load, so like give it a minute max for each tab to reach the complete status, if not auto-exit that queue item. Also, if the user closes tab while it's loading, exit out the queue item.)
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  //TODO: test remove this later on, just for testing set...
-  if (msg.command == "test-ebay") {
-    const itemData = {
-      imageUrls: [],
-      title: "Fanny pack",
-      description: "ebay desc",
-      price: "98",
-      brand: "Adidas",
-      condition: "nwt",
-      color: "",
-      sku: "123edfgreet",
-    };
-    createItem(itemData, "ebay");
-  }
-
   //LATER: maybe a better way to do this later on?
   if (msg.command == "remove-ebay-active-tab") {
     console.log("remove ebay active tab called", msg.data);
@@ -66,8 +51,21 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("after: ", ebaySetListingActiveTabs);
   }
 
-  //Start Crosspost session
+  //Crosslist Item
 
+  if (msg.command == "crosslist-item") {
+    let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
+    let itemProperties = msg.data.properties;
+
+    copyToMarketplaces.forEach((marketplace) => {
+      createItem(itemProperties, marketplace);
+    });
+
+    console.log("crosslist initiated ", msg.data);
+  }
+
+  //Start Crosspost session
+  //TODO: edit this, most likely going to remove
   if (msg.command == "start-crosslist-session") {
     let tab = msg.data.tab;
     let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
@@ -440,21 +438,19 @@ function injectScriptInNewTab(tab, data, marketplace) {
   chrome.tabs.executeScript(
     tab.id,
     {
-      file: `third-party/jquery-3.6.0.min.js`,
+      file: `chrome/third-party/jquery-3.6.0.min.js`,
       runAt: "document_start",
     },
     () => {
       chrome.tabs.executeScript(
         tab.id,
         {
-          //TODO: pass data in here
-          //TODO: not really working
           code: `var itemData = ${itemData};`,
           runAt: "document_start",
         },
         () => {
           chrome.tabs.executeScript(tab.id, {
-            file: `marketplaces/new-item/${marketplace}-item.js`,
+            file: `chrome/marketplaces/new-item/${marketplace}-item.js`,
             runAt: "document_start",
           });
         }

@@ -9,6 +9,8 @@ const closetPaths = {
   kidizen: "kidizen.com/users", //NOTE: kidizen doesn't have a direct closet path, so we detect it in closet script
   mercari: "mercari.com/mypage/listings",
   poshmark: "poshmark.com/closet/",
+  resellsavvy: "app.resellsavvy.com/item/", //for testing purposes
+  resellsavvy: "localhost:4200/item/", //for testing purposes
 };
 
 function injectClosetScript(tabId, marketplace) {
@@ -18,12 +20,15 @@ function injectClosetScript(tabId, marketplace) {
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  for (let [marketplace, path] of Object.entries(closetPaths)) {
-    //if closet path detected
-    if (tab.url.indexOf(path) > -1) {
-      console.info("closet path detected: ", marketplace, path, tab);
-      injectClosetScript(tabId, marketplace);
-      break;
+  //only inject on when tab is complete: to avoid duplicate code injections
+  if (changeInfo.status === "complete") {
+    for (let [marketplace, path] of Object.entries(closetPaths)) {
+      //if closet path detected
+      if (tab.url.indexOf(path) > -1) {
+        console.info("closet path detected: ", marketplace, path, tab);
+        injectClosetScript(tabId, marketplace);
+        break;
+      }
     }
   }
 });
