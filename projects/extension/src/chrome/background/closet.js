@@ -16,12 +16,13 @@ const closetPaths = {
 function injectClosetScript(tabId, marketplace) {
   chrome.tabs.executeScript(tabId, {
     file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
+    runAt: "document_end", //inject when dom is interactive
   });
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //only inject on when tab is complete: to avoid duplicate code injections
-  if (changeInfo.status === "complete") {
+  //only inject once when tab status is set to 'loading': to avoid duplicate code injections
+  if (changeInfo.status === "loading") {
     for (let [marketplace, path] of Object.entries(closetPaths)) {
       //if closet path detected
       if (tab.url.indexOf(path) > -1) {

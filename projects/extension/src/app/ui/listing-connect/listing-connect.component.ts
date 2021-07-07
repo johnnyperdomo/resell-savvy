@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-listing-connect',
@@ -38,7 +39,12 @@ export class ListingConnectComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {
+    console.log('Called Constructor');
+    this.route.queryParams.subscribe((params) => {
+      console.log('params are: ', params);
+    });
+  }
 
   ngOnInit(): void {
     //TODO: 1. check if user logged in. 2. check if user paying 3. get recent items in inventory

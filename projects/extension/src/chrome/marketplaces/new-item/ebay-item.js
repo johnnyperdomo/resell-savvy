@@ -309,6 +309,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     await helpers.delay(500);
 
     //condition
+    //FIX: not working all the time. fix this later on.
     if (condition) {
       let conditionValue = formatConditionVersionTwo(condition);
 

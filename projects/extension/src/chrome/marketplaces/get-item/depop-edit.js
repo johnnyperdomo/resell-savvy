@@ -62,7 +62,7 @@ async function formatItemProperties() {
     title: "", //null
     description: depop_description, //
     color: depop_color,
-    brand: "", //LATER: append later
+    brand: "", //LATER: append later //FIX:
     condition: formatCondition(depop_condition),
     price: depop_price,
     sku: "", //null

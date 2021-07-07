@@ -22,12 +22,6 @@
                   >
                     <u>inventory dashboard.</u>
                   </a>
-
-                  <br />
-                  <b>
-                    Note: You can only connect this listing to one item at a
-                    time. This can be changed later on.</b
-                  >
                 </p>
               </div>
             </div>
@@ -58,6 +52,7 @@
               <tr *ngFor="let item of recentItems">
                 <!-- Select -->
                 <td class="align-items-center">
+                  <!-- LATER: when clicking button, add loading spinner -->
                   <button class="btn btn-outline-primary">
                     Connect Listing
                   </button>

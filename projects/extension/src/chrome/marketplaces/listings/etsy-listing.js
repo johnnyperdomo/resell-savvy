@@ -1,3 +1,5 @@
+var swalAlert = new SwalAlert();
+
 function createLinkButton() {
   var findHost = document.querySelectorAll(".rs-link-host-element");
 
@@ -37,12 +39,12 @@ function onLinkBtnPressed() {
     console.log(" closet detected, ", window.location.href);
   }
 
-  //open modal,
-  //loading spinner
-  //fetch logged in user or not
-  //NOTE: (don't fetch paying user here, we want our workflow to be fast, so that would be extra loading time.)
-  //if not, fire SWAL, error message
-  //if successful authorization, show linking modal with table in it, fetch 20 recent listings. They can link whatever, but they can only link to one of them
+  let marketplace = "etsy";
+  let query = "?" + `marketplace=${marketplace}&url=${windowURL}`;
+
+  let src = chrome.extension.getURL("index.html?#/listing-connect") + query;
+
+  swalAlert.showModalIframes(src);
 }
 
 function fetchLoggedInUser() {
