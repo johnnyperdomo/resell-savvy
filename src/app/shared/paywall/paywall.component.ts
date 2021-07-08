@@ -96,10 +96,10 @@ export class PaywallComponent implements OnInit {
         (await this.stripe).redirectToCheckout({ sessionId: sessionId });
       } else if (this.subscriptionStatus === 'new') {
         if (!this.couponCode) {
-          //new user no coupon: default 14 day trial
+          //new user no coupon: default 7 day trial
 
           let checkoutSession = await checkoutSessionCallable({
-            trialLength: 14,
+            trialLength: 7,
             priceid: environment.stripe.priceId,
             successUrl: `${window.location.origin}/getting-started`,
             cancelUrl: `${window.location.origin}/paywall`,
