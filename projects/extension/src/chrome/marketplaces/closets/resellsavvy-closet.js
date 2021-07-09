@@ -2,7 +2,6 @@
 
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
-var helpers = new Helpers();
 var imageRenderer = new ImageRenderer();
 
 var crosslistButton = document.getElementById("rs-crosslist-button");

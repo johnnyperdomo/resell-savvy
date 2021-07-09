@@ -6,3 +6,5 @@ chrome.runtime.onInstalled.addListener((reason) => {
     });
   }
 });
+
+//LATER: only match manifest.json urls to specific closets and listing urls, cuz if not, you don't want to inject styles and dependencies on the other modules

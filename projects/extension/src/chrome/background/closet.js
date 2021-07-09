@@ -14,10 +14,20 @@ const closetPaths = {
 };
 
 function injectClosetScript(tabId, marketplace) {
-  chrome.tabs.executeScript(tabId, {
-    file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
-    runAt: "document_end", //inject when dom is interactive
-  });
+  //inject sweet alert: (for rs-savvy closet)
+  chrome.tabs.executeScript(
+    tabId,
+    {
+      file: `chrome/third-party/sweetalert.min.js`,
+      runAt: "document_start", //run at document start to inject first
+    },
+    () => {
+      chrome.tabs.executeScript(tabId, {
+        file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
+        runAt: "document_end", //inject when dom is interactive
+      });
+    }
+  );
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
