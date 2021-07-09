@@ -63,8 +63,12 @@
                     <!-- Image -->
                     <div class="avatar">
                       <img
+                        *ngIf="
+                          item.images && item.images.length > 0;
+                          else imagePlaceholder
+                        "
                         class="avatar-img rounded mr-3"
-                        src="https://picsum.photos/200"
+                        src="{{ azureStoragePath }}{{ item.images[0].blobID }}"
                       />
 
                       <ng-template #imagePlaceholder>
@@ -133,16 +137,20 @@
                 </td>
 
                 <!-- Date; with pipe modifier; converts unix seconds to Date -->
-                <td>{{ 24323423 | date: "shortDate" }}</td>
+                <td>
+                  {{
+                    item.modified && item.modified.seconds * 1000
+                      | date: "shortDate"
+                  }}
+                </td>
 
-                <!-- Marketplace Listed On
+                <!-- Marketplace Listed On -->
+
                 <td class="text-left">
                   <div class="avatar-group">
                     <span
                       *ngFor="let marketplace of listedMarketplaces[item.id]"
                       class="avatar avatar-xs"
-                      [matTooltip]="marketplace | titlecase"
-                      matTooltipPosition="above"
                     >
                       <img
                         src="assets/marketplace-logos/{{ marketplace }}.png"
@@ -151,7 +159,7 @@
                       />
                     </span>
                   </div>
-                </td> -->
+                </td>
               </tr>
             </tbody>
           </table>

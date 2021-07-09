@@ -159,8 +159,6 @@ export class ItemComponent implements OnInit {
     });
 
     this.uppy.on('file-added', (file) => {
-      // this.fileToUpload = file;
-      // this.getUploadSignature(file);
       console.log('Added file', file);
       this.uploadFile(file);
     });

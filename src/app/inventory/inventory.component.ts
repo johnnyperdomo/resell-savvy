@@ -104,7 +104,6 @@ export class InventoryComponent implements OnInit {
   }
 
   getItems() {
-    
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
         this.itemSub = this.db

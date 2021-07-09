@@ -4,6 +4,8 @@
 var firebaseConfig = {};
 var firebaseServerUrl = "";
 
+var azureStoragePath = ""; //blob storage
+
 //get extension state
 chrome.management.get(chrome.runtime.id, (extensionInfo) => {
   if (extensionInfo.installType === "development") {
@@ -25,6 +27,9 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
 
     firebaseServerUrl =
       "https://us-central1-reseller-savvy-dev.cloudfunctions.net/";
+
+    azureStoragePath =
+      "https://resellsavvydev.blob.core.windows.net/item-images/";
   } else if (extensionInfo.installType === "production") {
     //production keys
 
@@ -43,6 +48,9 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
     firebase.initializeApp(firebaseConfig);
 
     firebaseServerUrl = "https://us-central1-resell-savvy.cloudfunctions.net/";
+
+    azureStoragePath =
+      "https://resellsavvyprod.blob.core.windows.net/item-images/";
   }
 });
 
@@ -147,10 +155,78 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     }
   }
 
+  //fetch inventory items
+  if (msg.command == "fetch-inventory-items") {
+    //LATER: try to make this code nicer, maybe use await. I tried, but it failed when i was trying to implement
+    fetchInventoryItems()
+      .then((res) => {
+        response({
+          status: "success",
+          message: { items: res, azureStoragePath: azureStoragePath },
+        });
+      })
+      .catch((error) => {
+        response({ status: "error", message: error });
+      });
+  }
+
   return true;
 });
 
 //functions ======>
+
+//validate sub
+
+async function validateSubscription(user) {
+  try {
+    let subs = firebase
+      .firestore()
+      .collection("users")
+      .doc(user.uid)
+      .collection("subscriptions");
+
+    let snap = await subs.get();
+
+    if (snap.docs.length === 0) {
+      //completely new user - subscription inactive
+      return {
+        type: "subscription",
+        status: "in-active",
+        message:
+          "You do not have an active subscription. ResellSavvy only works with an active subscription.",
+      };
+    } else {
+      //users who had or have a current subscription
+      let totalSubscriptions = snap.docs.map((doc) => {
+        return doc.data();
+      });
+
+      let trialingSubs = totalSubscriptions.filter(
+        (doc) => doc.status == "trialing"
+      );
+
+      let activeSubs = totalSubscriptions.filter(
+        (doc) => doc.status == "active"
+      );
+
+      if (trialingSubs.length > 0 || activeSubs.length > 0) {
+        //active sub
+        return {
+          type: "subscription",
+          status: "active",
+          message: false,
+        };
+      } else {
+        //inactive sub
+        throw Error(
+          "You do not have an active subscription. ResellSavvy only works with an active subscription."
+        );
+      }
+    }
+  } catch (error) {
+    throw Error(error);
+  }
+}
 
 //create item in server
 //LATER: handle errors
@@ -175,7 +251,7 @@ async function apiCreateItem(properties, listing) {
         }),
       };
 
-      //LATER: handle errors
+      //LATER: handle errors; try catch
       fetch(server, options).then((res) => {
         if (res.ok) {
           console.log("successfully created item in server: ", res);
@@ -187,4 +263,41 @@ async function apiCreateItem(properties, listing) {
   }
 
   console.log("server creation message received: ", properties, listing);
+}
+
+//fetch inventory items
+async function fetchInventoryItems() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = firebase.auth().currentUser;
+
+      //1. validate auth, if unauthenticated -> throw error
+      if (!user) {
+        throw Error(
+          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
+        );
+      }
+
+      //2. validate sub, if not subbed -> throw error
+      await validateSubscription(user);
+
+      let itemRef = await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("items")
+        .orderBy("modified", "desc")
+        .limit(30)
+        .get();
+
+      let items = itemRef.docs.map((doc) => {
+        return doc.data();
+      });
+
+      resolve(items);
+      //3. fetch items
+    } catch (error) {
+      reject(error.message);
+    }
+  });
 }
