@@ -16,6 +16,8 @@ export class ListingConnectComponent implements OnInit {
     marketplace: string;
   };
 
+  error?: string;
+
   recentItems: any[]; //items in inventory (recent 30)
 
   listedMarketplaces: string[][] = []; //iterated property
@@ -28,14 +30,18 @@ export class ListingConnectComponent implements OnInit {
           params.url,
           params.marketplace
         );
-
         this.selectedListing = {
           listingUrl: url,
           listingID: extractedID,
           marketplace: params.marketplace,
         };
       } else {
-        alert('There was an error processing this request. Please try again.');
+        const errorMessage =
+          'There was an error processing this request. Please try again.';
+
+        this.zone.run(() => {
+          this.error = errorMessage;
+        });
       }
     });
   }
@@ -49,6 +55,8 @@ export class ListingConnectComponent implements OnInit {
       { command: 'fetch-inventory-items' },
       (response) => {
         if (response.status == 'success') {
+          this.error = null;
+
           let items = response.message.items; //items
 
           items.map((item: any) => {
@@ -66,8 +74,11 @@ export class ListingConnectComponent implements OnInit {
 
           console.log('items are: ', this.recentItems);
         } else {
-          //TODO: show error message
           console.log(response.message);
+
+          this.zone.run(() => {
+            this.error = response.message;
+          });
         }
       }
     );

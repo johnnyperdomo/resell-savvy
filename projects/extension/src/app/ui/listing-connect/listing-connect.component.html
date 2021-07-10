@@ -31,140 +31,152 @@
     </div>
 
     <!-- List -->
+    <ng-container *ngIf="error; else showItems">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </ng-container>
 
-    <div class="mt-2">
-      <p class="text-muted ml-2 small">Most Recently Updated Items</p>
-      <!-- Products -->
-      <div class="card">
-        <div class="table-responsive mb-0" id="productsList">
-          <table class="table table-sm table-hover card-table">
-            <thead>
-              <tr>
-                <th style="width: 175px"></th>
-                <th scope="col">Item</th>
-                <th scope="col">Status</th>
-                <th scope="col">Price</th>
-                <th scope="col">Date</th>
-                <th colspan="2" scope="col text-right ">Listed On</th>
-              </tr>
-            </thead>
-            <tbody class="list">
-              <tr *ngFor="let item of recentItems">
-                <!-- Select -->
-                <td class="align-items-center">
-                  <!-- LATER: when clicking button, add loading spinner -->
-                  <button class="btn btn-outline-primary">
-                    Connect Listing
-                  </button>
-                </td>
+    <ng-template #showItems>
+      <div class="mt-2">
+        <p class="text-muted ml-2 small">Most Recently Updated Items</p>
+        <!-- Products -->
+        <div class="card">
+          <div class="table-responsive mb-0" id="productsList">
+            <table class="table table-sm table-hover card-table">
+              <thead>
+                <tr>
+                  <th style="width: 175px"></th>
+                  <th scope="col">Item</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Date</th>
+                  <th colspan="2" scope="col text-right ">Listed On</th>
+                </tr>
+              </thead>
+              <tbody class="list">
+                <tr *ngFor="let item of recentItems">
+                  <!-- Select -->
+                  <td class="align-items-center">
+                    <!-- LATER: when clicking button, add loading spinner -->
+                    <button class="btn btn-outline-primary">
+                      Connect Listing
+                    </button>
+                  </td>
 
-                <td class="products-product">
-                  <div class="d-flex align-items-center">
-                    <!-- Image -->
-                    <div class="avatar">
-                      <img
-                        *ngIf="
-                          item.images && item.images.length > 0;
-                          else imagePlaceholder
-                        "
-                        class="avatar-img rounded mr-3"
-                        src="{{ azureStoragePath }}{{ item.images[0].blobID }}"
-                      />
-
-                      <ng-template #imagePlaceholder>
+                  <td class="products-product">
+                    <div class="d-flex align-items-center">
+                      <!-- Image -->
+                      <div class="avatar">
                         <img
+                          *ngIf="
+                            item.images && item.images.length > 0;
+                            else imagePlaceholder
+                          "
                           class="avatar-img rounded mr-3"
-                          src="assets/image-placeholder.png"
+                          src="{{ azureStoragePath }}{{
+                            item.images[0].blobID
+                          }}"
                         />
-                      </ng-template>
-                    </div>
 
-                    <div class="ml-3">
-                      <!-- Title -->
-                      <!-- LATER: make this more responsive: width sizing -->
-                      <h4 class="font-weight-normal mb-1" style="width: 200px">
-                        <span *ngIf="item.title != ''; else untitled">
-                          {{ item.title }}
-                        </span>
-
-                        <ng-template #untitled>
-                          <span>(Untitled)</span>
+                        <ng-template #imagePlaceholder>
+                          <img
+                            class="avatar-img rounded mr-3"
+                            src="assets/image-placeholder.png"
+                          />
                         </ng-template>
-                      </h4>
+                      </div>
 
-                      <!-- SKU -->
-                      <small *ngIf="item.sku" class="text-muted"
-                        >SKU: {{ item.sku }}</small
-                      >
+                      <div class="ml-3">
+                        <!-- Title -->
+                        <!-- LATER: make this more responsive: width sizing -->
+                        <h4
+                          class="font-weight-normal mb-1"
+                          style="width: 200px"
+                        >
+                          <span *ngIf="item.title != ''; else untitled">
+                            {{ item.title }}
+                          </span>
+
+                          <ng-template #untitled>
+                            <span>(Untitled)</span>
+                          </ng-template>
+                        </h4>
+
+                        <!-- SKU -->
+                        <small *ngIf="item.sku" class="text-muted"
+                          >SKU: {{ item.sku }}</small
+                        >
+                      </div>
                     </div>
-                  </div>
-                </td>
+                  </td>
 
-                <!-- Status -->
-                <td>
-                  <span
-                    *ngIf="item.sold; else showStatus"
-                    class="
-                      badge badge-soft-primary
-                      font-weight-bold
-                      text-capitalize
-                    "
-                  >
-                    Sold
-                  </span>
-
-                  <ng-template #showStatus>
+                  <!-- Status -->
+                  <td>
                     <span
-                      class="badge font-weight-bold text-capitalize"
-                      [ngClass]="{
-                        'badge-soft-secondary': item.status === 'draft',
-                        'badge-soft-success': item.status === 'active'
-                      }"
-                      >{{ item.status }}</span
+                      *ngIf="item.sold; else showStatus"
+                      class="
+                        badge badge-soft-primary
+                        font-weight-bold
+                        text-capitalize
+                      "
                     >
-                  </ng-template>
-                </td>
-
-                <!-- Price: with currency pipe modifier: shows currency symbol -->
-                <td class="text-secondary font-weight-bold">
-                  <span *ngIf="item.price; else priceEmpty">
-                    {{ item.price | currency: "USD" }}
-                  </span>
-
-                  <ng-template #priceEmpty>
-                    <span>--</span>
-                  </ng-template>
-                </td>
-
-                <!-- Date; with pipe modifier; converts unix seconds to Date -->
-                <td>
-                  {{
-                    item.modified && item.modified.seconds * 1000
-                      | date: "shortDate"
-                  }}
-                </td>
-
-                <!-- Marketplace Listed On -->
-
-                <td class="text-left">
-                  <div class="avatar-group">
-                    <span
-                      *ngFor="let marketplace of listedMarketplaces[item.id]"
-                      class="avatar avatar-xs"
-                    >
-                      <img
-                        src="assets/marketplace-logos/{{ marketplace }}.png"
-                        class="avatar-img rounded-circle"
-                        alt="{{ marketplace | titlecase }}"
-                      />
+                      Sold
                     </span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+                    <ng-template #showStatus>
+                      <span
+                        class="badge font-weight-bold text-capitalize"
+                        [ngClass]="{
+                          'badge-soft-secondary': item.status === 'draft',
+                          'badge-soft-success': item.status === 'active'
+                        }"
+                        >{{ item.status }}</span
+                      >
+                    </ng-template>
+                  </td>
+
+                  <!-- Price: with currency pipe modifier: shows currency symbol -->
+                  <td class="text-secondary font-weight-bold">
+                    <span *ngIf="item.price; else priceEmpty">
+                      {{ item.price | currency: "USD" }}
+                    </span>
+
+                    <ng-template #priceEmpty>
+                      <span>--</span>
+                    </ng-template>
+                  </td>
+
+                  <!-- Date; with pipe modifier; converts unix seconds to Date -->
+                  <td>
+                    {{
+                      item.modified && item.modified.seconds * 1000
+                        | date: "shortDate"
+                    }}
+                  </td>
+
+                  <!-- Marketplace Listed On -->
+
+                  <td class="text-left">
+                    <div class="avatar-group">
+                      <span
+                        *ngFor="let marketplace of listedMarketplaces[item.id]"
+                        class="avatar avatar-xs"
+                      >
+                        <img
+                          src="assets/marketplace-logos/{{ marketplace }}.png"
+                          class="avatar-img rounded-circle"
+                          alt="{{ marketplace | titlecase }}"
+                        />
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-template>
   </div>
 </div>
