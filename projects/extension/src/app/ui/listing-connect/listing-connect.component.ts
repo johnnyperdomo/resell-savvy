@@ -12,7 +12,7 @@ export class ListingConnectComponent implements OnInit {
   //LATER: show loading spinner while waiting for item to load
   selectedListing: {
     listingUrl: string;
-    listingID: string;
+    extractedID: string;
     marketplace: string;
   };
 
@@ -32,7 +32,7 @@ export class ListingConnectComponent implements OnInit {
         );
         this.selectedListing = {
           listingUrl: url,
-          listingID: extractedID,
+          extractedID: extractedID,
           marketplace: params.marketplace,
         };
       } else {
@@ -48,6 +48,73 @@ export class ListingConnectComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRecentItemsFromInventory();
+  }
+
+  onConnectListing(itemId: string) {
+    console.log(itemId);
+
+    const objectIndex = this.recentItems.findIndex((obj) => obj.id === itemId);
+
+    console.log('obj index: ', objectIndex);
+
+    this.recentItems[objectIndex].marketplaces[
+      this.selectedListing.marketplace
+    ] = {
+      extractedID: this.selectedListing.extractedID,
+      url: this.selectedListing.listingUrl,
+    }; //connect
+
+    this.recentItems.map((item: any) => {
+      //loop over listed marketplaces
+      this.iterateMarketplaces(item);
+    });
+
+    console.log(this.recentItems);
+    //TODO: send to firestore
+
+    chrome.runtime.sendMessage({
+      command: 'firestore-connect-listing',
+      data: {
+        itemId: itemId,
+        marketplace: this.selectedListing.marketplace,
+        extractedID: this.selectedListing.extractedID,
+        url: this.selectedListing.listingUrl,
+      },
+    });
+
+    //LATER: handle actual errors with firestore, if item didn't successfully update; wait for response and show error message
+  }
+
+  onDisconnectListing(itemId: string) {
+    console.log(itemId);
+
+    const objectIndex = this.recentItems.findIndex((obj) => obj.id === itemId);
+
+    console.log('obj index: ', objectIndex);
+
+    this.recentItems[objectIndex].marketplaces[
+      this.selectedListing.marketplace
+    ] = null; //disconnect
+
+    this.recentItems.map((item: any) => {
+      //loop over listed marketplaces
+      this.iterateMarketplaces(item);
+    });
+
+    // //TODO: send to firestore
+    console.log(this.recentItems);
+
+    chrome.runtime.sendMessage({
+      command: 'firestore-disconnect-listing',
+      data: {
+        itemId: itemId,
+        marketplace: this.selectedListing.marketplace,
+        extractedID: this.selectedListing.extractedID,
+        url: this.selectedListing.listingUrl,
+      },
+    });
+
+    //LATER: handle actual errors with firestore, if item didn't successfully update; wait for response and show error message
   }
 
   getRecentItemsFromInventory() {
@@ -95,6 +162,7 @@ export class ListingConnectComponent implements OnInit {
         array.push(marketplace);
       }
     }
+
     this.listedMarketplaces[item.id] = array;
   }
 

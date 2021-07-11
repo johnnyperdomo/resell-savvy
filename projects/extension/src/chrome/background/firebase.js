@@ -170,13 +170,31 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       });
   }
 
+  //connect listing to itme
+  if (msg.command == "firestore-connect-listing") {
+    let itemId = msg.data.itemId;
+    let extractedID = msg.data.extractedID;
+    let marketplace = msg.data.marketplace;
+    let url = msg.data.url;
+    connectListingToItem(itemId, extractedID, marketplace, url);
+    //LATER: wait for actual response, if error is throw, show it to ui
+  }
+
+  //disconnect listing from item
+  if (msg.command == "firestore-disconnect-listing") {
+    let itemId = msg.data.itemId;
+    let marketplace = msg.data.marketplace;
+
+    disconnectListingFromItem(itemId, marketplace);
+    //LATER: wait for actual response, if error is throw, show it to ui
+  }
+
   return true;
 });
 
 //functions ======>
 
 //validate sub
-
 async function validateSubscription(user) {
   try {
     let subs = firebase
@@ -296,6 +314,72 @@ async function fetchInventoryItems() {
 
       resolve(items);
       //3. fetch items
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+}
+
+//firestore connect listing to item
+async function connectListingToItem(itemId, extractedID, marketplace, url) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = firebase.auth().currentUser;
+
+      if (!user) {
+        throw Error(
+          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
+        );
+      }
+
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("items")
+        .doc(itemId)
+        .set(
+          {
+            marketplaces: {
+              [`${marketplace}`]: { extractedID: extractedID, url: url },
+            },
+          },
+          { merge: true }
+        );
+
+      resolve(true);
+    } catch (error) {
+      reject(error.message);
+    }
+  });
+}
+
+//firestore disconnect listing from item
+async function disconnectListingFromItem(itemId, marketplace) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = firebase.auth().currentUser;
+
+      if (!user) {
+        throw Error(
+          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
+        );
+      }
+
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("items")
+        .doc(itemId)
+        .set(
+          {
+            marketplaces: { [`${marketplace}`]: null },
+          },
+          { merge: true }
+        );
+
+      resolve(true);
     } catch (error) {
       reject(error.message);
     }

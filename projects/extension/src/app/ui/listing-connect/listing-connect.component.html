@@ -59,9 +59,31 @@
                   <!-- Select -->
                   <td class="align-items-center">
                     <!-- LATER: when clicking button, add loading spinner -->
-                    <button class="btn btn-outline-primary">
-                      Connect Listing
-                    </button>
+
+                    <ng-container
+                      *ngIf="
+                        listedMarketplaces[item.id].includes(
+                          selectedListing.marketplace
+                        );
+                        else connectButton
+                      "
+                    >
+                      <button
+                        class="btn btn-light"
+                        (click)="onDisconnectListing(item.id)"
+                      >
+                        Disconnect
+                      </button>
+                    </ng-container>
+
+                    <ng-template #connectButton>
+                      <button
+                        class="btn btn-primary"
+                        (click)="onConnectListing(item.id)"
+                      >
+                        Connect Listing
+                      </button>
+                    </ng-template>
                   </td>
 
                   <td class="products-product">
