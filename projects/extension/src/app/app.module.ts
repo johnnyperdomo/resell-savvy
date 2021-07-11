@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PopupComponent } from './ui/popup/popup.component';
-import { CrosslistComponent } from './ui/crosslist/crosslist.component';
+import { ImportComponent } from './ui/import/import.component';
 import { ListingConnectComponent } from './ui/listing-connect/listing-connect.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { PopupSigninComponent } from './ui/popup/popup-signin/popup-signin.component';
@@ -15,7 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     AppComponent,
     PopupComponent,
-    CrosslistComponent,
+    ImportComponent,
     ListingConnectComponent,
     PopupSigninComponent,
     PopupDashboardComponent,

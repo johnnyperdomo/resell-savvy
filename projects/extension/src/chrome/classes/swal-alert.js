@@ -1,6 +1,7 @@
 // sweet alert message popups
 
 //NOTE: use 'var' when declaring class, since it can be redeclared across different scopes
+//LATER: change some of the text of the "imported swal" to importing not crosslisting
 class SwalAlert {
   //when page is loading waiting for dom to be ready
   showPageLoadingAlert() {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CrosslistComponent } from './ui/crosslist/crosslist.component';
+import { ImportComponent } from './ui/import/import.component';
 import { ListingConnectComponent } from './ui/listing-connect/listing-connect.component';
 import { PopupComponent } from './ui/popup/popup.component';
 
@@ -10,8 +10,8 @@ const routes: Routes = [
     component: PopupComponent,
   },
   {
-    path: 'crosslist',
-    component: CrosslistComponent,
+    path: 'import',
+    component: ImportComponent,
   },
   {
     path: 'listing-connect',

@@ -51,11 +51,7 @@ export class ListingConnectComponent implements OnInit {
   }
 
   onConnectListing(itemId: string) {
-    console.log(itemId);
-
     const objectIndex = this.recentItems.findIndex((obj) => obj.id === itemId);
-
-    console.log('obj index: ', objectIndex);
 
     this.recentItems[objectIndex].marketplaces[
       this.selectedListing.marketplace
@@ -68,9 +64,6 @@ export class ListingConnectComponent implements OnInit {
       //loop over listed marketplaces
       this.iterateMarketplaces(item);
     });
-
-    console.log(this.recentItems);
-    //TODO: send to firestore
 
     chrome.runtime.sendMessage({
       command: 'firestore-connect-listing',
@@ -86,11 +79,7 @@ export class ListingConnectComponent implements OnInit {
   }
 
   onDisconnectListing(itemId: string) {
-    console.log(itemId);
-
     const objectIndex = this.recentItems.findIndex((obj) => obj.id === itemId);
-
-    console.log('obj index: ', objectIndex);
 
     this.recentItems[objectIndex].marketplaces[
       this.selectedListing.marketplace
@@ -100,9 +89,6 @@ export class ListingConnectComponent implements OnInit {
       //loop over listed marketplaces
       this.iterateMarketplaces(item);
     });
-
-    // //TODO: send to firestore
-    console.log(this.recentItems);
 
     chrome.runtime.sendMessage({
       command: 'firestore-disconnect-listing',

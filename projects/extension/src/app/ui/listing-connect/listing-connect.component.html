@@ -1,6 +1,6 @@
 <div class="main-content mx-4">
   <div class="container-fluid">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center sticky-top light-bg">
       <div class="col-12">
         <div class="header">
           <div class="header-body">
@@ -60,6 +60,8 @@
                   <td class="align-items-center">
                     <!-- LATER: when clicking button, add loading spinner -->
 
+                    <!-- //LATER: add search field + button, and let user search for item in inventory if the recent;y updated is not enough. s  -->
+
                     <ng-container
                       *ngIf="
                         listedMarketplaces[item.id].includes(
@@ -104,7 +106,7 @@
                         <ng-template #imagePlaceholder>
                           <img
                             class="avatar-img rounded mr-3"
-                            src="assets/image-placeholder.png"
+                            src="../../../assets/image-placeholder.png"
                           />
                         </ng-template>
                       </div>

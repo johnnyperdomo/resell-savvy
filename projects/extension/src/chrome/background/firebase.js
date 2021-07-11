@@ -155,6 +155,20 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     }
   }
 
+  //check auth-and-subscription
+  if (msg.command == "check-auth-and-subscription") {
+    checkAuthSubscription()
+      .then((res) => {
+        response({
+          status: "success",
+          message: "authorized",
+        });
+      })
+      .catch((error) => {
+        response({ status: "error", message: error });
+      });
+  }
+
   //fetch inventory items
   if (msg.command == "fetch-inventory-items") {
     //LATER: try to make this code nicer, maybe use await. I tried, but it failed when i was trying to implement
@@ -281,6 +295,28 @@ async function apiCreateItem(properties, listing) {
   }
 
   console.log("server creation message received: ", properties, listing);
+}
+
+async function checkAuthSubscription() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = firebase.auth().currentUser;
+
+      //1. validate auth, if unauthenticated -> throw error
+      if (!user) {
+        throw Error(
+          "You are not currently logged in. You must be logged in to use ResellSavvy."
+        );
+      }
+
+      //2. validate sub, if not subbed -> throw error
+      await validateSubscription(user);
+
+      resolve(true);
+    } catch (error) {
+      reject(error.message);
+    }
+  });
 }
 
 //fetch inventory items

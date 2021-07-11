@@ -1,0 +1,156 @@
+<div class="main-content mx-4">
+  <div class="container-fluid">
+    <div class="row justify-content-center sticky-top light-bg">
+      <div class="col-12">
+        <div class="header">
+          <div class="header-body">
+            <div class="row align-items-center">
+              <div class="col">
+                <!-- Title -->
+                <h1 class="header-title">⬇️ Import Listings</h1>
+
+                <p class="text-muted mt-3">
+                  Easily import all your listings to your
+
+                  <a
+                    href="https://app.resellsavvy.com/inventory"
+                    target="_blank"
+                  >
+                    <u>inventory dashboard</u>
+                  </a>
+
+                  and keep track of sales, profits, and fees.
+                  <small> (Import up to 20 items at a time)</small>
+
+                  <br />
+
+                  <b>Note:</b> Load your listings in your closet to be able to
+                  import into your dashboard.
+                </p>
+
+                <!-- TODO: {items loaded are}..... -->
+              </div>
+
+              <div class="col-auto">
+                <!-- Button -->
+                <!-- //TODO: button disabled if no items selected -->
+                <button
+                  class="btn btn-primary lift"
+                  [disabled]="selectedListingsToImport.length == 0"
+                  (click)="onImportListing()"
+                >
+                  Import {{ selectedListingsToImport.length }}/20
+                </button>
+              </div>
+            </div>
+            <!-- 
+            //LATER: on list, be able to search items in table and scroll to
+            that specific row. To make it easier to search loaded items see here: https://stackoverflow.com/questions/47616843/how-to-call-scrollintoview-on-an-element-in-angular-2 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List -->
+    <ng-container *ngIf="error; else showItems">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </ng-container>
+
+    <ng-template #showItems>
+      <div class="mt-2">
+        <!-- TODO: {items loaded are}..... -->
+
+        <p class="text-muted ml-2 small">
+          Listings currently loaded ({{ loadedListings.length }})
+        </p>
+        <!-- Products -->
+        <div class="card">
+          <div class="table-responsive mb-0" id="productsList">
+            <table class="table table-sm table-hover card-table">
+              <thead>
+                <tr>
+                  <th style="width: 5px"></th>
+                  <th scope="col">
+                    <!-- LATER: sort alphabetically: https://dashkit.goodthemes.co/docs/components.html#tables -->
+                    Item
+                  </th>
+                </tr>
+              </thead>
+
+              <!-- Body -->
+
+              <tbody class="list">
+                <tr
+                  *ngFor="let item of loadedListings"
+                  (click)="selectListing(item)"
+                  class="pointer"
+                >
+                  <!-- Select -->
+
+                  <td>
+                    <!-- Checkbox: Psuedo: the entire row is already clicked -->
+                    <!-- //LATER: make checkbox prettier -->
+                    <div class="form-check">
+                      <input
+                        class="form-check-input list-checkbox"
+                        type="checkbox"
+                        [checked]="selectedListingsToImport.includes(item)"
+                      />
+                      <label class="form-check-label" for="ordersSelectOne"
+                        >&nbsp;</label
+                      >
+                    </div>
+                  </td>
+
+                  <td class="products-product">
+                    <div class="d-flex align-items-center">
+                      <!-- Image -->
+                      <div class="avatar">
+                        <img
+                          *ngIf="item.image; else imagePlaceholder"
+                          class="avatar-img rounded mr-3"
+                          src="{{ item.image }}"
+                        />
+
+                        <ng-template #imagePlaceholder>
+                          <img
+                            class="avatar-img rounded mr-3"
+                            src="../../../assets/image-placeholder.png"
+                          />
+                        </ng-template>
+                      </div>
+
+                      <div class="ml-3">
+                        <!-- Title -->
+                        <!-- LATER: make this more responsive: width sizing -->
+                        <h4
+                          class="font-weight-normal mb-1"
+                          style="width: 200px"
+                        >
+                          <span
+                            *ngIf="
+                              item.title != '' && item.title != undefined;
+                              else untitled
+                            "
+                          >
+                            {{ item.title }}
+                          </span>
+
+                          <ng-template #untitled>
+                            <span>(Untitled)</span>
+                          </ng-template>
+                        </h4>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
