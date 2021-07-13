@@ -188,7 +188,6 @@ export class InventoryComponent implements OnInit {
 
   onDeleteItem(itemID: string) {
     //LATER: add confirmation step
-    //TODO: firebase delete item
 
     this.auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -210,7 +209,6 @@ export class InventoryComponent implements OnInit {
 
   onMarkItemSold(item: Item) {
     //LATER: delist items automatically later
-    // TODO: modal
 
     this.dialog.open(SoldDialogComponent, {
       data: { item: item },

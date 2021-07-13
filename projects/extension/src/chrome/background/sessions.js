@@ -26,6 +26,34 @@ const marketplaceNewListingFormPaths = {
   poshmark: "https://poshmark.com/create-listing",
 };
 
+function getEditUrlPath(marketplace, listingId) {
+  switch (marketplace) {
+    case "depop":
+      return `https://www.depop.com/products/edit/${listingId}/`;
+
+    case "ebay":
+      return `https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&sellingMode=ReviseItem&lineID=${listingId}`;
+
+    case "etsy":
+      return `https://www.etsy.com/your/shops/me/tools/listings/${listingId}`;
+
+    case "grailed":
+      return `https://www.grailed.com/listings/${listingId}/edit`;
+
+    case "kidizen":
+      return `https://www.kidizen.com/items/${listingId}/edit`;
+
+    case "mercari":
+      return `https://www.mercari.com/sell/edit/${listingId}/`;
+
+    case "poshmark":
+      return `https://poshmark.com/edit-listing/${listingId}`;
+
+    default:
+      return ""; //return empty
+  }
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //LATER: maybe a better way to do this later on?
   if (msg.command == "remove-ebay-active-tab") {
@@ -73,197 +101,60 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("crosslist initiated ", msg.data);
   }
 
-  //Start Crosspost session
-  //TODO: edit this, most likely going to remove
-  if (msg.command == "start-crosslist-session") {
-    let tab = msg.data.tab;
-    let copyToMarketplaces = Array.from(msg.data.copyToMarketplaces);
-    let fromMarketplace = msg.data.copyFromMarketplace;
-    let listingURL = msg.data.listingURL;
-    let itemProperties = msg.data.properties;
+  //get listing data =====>
+  if (msg.command == "start-import-session") {
+    let marketplace = msg.data.marketplace;
+    let listingUrl = msg.data.listingUrl;
+    let listingId = msg.data.listingId;
 
-    console.log("marketplaces, ", copyToMarketplaces);
+    //TODO
+    let editUrl = getEditUrlPath(marketplace, listingId);
+
+    chrome.tabs.create(
+      {
+        url: editUrl,
+        active: false,
+      },
+      (tab) => {
+        let listingObject = {
+          marketplace: marketplace,
+          listingUrl: listingUrl,
+          listingId: listingId,
+          tab: tab,
+        };
+
+        getListingDetails(tab, listingObject, marketplace);
+      }
+    );
+  }
+
+  //import items; after import session is completed
+  if (msg.command == "import-listing") {
+    let tab = msg.data.tab;
+    let marketplace = msg.data.marketplace;
+    let listingURL = msg.data.listingUrl;
+    let itemProperties = msg.data.properties;
+    let listingId = msg.data.listingId; //TODO
+
     //1. Close Tab
     chrome.tabs.remove(tab.id);
 
-    //TODO: if user is crosslisting from inventory or just importing inventory, skip some steps
-
-    //TODO: initilialize after project ready to be launched
     //2. Send Data to firebase cloud function
-    // createItemInServer(
-    //   itemProperties.imageUrls,
-    //   itemProperties.title,
-    //   itemProperties.description,
-    //   itemProperties.sku,
-    //   itemProperties.color,
-    //   itemProperties.brand,
-    //   itemProperties.condition,
-    //   itemProperties.price,
-    //   fromMarketplace,
-    //   listingURL,
-    //   "123423453"
-    // ); //TODO: get real listing id
+    createItemInServer(
+      itemProperties.imageUrls,
+      itemProperties.title,
+      itemProperties.description,
+      itemProperties.sku,
+      itemProperties.color,
+      itemProperties.brand,
+      itemProperties.condition,
+      itemProperties.price,
+      marketplace,
+      listingURL,
+      listingId
+    ); //TODO: get real listing id
 
-    //3. Open marketplace for each item in array
-    copyToMarketplaces.forEach((marketplace) => {
-      createItem(itemProperties, marketplace);
-    }); //TODO
-
-    console.log("message received: ", msg.data);
-  }
-
-  //get listing data =====>
-
-  //depop
-  if (msg.command == "get-listing-from-depop") {
-    //TODO: set data id
-    chrome.tabs.create(
-      {
-        url: "https://www.depop.com/products/edit/johnnyperdomo-nike-limited-edition-shirt/", //TODO: what they will get data from
-        active: false,
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["grailed"],
-          copyFromMarketplace: "depop",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji", //TODO: the actual listing url
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "depop");
-      }
-    );
-  }
-
-  //ebay
-  if (msg.command == "get-listing-from-ebay") {
-    //NOTE: Ebay has two different listing versions, the script checks the version first before manipulating the dom
-    //TODO: set correct data
-    chrome.tabs.create(
-      {
-        url: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList&sellingMode=ReviseItem&ReturnURL=https%3A%2F%2Fwww.ebay.com%2Fsh%2Flst%2Factive&lineID=363389338870",
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["poshmark"],
-          copyFromMarketplace: "ebay",
-          listingURL: "https://www.ebay.com/itm/363389338870", //TODO: the actual listing url
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "ebay");
-      }
-    );
-  }
-
-  //etsy
-  if (msg.command == "get-listing-from-etsy") {
-    //TODO: set data id
-    chrome.tabs.create(
-      {
-        url: "https://www.etsy.com/your/shops/me/tools/listings/1013280995",
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["depop"],
-          copyFromMarketplace: "etsy",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "etsy");
-      }
-    );
-  }
-
-  //grailed
-  if (msg.command == "get-listing-from-grailed") {
-    //TODO: set data id
-    chrome.tabs.create(
-      {
-        url: "https://www.grailed.com/listings/21859004/edit",
-        active: false,
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["ebay"],
-          copyFromMarketplace: "grailed",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "grailed");
-      }
-    );
-  }
-
-  //kidizen
-  if (msg.command == "get-listing-from-kidizen") {
-    //TODO: set data id
-    chrome.tabs.create(
-      {
-        url: "https://www.kidizen.com/items/memoji-sticker-8376797/edit",
-        active: false,
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["grailed"],
-          copyFromMarketplace: "kidizen",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "kidizen");
-      }
-    );
-  }
-
-  //mercari
-  if (msg.command == "get-listing-from-mercari") {
-    //TODO: set data id
-    chrome.tabs.create(
-      {
-        url: "https://www.mercari.com/sell/edit/m51684724871/",
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: ["ebay"],
-          copyFromMarketplace: "mercari",
-          listingURL: "https://www.grailed.com/listings/21859004-adidas-memoji",
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "mercari");
-      }
-    );
-  }
-
-  //poshmark
-  if (msg.command == "get-listing-from-poshmark") {
-    //TODO: set data id
-
-    chrome.tabs.create(
-      {
-        url: "https://poshmark.com/edit-listing/609710852b46b502a60b0194",
-      },
-      (tab) => {
-        let retrievalObject = {
-          copyToMarketplaces: [
-            "depop",
-            "grailed",
-            "etsy",
-            "mercari",
-            "kidizen",
-          ],
-          copyFromMarketplace: "poshmark",
-          listingURL:
-            "https://poshmark.com/listing/Nike-Shoes-609710852b46b502a60b0194",
-          tab: tab,
-        };
-
-        getListingDetails(tab, retrievalObject, "poshmark");
-      }
-    );
+    console.log("imported item: ", msg.data);
   }
 });
 
@@ -324,7 +215,6 @@ function injectScriptInNewTab(tab, data, marketplace) {
 }
 
 //Functions ====>
-
 function createItemInServer(
   imageUrls,
   title,
@@ -356,33 +246,27 @@ function createItemInServer(
   }; //NOTE: don't edit keys, modeled after api
 
   apiCreateItem(properties, listing); //file: firebase.js
-
-  console.log("called server from session.js; ");
 }
 
 function getListingDetails(tab, data, marketplace) {
-  const retrievalObject = JSON.stringify(data);
-
-  console.log("get script injected");
+  const listingObject = JSON.stringify(data);
 
   chrome.tabs.executeScript(
     tab.id,
     {
-      file: `third-party/jquery-3.6.0.min.js`,
+      file: `chrome/third-party/jquery-3.6.0.min.js`,
       runAt: "document_start",
     },
     () => {
       chrome.tabs.executeScript(
         tab.id,
         {
-          //TODO: pass data in here
-          //TODO: not really working
-          code: `const retrievalObject = ${retrievalObject};`,
+          code: `const listingObject = ${listingObject};`,
           runAt: "document_start",
         },
         () => {
           chrome.tabs.executeScript(tab.id, {
-            file: `marketplaces/get-item/${marketplace}-edit.js`,
+            file: `chrome/marketplaces/get-item/${marketplace}-edit.js`,
             runAt: "document_start",
           });
         }
@@ -426,7 +310,6 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   }
 });
 
-//TODO: on crosslist popup, let user sort by 1)'name'a-z,z-a, or 2) first/last,
 //LATER: later on crosslist modal, add search functionality, when they user starts typing, it goes to the row of what the text is, so if he types "adida", go to the 5th row where that word is that. Find row # and go there, if no row # found, don't go anywhere, but don't filter out results, that way it doesn't make it hard to find the list items that follow, ,  - let users know they can only see or search for items that have been loaded when clicking on the modal(load more to see more)
 
 //NOTE: when showing crosslist modal, don't run a query to compare if user has already crosslisted or if they have that item in their inventory. I've done the research and this can get very expensive, very fast, since this can fetch multiple times. They can do the work themselves of seeing which items need to be imported or not, or which ones have been crosslisted.

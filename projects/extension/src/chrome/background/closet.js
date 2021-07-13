@@ -22,10 +22,20 @@ function injectClosetScript(tabId, marketplace) {
       runAt: "document_start", //run at document start to inject first
     },
     () => {
-      chrome.tabs.executeScript(tabId, {
-        file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
-        runAt: "document_end", //inject when dom is interactive
-      });
+      chrome.tabs.executeScript(
+        tabId,
+        {
+          //to have tabId variable in the content script
+          code: `window.tabId = ${tabId}`,
+          runAt: "document_start",
+        },
+        () => {
+          chrome.tabs.executeScript(tabId, {
+            file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
+            runAt: "document_end", //inject when dom is interactive
+          });
+        }
+      );
     }
   );
 }

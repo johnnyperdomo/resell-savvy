@@ -132,7 +132,6 @@ async function uploadImages(images, targetElement) {
 
 //detect if document is ready
 document.onreadystatechange = function () {
-  //TODO: after swal working
   //doc tree is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting;

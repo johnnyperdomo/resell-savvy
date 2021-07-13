@@ -148,7 +148,6 @@ function _removeHttp(url) {
 }
 
 //all image fetch requests should be passed through this proxy, which is a firebase cloud function, in order to bypass cors error on the browser
-// TODO: get prod version
 const _corsProxy =
   "https://us-central1-resell-savvy.cloudfunctions.net/corsanywhere/";
 

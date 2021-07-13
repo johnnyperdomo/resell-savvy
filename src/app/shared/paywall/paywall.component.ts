@@ -91,7 +91,7 @@ export class PaywallComponent implements OnInit {
         });
 
         const sessionId = checkoutSession.data.id;
-        //TODO: loading spinner
+        //LATER: loading spinner
 
         (await this.stripe).redirectToCheckout({ sessionId: sessionId });
       } else if (this.subscriptionStatus === 'new') {

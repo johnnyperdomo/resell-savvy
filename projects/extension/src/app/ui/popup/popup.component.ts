@@ -67,7 +67,7 @@ export class PopupComponent implements OnInit {
 //           animation: redraw 1s linear infinite;
 //         }
 //       `);
-//       //FIX: adopted style sheets don't seem to work
+//       //LATER: //FIX: adopted style sheets don't seem to work
 //       document.adoptedStyleSheets = [
 //         ...document.adoptedStyleSheets,
 //         fontFaceSheet,

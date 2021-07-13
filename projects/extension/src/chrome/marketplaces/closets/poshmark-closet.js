@@ -1,14 +1,6 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 
-function openModal() {
-  const cardInfo = getCardInfo();
-
-  //TODO: open modal
-  let src = chrome.extension.getURL("index.html?#/import");
-  swalAlert.showModalIframes(src);
-}
-
 function createCrossListButton() {
   var findHost = document.querySelectorAll(".rs-crosslist-host-element");
 
@@ -40,12 +32,11 @@ function createCrossListButton() {
 
 createCrossListButton();
 
-function getCardInfo() {
+function getLoadedListings() {
   var parsedArray = [];
   var items = document.querySelectorAll(".tile .card");
 
   items.forEach((item) => {
-    let listingID = $(item).find("a").attr("data-et-prop-listing_id");
     var imageURL = $(item).find(".img__container img").attr("src");
     var title = $(item)
       .find(".item__details .title__condition__container a")
@@ -65,13 +56,14 @@ function getCardInfo() {
 
     const parsedData = {
       title: title,
-      thumbnailURL: imageURL,
-      listingURL: listingURL,
-      listingID: listingID,
+      image: imageURL,
+      url: listingURL,
     };
 
     parsedArray.push(parsedData);
   });
+
+  console.log(parsedArray);
 
   return parsedArray;
 }
@@ -92,3 +84,24 @@ function getCardInfo() {
 // observer.observe(document.body, {
 //   childList: true,
 // });
+
+function openModal() {
+  let marketplace = "poshmark";
+  let tabId = window.tabId; //injected
+
+  let query = "?" + `marketplace=${marketplace}&tabId=${tabId}`;
+  let src = chrome.extension.getURL("index.html?#/import") + query;
+
+  swalAlert.showModalIframes(src);
+}
+
+//listen for message from the import listings iframe modal.
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "get-listings") {
+    sendResponse({
+      data: {
+        listings: getLoadedListings(),
+      },
+    });
+  }
+});

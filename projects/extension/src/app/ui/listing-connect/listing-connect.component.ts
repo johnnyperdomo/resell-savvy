@@ -48,6 +48,11 @@ export class ListingConnectComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRecentItemsFromInventory();
+
+    //TODO:test
+    chrome.runtime.sendMessage({ command: 'depop-tester' }, (response) => {
+      console.log('got message from script back depop tester: ', response);
+    });
   }
 
   onConnectListing(itemId: string) {

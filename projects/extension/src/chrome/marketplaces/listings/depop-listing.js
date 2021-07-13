@@ -29,7 +29,7 @@ function createLinkButton() {
   root.appendChild(button);
 }
 
-function onLinkBtnPressed() {
+async function onLinkBtnPressed() {
   //LATER: currently using this method to verify if content script is in listing url page, bcuz in spa applications, page isn't reloaded, so content script isn't removed. Which can leak the listing button to another page.
   //LATER: //FIX: fix leaking blue corner buttons on other pages, recheck observer
 
@@ -40,9 +40,20 @@ function onLinkBtnPressed() {
   }
 
   let marketplace = "depop";
-  let query = "?" + `marketplace=${marketplace}&url=${windowURL}`;
+ 
+
+  let query =
+    "?" + `marketplace=${marketplace}&url=${windowURL}`;
 
   let src = chrome.extension.getURL("index.html?#/listing-connect") + query;
+
+  // //TODO: this code is just to test
+  // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  //   var myTabId = tabs[0].id;
+  //   chrome.tabs.sendMessage(myTabId, { text: "hi" }, function (response) {
+  //     alert(response);
+  //   });
+  // });
 
   swalAlert.showModalIframes(src);
 }
@@ -71,3 +82,41 @@ function unlinkItemFromListing(id) {
 }
 
 createLinkButton();
+
+// chrome.runtime.onMessage.addListener((msg, sender, response) => {
+//   //check user authentication
+//   if (msg.command == "depop-tester") {
+//     console.log(
+//       "content script called in depop!!!!!!!!!!! from iframe listing connect"
+//     );
+//     response(
+//       "this is a messge from the depop tester into the iframe listing connect"
+//     );
+//   }
+// });
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log(
+    sender.tab
+      ? "from a content script:" + sender.tab.url
+      : "from the extension"
+  );
+  if (request.greeting === "hello") sendResponse({ farewell: "goodbye" });
+});
+
+// function getCurrentTabId() {
+//   var tabId = "";
+//   let [tab] = await chrome.tabs.getCurrent();
+
+//   await chrome.tabs.getCurrent((tab) => {
+//     tabId = tab.id;
+//   });
+
+//   return tabId;
+// }
+
+// async function getCurrentTab() {
+//   let queryOptions = { active: true, currentWindow: true };
+//   let [tab] = await chrome.tabs.query(queryOptions);
+//   return tab;
+// }

@@ -27,13 +27,11 @@
                   <b>Note:</b> Load your listings in your closet to be able to
                   import into your dashboard.
                 </p>
-
-                <!-- TODO: {items loaded are}..... -->
               </div>
 
               <div class="col-auto">
                 <!-- Button -->
-                <!-- //TODO: button disabled if no items selected -->
+                <!-- //LATER: if user clicks import button, add like a success button that lets them know it will start importing -->
                 <button
                   class="btn btn-primary lift"
                   [disabled]="selectedListingsToImport.length == 0"
@@ -47,6 +45,10 @@
             //LATER: on list, be able to search items in table and scroll to
             that specific row. To make it easier to search loaded items see here: https://stackoverflow.com/questions/47616843/how-to-call-scrollintoview-on-an-element-in-angular-2 -->
           </div>
+
+          <p class="text-muted mt-2 small">
+            Listings currently loaded ({{ loadedListings.length }})
+          </p>
         </div>
       </div>
     </div>
@@ -58,13 +60,9 @@
       </div>
     </ng-container>
 
+    <!-- //LATER: if list empty, show message saying "no data" -->
     <ng-template #showItems>
-      <div class="mt-2">
-        <!-- TODO: {items loaded are}..... -->
-
-        <p class="text-muted ml-2 small">
-          Listings currently loaded ({{ loadedListings.length }})
-        </p>
+      <div>
         <!-- Products -->
         <div class="card">
           <div class="table-responsive mb-0" id="productsList">

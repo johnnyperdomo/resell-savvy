@@ -1,14 +1,6 @@
 var swalAlert = new SwalAlert();
 var domEvent = new DomEvent();
 
-function openModal() {
-  const cardInfo = getCardInfo();
-
-  //TODO: open modal
-  let src = chrome.extension.getURL("index.html?#/import");
-  swalAlert.showModalIframes(src);
-}
-
 function createCrossListButton() {
   var findHost = document.querySelectorAll(".rs-crosslist-host-element");
 
@@ -40,7 +32,7 @@ function createCrossListButton() {
 
 createCrossListButton();
 
-function getCardInfo() {
+function getLoadedListings() {
   var parsedArray = [];
 
   var items = document.querySelectorAll(".Item");
@@ -60,12 +52,34 @@ function getCardInfo() {
 
     const parsedData = {
       title: title,
-      thumbnailURL: imageURL,
-      listingURL: listingURL,
+      image: imageURL,
+      url: listingURL,
     };
 
     parsedArray.push(parsedData);
   });
 
+  console.log(parsedArray);
   return parsedArray;
 }
+
+function openModal() {
+  let marketplace = "kidizen";
+  let tabId = window.tabId; //injected
+
+  let query = "?" + `marketplace=${marketplace}&tabId=${tabId}`;
+  let src = chrome.extension.getURL("index.html?#/import") + query;
+
+  swalAlert.showModalIframes(src);
+}
+
+//listen for message from the import listings iframe modal.
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "get-listings") {
+    sendResponse({
+      data: {
+        listings: getLoadedListings(),
+      },
+    });
+  }
+});

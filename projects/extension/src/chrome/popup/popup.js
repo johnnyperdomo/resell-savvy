@@ -5,8 +5,6 @@
 
 //LATER: have forgot password button
 
-//TODO: add script for resellsavvy
-
 let loggedIn = false;
 let isSubscriptionValid = false;
 

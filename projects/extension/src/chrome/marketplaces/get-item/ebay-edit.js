@@ -37,10 +37,10 @@ async function getItemDetails(version) {
     const properties = await formatItemPropertiesVersionOne();
 
     const data = {
-      copyToMarketplaces: retrievalObject.copyToMarketplaces,
-      copyFromMarketplace: retrievalObject.copyFromMarketplace,
-      listingURL: retrievalObject.listingURL,
-      tab: retrievalObject.tab,
+      marketplace: listingObject.marketplace,
+      listingUrl: listingObject.listingUrl,
+      listingId: listingObject.listingId,
+      tab: listingObject.tab,
       properties: properties,
     };
     console.log("data from version one, ", data);
@@ -50,10 +50,10 @@ async function getItemDetails(version) {
     const properties = await formatItemPropertiesVersionTwo();
 
     const data = {
-      copyToMarketplaces: retrievalObject.copyToMarketplaces,
-      copyFromMarketplace: retrievalObject.copyFromMarketplace,
-      listingURL: retrievalObject.listingURL,
-      tab: retrievalObject.tab,
+      marketplace: listingObject.marketplace,
+      listingUrl: listingObject.listingUrl,
+      listingId: listingObject.listingId,
+      tab: listingObject.tab,
       properties: properties,
     };
     console.log("data from version two, ", data);
@@ -64,7 +64,7 @@ async function getItemDetails(version) {
 
 function sendMessageToBackground(data) {
   chrome.runtime.sendMessage({
-    command: "start-crosslist-session",
+    command: "import-listing",
     data: data,
   });
 }
@@ -105,7 +105,7 @@ async function formatItemPropertiesVersionOne() {
     .find("body")[0].innerText;
   let ebay_brand = $("input[fieldname='Brand']").val();
   let ebay_condition = $("select[name='itemCondition']").val();
-  let ebay_price = $("#binPrice").val(); //TODO: check ebay to see what would it be for an auction listing
+  let ebay_price = $("#binPrice").val(); //LATER: check ebay to see what would it be for an auction listing
   let ebay_sku = $("#editpane_skuNumber").val();
 
   console.log(ebay_description);

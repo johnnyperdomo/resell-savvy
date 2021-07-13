@@ -63,7 +63,7 @@ async function fillOutPoshmarkForm(
   //LATER: maybe add msrp input,
 
   //listPrice
-  //TODO: round up, posh dont accept decimals
+  //LATER, //FIX: round up, posh dont accept decimals
   $(poshmark_listingPrice).trigger("focus");
   domEvent.fillInputValue(poshmark_listingPrice, listPrice);
   $(poshmark_listingPrice).trigger("blur");

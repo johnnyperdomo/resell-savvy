@@ -162,7 +162,7 @@ class SwalAlert {
     Swal.fire({
       showConfirmButton: false,
       grow: "column", //only grow to window height
-      padding: "0", //FIX: try to find a way to make padding be actually be 0 on the iframe content, because it doesn't take the full popup window
+      padding: "0", //FIX //LATER: try to find a way to make padding be actually be 0 on the iframe content, because it doesn't take the full popup window
       background: "#f9fbfd", //light color
       width: "85%",
       html: `<iframe width="100%" height="100%" src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`,

@@ -1,15 +1,6 @@
 var domEvent = new DomEvent();
 var swalAlert = new SwalAlert();
 
-function openModal() {
-  const cardInfo = getCardInfo();
-
-  //TODO: open modal
-  let src = chrome.extension.getURL("index.html?#/import");
-
-  swalAlert.showModalIframes(src);
-}
-
 function createCrossListButton() {
   var findHost = document.querySelectorAll(".rs-crosslist-host-element");
 
@@ -39,7 +30,7 @@ function createCrossListButton() {
   root.appendChild(button);
 }
 
-function getCardInfo() {
+function getLoadedListings() {
   var parsedArray = [];
 
   var items = document.querySelectorAll(
@@ -61,12 +52,15 @@ function getCardInfo() {
     }
 
     const parsedData = {
-      thumbnailURL: imageURL,
-      listingURL: listingURL,
+      title: "", //NOTE: depop listings don't have a title
+      image: imageURL,
+      url: listingURL,
     };
 
     parsedArray.push(parsedData);
   });
+
+  console.log(parsedArray);
 
   return parsedArray;
 }
@@ -80,3 +74,24 @@ domEvent.waitForElementToDisplay(
   1000,
   30000
 );
+
+function openModal() {
+  let marketplace = "depop";
+  let tabId = window.tabId; //injected
+
+  let query = "?" + `marketplace=${marketplace}&tabId=${tabId}`;
+  let src = chrome.extension.getURL("index.html?#/import") + query;
+
+  swalAlert.showModalIframes(src);
+}
+
+//listen for message from the import listings iframe modal.
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "get-listings") {
+    sendResponse({
+      data: {
+        listings: getLoadedListings(),
+      },
+    });
+  }
+});

@@ -49,10 +49,10 @@ async function getItemDetails() {
   const properties = await formatItemProperties();
 
   const data = {
-    copyToMarketplaces: retrievalObject.copyToMarketplaces,
-    copyFromMarketplace: retrievalObject.copyFromMarketplace,
-    listingURL: retrievalObject.listingURL,
-    tab: retrievalObject.tab,
+    marketplace: listingObject.marketplace,
+    listingUrl: listingObject.listingUrl,
+    listingId: listingObject.listingId,
+    tab: listingObject.tab,
     properties: properties,
   };
   console.log(data);
@@ -62,7 +62,7 @@ async function getItemDetails() {
 
 function sendMessageToBackground(data) {
   chrome.runtime.sendMessage({
-    command: "start-crosslist-session",
+    command: "import-listing",
     data: data,
   });
 }
