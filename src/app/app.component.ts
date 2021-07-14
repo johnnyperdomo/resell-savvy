@@ -13,7 +13,7 @@ import { NavigationStart, Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'reseller-savvy';
+  title = 'resell-savvy';
 
   constructor(
     private router: Router,

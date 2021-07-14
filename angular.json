@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "reseller-savvy": {
+    "resell-savvy": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/reseller-savvy",
+            "outputPath": "dist/resell-savvy",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -73,18 +73,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "reseller-savvy:build"
+            "browserTarget": "resell-savvy:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "reseller-savvy:build:production"
+              "browserTarget": "resell-savvy:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "reseller-savvy:build"
+            "browserTarget": "resell-savvy:build"
           }
         },
         "test": {
@@ -117,11 +117,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "reseller-savvy:serve"
+            "devServerTarget": "resell-savvy:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "reseller-savvy:serve:production"
+              "devServerTarget": "resell-savvy:serve:production"
             }
           }
         },
@@ -257,5 +257,5 @@
       }
     }
   },
-  "defaultProject": "reseller-savvy"
+  "defaultProject": "resell-savvy"
 }

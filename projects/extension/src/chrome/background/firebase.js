@@ -13,7 +13,7 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
 
     firebaseConfig = {
       apiKey: "AIzaSyAbbTWPL-KsWsYT18EDJMNq4fhYwQL-kFY",
-      authDomain: "reseller-savvy-dev.firebaseapp.com",
+      authDomain: "resell-savvy-dev.firebaseapp.com",
       projectId: "reseller-savvy-dev",
       storageBucket: "reseller-savvy-dev.appspot.com",
       messagingSenderId: "51437845156",
