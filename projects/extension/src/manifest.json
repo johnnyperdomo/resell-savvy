@@ -13,8 +13,8 @@
     "activeTab",
     "background",
     "tabs",
+    "webNavigation",
     "management",
-    "cookies",
     "*://*.resellsavvy.com/*",
     "*://*.ebay.com/*",
     "*://*.etsy.com/*",
@@ -38,7 +38,7 @@
       "matches": ["https://bulkedit.ebay.com/*"],
       "js": [
         "chrome/third-party/jquery-3.6.0.min.js",
-        "chrome/marketplaces/new-item/bulkedit-iframe.js"
+        "chrome/marketplaces/new-item/ebay-bulkedit-iframe.js"
       ],
       "all_frames": true
     },

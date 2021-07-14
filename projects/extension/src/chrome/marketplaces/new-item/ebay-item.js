@@ -1,20 +1,22 @@
+//script can be injected multiple times, so we just want to make sure that it is injected once.
 if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
   window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG = true;
 
   var domEvent = new DomEvent();
-  var swalAlert = new SwalAlert();
+  // var swalAlert = new SwalAlert();
   var helpers = new Helpers();
   var imageRenderer = new ImageRenderer();
 
   //LATER: some inputs only exist on certain categories, before inputing, make sure input exists if available, if so then apply input
 
   document.onreadystatechange = function () {
+    //LATER: //FIX: error is given with swalAlert on ebay listing page
     if (document.readyState === "interactive") {
-      swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+      //  swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
     }
 
     if (document.readyState === "complete") {
-      swalAlert.closeSwal(); //close modal: //NOTE: processing alert stops ebay from uploading images for some reason, so don't show processing swal. maybe later try to fix this: //LATER
+      //  swalAlert.closeSwal(); //close modal: //NOTE: processing alert stops ebay from uploading images for some reason, so don't show processing swal. maybe later try to fix this: //LATER
 
       //Ebay listing version 1; look for subtitle, which is unique from the bulksell title search bar
       domEvent.waitForElementToDisplay(
@@ -34,6 +36,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
         function () {
           console.log("detected ebay v2");
           getItemDetails("two");
+
           removeEbayActiveTab(); //to stop watching this tab
         },
         100,
@@ -159,6 +162,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
       let conditionValue = formatConditionVersionOne(condition);
 
       //LATER: //FIX: I don't think the condition is being passed into preview(not being detected?), maybe we should press it later on.
+
       $(ebay_condition).trigger("focus");
       $(ebay_condition).val(conditionValue).trigger("change");
       $(ebay_condition).trigger("blur");
@@ -208,7 +212,9 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
 
     //LATER: maybe you can use xpath query selectors for some of them: for ebay, since the data changes.
 
-    let ebay_image_input = document.querySelector("input[type='file']");
+    let ebay_image_input = document.querySelector(
+      "input[type='file'][id='fehelix-uploader']"
+    ); //specify which input
     let ebay_title = document.querySelector("input[name='title']");
     let ebay_sku = document.querySelector("input[name='customLabel']");
     let ebay_price = document.querySelector("input[name='price']");
@@ -222,6 +228,7 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
 
     //images
     console.log("ebay images: ", imageUrls);
+    console.log("ebay input detector is: ", ebay_image_input);
     await uploadImages(imageUrls, ebay_image_input);
 
     //title
@@ -251,6 +258,8 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
     $(ebay_price).trigger("blur");
 
     //brand
+    //FIX: sometimes if the listing is autofilled by ebay, some of the attributes won't be present. so make an edge case for when item is autofilled, try to find attributes another way
+
     if (brand) {
       let item_specifics_edit_button = document.querySelector(
         "button[_track*='ATTRIBUTES'].edit-button"
@@ -444,4 +453,6 @@ if (!window.RS_EBAY_SCRIPT_ALREADY_INJECTED_FLAG) {
       resolve();
     });
   }
+  // } else {
+  //   console.log("exit out - script already detected");
 }

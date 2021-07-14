@@ -29,7 +29,7 @@ async function onCrosslistBtnPressed() {
     //let user select marketplaces to crosslist to; swal
     let crosslistTo = await selectMarketplaces();
 
-    if (!crosslistTo || !itemDetails) {
+    if (!itemDetails) {
       throw Error(
         "There was a problem while processing this listing, please refresh the page and try again."
       );

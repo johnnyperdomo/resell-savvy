@@ -10,7 +10,6 @@ async function enterEbayItemTitle() {
 
   //can't manipulate dom from iframe - inject a seperate script from manifest.json, and then send a message to iframe with data
   let iframe = document.querySelector("iframe[name='findprod_iframe']");
-  console.log("iframe: ", iframe);
 
   iframe.contentWindow.postMessage(
     {
@@ -62,19 +61,3 @@ document.onreadystatechange = function () {
     enterEbayItemTitle(itemData.title);
   }
 };
-
-// {
-//     "matches": [
-//       "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList*",
-//       "https://www.ebay.com/lstng*"
-//     ],
-//     "js": [
-//       "third-party/jquery-3.6.0.min.js",
-//       "marketplaces/new-item/ebay-item.js"
-//     ],
-//     "all_frames": true
-//   },
-
-// let autocompleteList = await domEvent.waitForElementToLoad(
-//   'div[id="w0-find-product-search-bar-autocomplete"] ul > li'
-// );

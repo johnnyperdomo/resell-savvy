@@ -56,37 +56,27 @@ function getEditUrlPath(marketplace, listingId) {
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   //LATER: maybe a better way to do this later on?
+  //TODO: add on
   if (msg.command == "remove-ebay-active-tab") {
-    console.log("remove ebay active tab called", msg.data);
+    let tabId = msg.data.tab.id;
 
-    let tabId = msg.data.tab;
-
-    if (
-      ebaySetListingActiveTabs.hasOwnProperty(tabId) &&
-      ebaySetListingActiveTabs[tabId].stage === "form"
-    ) {
+    if (ebaySessionTabs.hasOwnProperty(tabId)) {
       //remove tabId from object
-      delete ebaySetListingActiveTabs[tabId];
+      delete ebaySessionTabs[tabId];
 
-      console.log(
-        "removed listing active tabs for ebay, ",
-        ebaySetListingActiveTabs
-      );
+      console.log("removed listing active tabs for ebay, ", ebaySessionTabs);
     }
   }
 
-  //let the browser know in what stage the ebay creation multiprocess listing in, 'title', or 'form'
+  //let the browser know in what stage the ebay creation multiprocess listing in, 'title', or 'form'. basically step 1 -> step 2
   if (msg.command == "update-ebay-active-tab-stage") {
     let stage = msg.data.stage;
     let tabId = msg.data.tab.id;
 
-    console.log("before: ", ebaySetListingActiveTabs);
-
-    ebaySetListingActiveTabs[tabId].stage = stage;
+    ebaySessionTabs[tabId].stage = stage;
 
     console.log(tabId, stage);
-    console.log("update tab listing stage", msg.data);
-    console.log("after: ", ebaySetListingActiveTabs);
+    console.log("after: ", ebaySessionTabs);
   }
 
   //Crosslist Item
@@ -97,8 +87,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     copyToMarketplaces.forEach((marketplace) => {
       createItem(itemProperties, marketplace);
     });
-
-    console.log("crosslist initiated ", msg.data);
   }
 
   //get listing data =====>
@@ -107,7 +95,6 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     let listingUrl = msg.data.listingUrl;
     let listingId = msg.data.listingId;
 
-    //TODO
     let editUrl = getEditUrlPath(marketplace, listingId);
 
     chrome.tabs.create(
@@ -134,7 +121,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     let marketplace = msg.data.marketplace;
     let listingURL = msg.data.listingUrl;
     let itemProperties = msg.data.properties;
-    let listingId = msg.data.listingId; //TODO
+    let listingId = msg.data.listingId;
 
     //1. Close Tab
     chrome.tabs.remove(tab.id);
@@ -152,9 +139,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       marketplace,
       listingURL,
       listingId
-    ); //TODO: get real listing id
-
-    console.log("imported item: ", msg.data);
+    );
   }
 });
 
@@ -171,7 +156,7 @@ function createItem(properties, marketplace) {
       switch (marketplace) {
         case "ebay":
           injectScriptInNewTab(tab, properties, "ebay-bulksell");
-          ebaySetListingActiveTabs[tab.id] = { stage: "title", properties };
+          ebaySessionTabs[tab.id] = { stage: "title", properties };
 
           break;
 
@@ -188,7 +173,7 @@ function injectScriptInNewTab(tab, data, marketplace) {
   data["tab"] = tab; //add tab properties to data object
   var itemData = JSON.stringify(data);
 
-  console.log("script inject");
+  console.log("script injected: ", data, marketplace);
 
   chrome.tabs.executeScript(
     tab.id,
@@ -197,6 +182,7 @@ function injectScriptInNewTab(tab, data, marketplace) {
       runAt: "document_start",
     },
     () => {
+      console.log("script execute 1 completed");
       chrome.tabs.executeScript(
         tab.id,
         {
@@ -204,6 +190,8 @@ function injectScriptInNewTab(tab, data, marketplace) {
           runAt: "document_start",
         },
         () => {
+          console.log("script execute 2 completed => 3");
+
           chrome.tabs.executeScript(tab.id, {
             file: `chrome/marketplaces/new-item/${marketplace}-item.js`,
             runAt: "document_start",
@@ -275,38 +263,30 @@ function getListingDetails(tab, data, marketplace) {
   );
 }
 
-//listen to active ebay tabs
-var ebaySetListingActiveTabs = {};
+//listen to active ebay tabs = {123: {stage: 'title', properties: properties}}
+var ebaySessionTabs = {};
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log("active tabs get, ", ebaySetListingActiveTabs);
-  console.log("tab info:", tab);
-
   //if this is an active ebay tab, and, if the tab is at the ('form' - stage), inject script in tab that fills in ebay form
   if (
-    ebaySetListingActiveTabs.hasOwnProperty(tabId) &&
-    ebaySetListingActiveTabs[tabId].stage === "form"
+    ebaySessionTabs.hasOwnProperty(tabId) &&
+    ebaySessionTabs[tabId].stage === "form"
   ) {
     console.log("this tab is active, script will be inject into tab:", tabId);
-    let data = ebaySetListingActiveTabs[tabId];
+    let data = ebaySessionTabs[tabId];
 
-    injectScriptInNewTab(tabId, data, "ebay");
+    injectScriptInNewTab(tab, data, "ebay");
   }
 });
 
 //listen to ebay tabs that were removed
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   //ebay active tab is removed on script completion or tab removal, whichever comes first
-  console.log("tab removed: ", tabId, removeInfo);
 
-  if (ebaySetListingActiveTabs.hasOwnProperty(tabId)) {
+  if (ebaySessionTabs.hasOwnProperty(tabId)) {
     //remove tabId from object
-    delete ebaySetListingActiveTabs[tabId];
-
-    console.log(
-      "new get listing active tabs for ebay, ",
-      ebaySetListingActiveTabs
-    );
+    delete ebaySessionTabs[tabId];
+    console.log("removed ebay tab: ", tabId, removeInfo);
   }
 });
 
