@@ -3,13 +3,10 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
     uglify: {
-      //distort variable names
+      //just remove comments, but don't distort variable names, as this can cause app review to take longer by chrome extension
       options: {
-        mangle: {
-          properties: false, //can cause scope error with redeclared variable names
-          toplevel: false, //can cause scope error with redeclared variable names
-          reserved: ["operation", "jQuery", "$"], // Exclude mangling specific names.
-        },
+        mangle: false,
+        preserveComments: true,
       },
       //uglify chrome extension files
       build: {

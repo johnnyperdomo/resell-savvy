@@ -1,7 +1,7 @@
 {
   "name": "ResellSavvy - Crosslisting tool for sellers",
   "version": "1",
-  "description": "Crosslisting tool for sellers",
+  "description": "Crosslisting and inventory management tool for online sellers.",
   "icons": {
     "16": "assets/icons/icon-16.png",
     "48": "assets/icons/icon-48.png",
@@ -9,11 +9,9 @@
   },
   "permissions": [
     "storage",
-    "declarativeContent",
     "activeTab",
     "background",
     "tabs",
-    "webNavigation",
     "management",
     "*://*.resellsavvy.com/*",
     "*://*.ebay.com/*",
@@ -25,7 +23,6 @@
     "*://*.grailed.com/*",
     "*://*.poshmark.com/*",
     "*://www.picupload.ebay.com/*",
-    "*://localhost:*/*",
     "*://app.resellsavvy.com/*"
   ],
 
@@ -74,7 +71,6 @@
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*",
-        "*://localhost:*/*",
         "*://app.resellsavvy.com/*"
       ],
       "run_at": "document_start",
