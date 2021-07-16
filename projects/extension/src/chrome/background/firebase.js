@@ -3,6 +3,9 @@
 //TODO: //FIX
 
 // Your web app's Firebase configuration
+
+// NOTE: Firestore not working in chrome extension V3: https://groups.google.com/a/chromium.org/g/chromium-extensions/c/t4i7PRxBtrM/m/ARZip9XIAQAJ
+
 var firebaseConfig = {};
 var firebaseServerUrl = "";
 
@@ -109,51 +112,24 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     let user = firebase.auth().currentUser;
 
     if (user) {
-      let subs = firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("subscriptions");
+      validateSubscription(user)
+        .then((subscription) => {
+          console.log("user sub active");
+          response({
+            type: "subscription",
+            status: subscription.status,
+            message: subscription.status,
+          });
+        })
+        .catch((error) => {
+          console.log("error validate sub", error);
 
-      subs.get().then((snap) => {
-        if (snap.docs.length === 0) {
-          //completely new user - subscription inactive
           response({
             type: "subscription",
             status: "in-active",
-            message: false,
+            message: `There was a problem validating your subcription, please try again. Error: ${error}`,
           });
-        } else {
-          //users who had or have a current subscription
-          let totalSubscriptions = snap.docs.map((doc) => {
-            return doc.data();
-          });
-
-          let trialingSubs = totalSubscriptions.filter(
-            (doc) => doc.status == "trialing"
-          );
-
-          let activeSubs = totalSubscriptions.filter(
-            (doc) => doc.status == "active"
-          );
-
-          if (trialingSubs.length > 0 || activeSubs.length > 0) {
-            //active sub
-            response({
-              type: "subscription",
-              status: "active",
-              message: true,
-            });
-          } else {
-            //inactive sub
-            response({
-              type: "subscription",
-              status: "in-active",
-              message: false,
-            });
-          }
-        }
-      });
+        });
     }
   }
 
@@ -209,54 +185,34 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 });
 
 //functions ======>
-
-//validate sub
+//call api
 async function validateSubscription(user) {
   try {
-    let subs = firebase
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .collection("subscriptions");
+    //1. get token
+    const tokenId = await user.getIdToken();
 
-    let snap = await subs.get();
+    const server = firebaseServerUrl + "item/validate-subscription";
+    const options = {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${tokenId}`,
+      },
+    };
 
-    if (snap.docs.length === 0) {
-      //completely new user - subscription inactive
-      return {
-        type: "subscription",
-        status: "in-active",
-        message:
-          "You do not have an active subscription. ResellSavvy only works with an active subscription.",
-      };
-    } else {
-      //users who had or have a current subscription
-      let totalSubscriptions = snap.docs.map((doc) => {
-        return doc.data();
-      });
+    //LATER: handle errors; try catch
 
-      let trialingSubs = totalSubscriptions.filter(
-        (doc) => doc.status == "trialing"
+    const response = await fetch(server, options);
+    const subscription = await response.json();
+
+    //throw error message
+    if (subscription.status != "active") {
+      throw Error(
+        "You do not have an active subscription. ResellSavvy only works with an active subscription."
       );
-
-      let activeSubs = totalSubscriptions.filter(
-        (doc) => doc.status == "active"
-      );
-
-      if (trialingSubs.length > 0 || activeSubs.length > 0) {
-        //active sub
-        return {
-          type: "subscription",
-          status: "active",
-          message: false,
-        };
-      } else {
-        //inactive sub
-        throw Error(
-          "You do not have an active subscription. ResellSavvy only works with an active subscription."
-        );
-      }
     }
+
+    return subscription;
   } catch (error) {
     throw Error(error);
   }
@@ -337,6 +293,7 @@ async function fetchInventoryItems() {
       //2. validate sub, if not subbed -> throw error
       await validateSubscription(user);
 
+      //TODO:
       let itemRef = await firebase
         .firestore()
         .collection("users")
@@ -369,6 +326,8 @@ async function connectListingToItem(itemId, extractedID, marketplace, url) {
           "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
         );
       }
+
+      //TODO
 
       await firebase
         .firestore()
@@ -404,6 +363,7 @@ async function disconnectListingFromItem(itemId, marketplace) {
         );
       }
 
+      //TODO:
       await firebase
         .firestore()
         .collection("users")

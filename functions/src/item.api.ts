@@ -84,7 +84,84 @@ app.post('/create', async (req: express.Request, res: express.Response) => {
   }
 });
 
+//validate subscription
+app.get(
+  '/validate-subscription',
+  async (req: express.Request, res: express.Response) => {
+    //if no firebase token present, return error
+    if (!req.headers.authorization) {
+      res
+        .status(403)
+        .json({ error: 'You must be logged in to make this request.' });
+
+      throw Error('You must be logged in to make this request.');
+    }
+
+    const tokenId = req.headers.authorization.split('Bearer ')[1];
+
+    try {
+      const authenticated = await authenticate(tokenId);
+
+      const subscription = await validateSubscription(authenticated.uid);
+
+      res.status(200).send({
+        status: subscription.status,
+        message: subscription.message,
+      });
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+);
+
 //Methods =========>
+
+async function validateSubscription(uid: string) {
+  try {
+    const subs = db.collection('users').doc(uid).collection('subscriptions');
+
+    const snap = await subs.get();
+
+    if (snap.docs.length === 0) {
+      //completely new user - subscription inactive
+      return {
+        status: 'in-active',
+        message:
+          'You do not have an active subscription. ResellSavvy only works with an active subscription.',
+      };
+    } else {
+      //users who had or have a current subscription
+      const totalSubscriptions = snap.docs.map((doc) => {
+        return doc.data();
+      });
+
+      const trialingSubs = totalSubscriptions.filter(
+        (doc) => doc.status === 'trialing'
+      );
+
+      const activeSubs = totalSubscriptions.filter(
+        (doc) => doc.status === 'active'
+      );
+
+      if (trialingSubs.length > 0 || activeSubs.length > 0) {
+        //active sub
+        return {
+          status: 'active',
+          message: true,
+        };
+      } else {
+        return {
+          status: 'in-active',
+          message:
+            'You do not have an active subscription. ResellSavvy only works with an active subscription.',
+        };
+      }
+    }
+  } catch (error) {
+    throw Error(error);
+  }
+}
+
 async function createNewItemInFirestore(
   uid: string,
   properties: any,
