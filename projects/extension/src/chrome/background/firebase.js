@@ -1,5 +1,7 @@
 //LATER: separate into its own functions
 
+//TODO: //FIX
+
 // Your web app's Firebase configuration
 var firebaseConfig = {};
 var firebaseServerUrl = "";

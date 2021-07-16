@@ -80,7 +80,7 @@ function openModal() {
   let tabId = window.tabId; //injected
 
   let query = "?" + `marketplace=${marketplace}&tabId=${tabId}`;
-  let src = chrome.extension.getURL("index.html?#/import") + query;
+  let src = chrome.runtime.getURL("index.html?#/import") + query;
 
   swalAlert.showModalIframes(src);
 }
@@ -93,5 +93,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
         listings: getLoadedListings(),
       },
     });
+  }
+
+  if (msg.command == "set-tab-id") {
+    //set the tab id
+    window.tabId = msg.data.tabId;
   }
 });

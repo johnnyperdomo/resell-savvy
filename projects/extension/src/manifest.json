@@ -7,13 +7,9 @@
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
   },
-  "permissions": [
-    "storage",
-    "activeTab",
-    "background",
-    "tabs",
-    "management",
-    "*://*.resellsavvy.com/*",
+  "permissions": ["activeTab", "management", "scripting"],
+
+  "host_permissions": [
     "*://*.ebay.com/*",
     "*://*.etsy.com/*",
     "*://*.etsy.com/*",
@@ -27,7 +23,7 @@
   ],
 
   "background": {
-    "page": "chrome/background/background.html"
+    "service_worker": "background-wrapper.js"
   },
 
   "content_scripts": [
@@ -78,12 +74,27 @@
     }
   ],
 
-  "browser_action": {
+  "action": {
     "default_popup": "/index.html#/popup"
   },
 
-  "web_accessible_resources": ["*.html*"],
-
-  "manifest_version": 2,
-  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+  "web_accessible_resources": [
+    {
+      "resources": ["*.html*"],
+      "matches": [
+        "*://*.ebay.com/*",
+        "*://*.etsy.com/*",
+        "*://*.etsy.com/*",
+        "*://*.depop.com/*",
+        "*://*.kidizen.com/*",
+        "*://*.mercari.com/*",
+        "*://*.grailed.com/*",
+        "*://*.poshmark.com/*",
+        "*://www.picupload.ebay.com/*",
+        "*://app.resellsavvy.com/*"
+      ],
+      "extension_ids": []
+    }
+  ],
+  "manifest_version": 3
 }

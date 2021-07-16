@@ -43,7 +43,7 @@ function onLinkBtnPressed() {
   let marketplace = "mercari";
   let query = "?" + `marketplace=${marketplace}&url=${windowURL}`;
 
-  let src = chrome.extension.getURL("index.html?#/listing-connect") + query;
+  let src = chrome.runtime.getURL("index.html?#/listing-connect") + query;
 
   swalAlert.showModalIframes(src);
 }

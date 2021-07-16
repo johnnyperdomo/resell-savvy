@@ -1,6 +1,8 @@
 //Listen to when user lands on a closet
 
 //object of the closets of the different marketplace paths
+
+//LATER: //FIX, don't duplicate time code runs -> https://www.youtube.com/watch?v=29dmxQ9QQ4o
 const closetPaths = {
   depop: "depop.com/", //NOTE: depop doesn't have a direct closet path, so we detect it in closet script
   ebay: "ebay.com/sh/lst/active",
@@ -14,25 +16,25 @@ const closetPaths = {
 };
 
 function injectClosetScript(tabId, marketplace) {
+  //send tab id
+
   //inject sweet alert: (for rs-savvy closet)
-  chrome.tabs.executeScript(
-    tabId,
+  chrome.scripting.executeScript(
     {
-      file: `chrome/third-party/sweetalert.min.js`,
-      runAt: "document_start", //run at document start to inject first
+      target: { tabId: tabId },
+      files: ["chrome/third-party/sweetalert.min.js"],
     },
     () => {
-      chrome.tabs.executeScript(
-        tabId,
+      //inject button
+      chrome.scripting.executeScript(
         {
-          //to have tabId variable in the content script
-          code: `window.tabId = ${tabId}`,
-          runAt: "document_start",
+          target: { tabId: tabId },
+          files: [`chrome/marketplaces/closets/${marketplace}-closet.js`],
         },
         () => {
-          chrome.tabs.executeScript(tabId, {
-            file: `chrome/marketplaces/closets/${marketplace}-closet.js`,
-            runAt: "document_end", //inject when dom is interactive
+          chrome.tabs.sendMessage(tabId, {
+            command: "set-tab-id",
+            data: { tabId: tabId },
           });
         }
       );

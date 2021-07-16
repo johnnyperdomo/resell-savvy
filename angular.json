@@ -156,6 +156,8 @@
               "projects/extension/src/assets",
               "projects/extension/src/chrome",
               "projects/extension/src/manifest.json",
+              "projects/extension/src/background-wrapper.js",
+              "projects/extension/src/firebase.js",
               "projects/extension/src/assets/dashkit/img"
             ],
             "styles": [

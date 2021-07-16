@@ -1,13 +1,7 @@
-<!-- Works as a bridge for the chrome extension and how they communicate with each other -->
-
-<!-- NOTE: Communication between our background scripts are handled as if it was a single script, since the bckground scripts are combined. So we don't use the chrome.runtime api, just call a regular function normally -->
-
-<!-- LATER: maybe we can see how we can convert this into typescript -->
-
 <!-- Firebase scripts-->
-<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+<!-- <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-auth.js"></script> -->
 
 <script src="firebase.js"></script>
 
@@ -17,7 +11,3 @@
 <script src="sessions.js"></script>
 <script src="closet.js"></script>
 <script src="listing.js"></script>
-
-<!-- //LATER: see how you can make your web scraping more robust, since data can change on any given page
-// https://codeburst.io/two-simple-technique-for-web-scraping-pages-with-dynamically-created-css-class-names-72eaca8c1304
-//LATER: your websraping tools should also be done in a way of importance and availability, 'id'(99% of the time unique, and rarely changes), if not available -> 'name'(not necessarily unique, but it can be, and it changes less), 'class'(sometimes not unique, and it can change more often than the other two). i.e., if we're looking for an input, better to look for type input with an id attached rather than a class name: see this tut for more explanation: https://www.youtube.com/watch?v=b5jt2bhSeXs -->

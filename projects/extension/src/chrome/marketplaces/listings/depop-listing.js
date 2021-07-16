@@ -40,20 +40,10 @@ async function onLinkBtnPressed() {
   }
 
   let marketplace = "depop";
- 
 
-  let query =
-    "?" + `marketplace=${marketplace}&url=${windowURL}`;
+  let query = "?" + `marketplace=${marketplace}&url=${windowURL}`;
 
-  let src = chrome.extension.getURL("index.html?#/listing-connect") + query;
-
-  // //TODO: this code is just to test
-  // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  //   var myTabId = tabs[0].id;
-  //   chrome.tabs.sendMessage(myTabId, { text: "hi" }, function (response) {
-  //     alert(response);
-  //   });
-  // });
+  let src = chrome.runtime.getURL("index.html?#/listing-connect") + query;
 
   swalAlert.showModalIframes(src);
 }

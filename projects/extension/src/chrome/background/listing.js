@@ -18,9 +18,9 @@ const listingPaths = {
 };
 
 function injectListingScript(tabId, marketplace) {
-  chrome.tabs.executeScript(tabId, {
-    file: `chrome/marketplaces/listings/${marketplace}-listing.js`,
-    runAt: "document_end", //inject when dom is interactive
+  chrome.scripting.executeScript({
+    target: { tabId: tabId },
+    files: [`chrome/marketplaces/listings/${marketplace}-listing.js`],
   });
 }
 

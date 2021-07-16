@@ -23,6 +23,4 @@ module.exports = function (grunt) {
 
   // Default task(s).
   grunt.registerTask("default", ["uglify"]);
-
-  //TODO: use git compress in production to turn dist/extension into a zip file to easily be uploaded
 };
