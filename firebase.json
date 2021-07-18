@@ -3,9 +3,7 @@
     {
       "target": "reseller-savvy",
       "public": "dist/reseller-savvy",
-      "ignore": [
-        "**/.*"
-      ],
+      "ignore": ["**/.*"],
       "headers": [
         {
           "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",

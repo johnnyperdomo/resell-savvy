@@ -114,6 +114,108 @@ app.get(
   }
 );
 
+//fetch recent items //TODO
+app.post(
+  '/fetch-items',
+  async (req: express.Request, res: express.Response) => {
+    //if no firebase token present, return error
+    if (!req.headers.authorization) {
+      res
+        .status(403)
+        .json({ error: 'You must be logged in to make this request.' });
+
+      throw Error('You must be logged in to make this request.');
+    }
+
+    const tokenId = req.headers.authorization.split('Bearer ')[1];
+
+    try {
+      const authenticated = await authenticate(tokenId);
+
+      //from response
+      const queryLimit = req.body.query_limit;
+
+      const items = await fetchRecentItems(authenticated.uid, queryLimit);
+
+      res.status(200).send({
+        items: items,
+      });
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+);
+
+//connect-listing //TODO
+app.post(
+  '/connect-listing',
+  async (req: express.Request, res: express.Response) => {
+    //if no firebase token present, return error
+    if (!req.headers.authorization) {
+      res
+        .status(403)
+        .json({ error: 'You must be logged in to make this request.' });
+
+      throw Error('You must be logged in to make this request.');
+    }
+
+    const tokenId = req.headers.authorization.split('Bearer ')[1];
+
+    try {
+      const authenticated = await authenticate(tokenId);
+
+      //from response
+      const itemId = req.body.item_id;
+      const extractedId = req.body.extracted_id;
+      const marketplace = req.body.marketplace;
+      const url = req.body.url;
+
+      await connectListing(
+        authenticated.uid,
+        itemId,
+        extractedId,
+        marketplace,
+        url
+      );
+
+      res.status(200).send({ message: 'Successfully connected listing' });
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+);
+
+//disconnect-listing //TODO
+app.post(
+  '/disconnect-listing',
+  async (req: express.Request, res: express.Response) => {
+    //if no firebase token present, return error
+    if (!req.headers.authorization) {
+      res
+        .status(403)
+        .json({ error: 'You must be logged in to make this request.' });
+
+      throw Error('You must be logged in to make this request.');
+    }
+
+    const tokenId = req.headers.authorization.split('Bearer ')[1];
+
+    try {
+      const authenticated = await authenticate(tokenId);
+
+      //from response
+      const itemId = req.body.item_id;
+      const marketplace = req.body.marketplace;
+
+      await disconnectListing(authenticated.uid, itemId, marketplace);
+
+      res.status(200).send({ message: 'Successfully disconnected listing' });
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+);
+
 //Methods =========>
 
 async function validateSubscription(uid: string) {
@@ -159,6 +261,77 @@ async function validateSubscription(uid: string) {
     }
   } catch (error) {
     throw Error(error);
+  }
+}
+
+async function connectListing(
+  uid: string,
+  itemId: string,
+  extractedId: string,
+  marketplace: string,
+  url: string
+) {
+  try {
+    await db
+      .collection('users')
+      .doc(uid)
+      .collection('items')
+      .doc(itemId)
+      .set(
+        {
+          marketplaces: {
+            [`${marketplace}`]: { extractedID: extractedId, url: url },
+          },
+        },
+        { merge: true }
+      );
+    return;
+  } catch (error) {
+    throw new functions.https.HttpsError('unknown', error);
+  }
+}
+
+async function disconnectListing(
+  uid: string,
+  itemId: string,
+  marketplace: string
+) {
+  try {
+    await db
+      .collection('users')
+      .doc(uid)
+      .collection('items')
+      .doc(itemId)
+      .set(
+        {
+          marketplaces: { [`${marketplace}`]: null },
+        },
+        { merge: true }
+      );
+
+    return;
+  } catch (error) {
+    throw new functions.https.HttpsError('unknown', error);
+  }
+}
+
+async function fetchRecentItems(uid: string, queryLimit: number) {
+  try {
+    const itemRef = await db
+      .collection('users')
+      .doc(uid)
+      .collection('items')
+      .orderBy('modified', 'desc')
+      .limit(queryLimit)
+      .get();
+
+    const items = itemRef.docs.map((doc) => {
+      return doc.data();
+    });
+
+    return items;
+  } catch (error) {
+    throw new functions.https.HttpsError('unknown', error);
   }
 }
 

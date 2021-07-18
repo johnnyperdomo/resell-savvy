@@ -1,7 +1,5 @@
 //LATER: separate into its own functions
 
-//TODO: //FIX
-
 // Your web app's Firebase configuration
 
 // NOTE: Firestore not working in chrome extension V3: https://groups.google.com/a/chromium.org/g/chromium-extensions/c/t4i7PRxBtrM/m/ARZip9XIAQAJ
@@ -158,6 +156,9 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
         });
       })
       .catch((error) => {
+        console.log("fetch error is: ", error);
+        console.log("fetch error is 2 : ", error.Error);
+
         response({ status: "error", message: error });
       });
   }
@@ -214,7 +215,7 @@ async function validateSubscription(user) {
 
     return subscription;
   } catch (error) {
-    throw Error(error);
+    throw error;
   }
 }
 
@@ -279,107 +280,116 @@ async function checkAuthSubscription() {
 
 //fetch inventory items
 async function fetchInventoryItems() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = firebase.auth().currentUser;
+  try {
+    const user = firebase.auth().currentUser;
 
-      //1. validate auth, if unauthenticated -> throw error
-      if (!user) {
-        throw Error(
-          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
-        );
-      }
-
-      //2. validate sub, if not subbed -> throw error
-      await validateSubscription(user);
-
-      //TODO:
-      let itemRef = await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("items")
-        .orderBy("modified", "desc")
-        .limit(30)
-        .get();
-
-      let items = itemRef.docs.map((doc) => {
-        return doc.data();
-      });
-
-      resolve(items);
-      //3. fetch items
-    } catch (error) {
-      reject(error.message);
+    //1. validate auth, if unauthenticated -> throw error
+    if (!user) {
+      throw "You are not currently logged in. You must be logged in to use ResellSavvy.";
     }
-  });
+
+    //1. get token
+    const tokenId = await user.getIdToken();
+
+    const server = firebaseServerUrl + "item/fetch-items";
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${tokenId}`,
+      },
+      body: JSON.stringify({
+        query_limit: 30,
+      }),
+    };
+
+    //LATER: handle errors; try catch
+
+    const response = await fetch(server, options);
+    const jsonResponse = await response.json();
+
+    const items = jsonResponse.items;
+
+    console.log("items to fetch: ", items);
+
+    return items;
+  } catch (error) {
+    throw error;
+  }
 }
 
 //firestore connect listing to item
 async function connectListingToItem(itemId, extractedID, marketplace, url) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = firebase.auth().currentUser;
+  try {
+    const user = firebase.auth().currentUser;
 
-      if (!user) {
-        throw Error(
-          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
-        );
-      }
-
-      //TODO
-
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("items")
-        .doc(itemId)
-        .set(
-          {
-            marketplaces: {
-              [`${marketplace}`]: { extractedID: extractedID, url: url },
-            },
-          },
-          { merge: true }
-        );
-
-      resolve(true);
-    } catch (error) {
-      reject(error.message);
+    //1. validate auth, if unauthenticated -> throw error
+    if (!user) {
+      throw "You are not currently logged in. You must be logged in to use ResellSavvy.";
     }
-  });
+
+    //1. get token
+    const tokenId = await user.getIdToken();
+
+    const server = firebaseServerUrl + "item/connect-listing";
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${tokenId}`,
+      },
+      body: JSON.stringify({
+        item_id: itemId,
+        extracted_id: extractedID,
+        marketplace: marketplace,
+        url: url,
+      }),
+    };
+
+    //LATER: handle errors; try catch
+
+    const response = await fetch(server, options);
+    const jsonResponse = await response.json();
+
+    return jsonResponse;
+  } catch (error) {
+    throw error;
+  }
 }
 
 //firestore disconnect listing from item
 async function disconnectListingFromItem(itemId, marketplace) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const user = firebase.auth().currentUser;
+  try {
+    const user = firebase.auth().currentUser;
 
-      if (!user) {
-        throw Error(
-          "You are not currently logged in. You must be logged in to connect your listings. Make sure you are logged in by clicking on the extension popup."
-        );
-      }
-
-      //TODO:
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("items")
-        .doc(itemId)
-        .set(
-          {
-            marketplaces: { [`${marketplace}`]: null },
-          },
-          { merge: true }
-        );
-
-      resolve(true);
-    } catch (error) {
-      reject(error.message);
+    //1. validate auth, if unauthenticated -> throw error
+    if (!user) {
+      throw "You are not currently logged in. You must be logged in to use ResellSavvy.";
     }
-  });
+
+    //1. get token
+    const tokenId = await user.getIdToken();
+
+    const server = firebaseServerUrl + "item/disconnect-listing";
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${tokenId}`,
+      },
+      body: JSON.stringify({
+        item_id: itemId,
+        marketplace: marketplace,
+      }),
+    };
+
+    //LATER: handle errors; try catch
+
+    const response = await fetch(server, options);
+    const jsonResponse = await response.json();
+
+    return jsonResponse;
+  } catch (error) {
+    throw error;
+  }
 }

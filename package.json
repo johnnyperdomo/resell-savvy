@@ -32,7 +32,7 @@
     "bootstrap": "^4.6.0",
     "compressorjs": "^1.0.7",
     "currency.js": "^2.0.3",
-    "firebase": "^7.0 || ^8.0",
+    "firebase": "^8.7.1",
     "nanoid": "^3.1.22",
     "rxjs": "~6.5.4",
     "sweetalert2": "^11.0.7",
@@ -67,5 +67,17 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.13.",
+  "main": "Gruntfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnnyperdomo/resell-savvy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnnyperdomo/resell-savvy/issues"
+  },
+  "homepage": "https://github.com/johnnyperdomo/resell-savvy#readme"
 }
