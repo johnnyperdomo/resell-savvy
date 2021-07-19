@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:extension": "ng serve --project extension",
     "build": "ng build",
-    "build:extension": "ng build --project extension",
+    "build:extension": "ng build --watch --project extension",
     "build:extension:prod": "ng build --project extension && grunt uglify",
     "test": "ng test",
     "lint": "ng lint",

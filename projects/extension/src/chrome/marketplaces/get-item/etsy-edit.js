@@ -49,10 +49,10 @@ async function getItemDetails() {
   const properties = await formatItemProperties();
 
   const data = {
-    marketplace: listingObject.marketplace,
-    listingUrl: listingObject.listingUrl,
-    listingId: listingObject.listingId,
-    tab: listingObject.tab,
+    marketplace: window.listingObject.marketplace,
+    listingUrl: window.listingObject.listingUrl,
+    listingId: window.listingObject.listingId,
+    tab: window.listingObject.tab,
     properties: properties,
   };
   console.log(data);
@@ -67,16 +67,28 @@ function sendMessageToBackground(data) {
   });
 }
 
-//detect if document is ready
-document.onreadystatechange = function () {
-  //doc tree is loaded
+//listen for message from the import listings
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "set-listing-object") {
+    //set listing object, parse stringified json
+    window.listingObject = JSON.parse(msg.data.listingObject);
+
+    checkDocumentState();
+  }
+});
+
+function checkDocumentState() {
+  //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
-  //doc tree is fully ready to be manipulated
-  if (document.readyState === "complete") {
-    swalAlert.showProcessingAlert(); //swal alert ui waiting
-    getItemDetails();
-  }
-};
+  document.addEventListener("readystatechange", () => {
+    //doc tree is fully ready to be manipulated
+    if (document.readyState === "complete") {
+      swalAlert.showProcessingAlert();
+
+      getItemDetails(); //run process
+    }
+  });
+}

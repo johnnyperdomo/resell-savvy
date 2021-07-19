@@ -16,6 +16,18 @@
 
 //LATER: when crosslisting, open tabs in queue, instead of opening all the tabs all at once, since this can make the computer very slow when opening the tabs all at once in chrome, and can even freeze the browser. For now, open 10 simultaneously, but later on, let users crosspost a max of 25 items at a time when it auto-queues [chrome hogs alot of resources, so we don't want to have too many tabs open]. you need to add a queue for getting items(so we don't get at the same time,) and setting item. (so we don't set at the same time). Queue should work like this. (1. get item => set item 1 in marketplace, wait for page to finish loading, watch tab updates to see when it's status is complete, go on to marketplace 2 => set => wait => marketplace 3, etc....., when you finish going through all marketplaces, go to item 2, => set item marketplace 1, etc....) That way users can start editing item information, while the pages load. The problem with all at once, is that the tabs all finish loading at the same time which can take a few minutes before we see anything, instead, where if we queue it up in order, it will load a new page every few seconds and be even faster, and users can start editing right away. In the popup js, we will have a loading spinner that says something like "items processing in queue 3/25", they can have the option to cancel the queue if they want. If an item is in queue, they won't be able to crosslist any more items until the queue finishes. (make sure to remove from queue if the tab is taking too long to load, so like give it a minute max for each tab to reach the complete status, if not auto-exit that queue item. Also, if the user closes tab while it's loading, exit out the queue item.)
 
+//wait for tab to finish pending
+function waitForTabLoad(loadingTabId) {
+  return new Promise(function (resolve) {
+    chrome.tabs.onUpdated.addListener(function _listener(tabId, info, tab) {
+      if (loadingTabId == tabId && tab.status == "loading") {
+        chrome.tabs.onUpdated.removeListener(_listener);
+        resolve();
+      }
+    });
+  });
+}
+
 const marketplaceNewListingFormPaths = {
   depop: "https://www.depop.com/products/create/",
   ebay: "https://bulksell.ebay.com/ws/eBayISAPI.dll?SingleList",
@@ -54,9 +66,8 @@ function getEditUrlPath(marketplace, listingId) {
   }
 }
 
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
+chrome.runtime.onMessage.addListener(async (msg, sender, response) => {
   //LATER: maybe a better way to do this later on?
-  //TODO: add on
   if (msg.command == "remove-ebay-active-tab") {
     let tabId = msg.data.tab.id;
 
@@ -97,22 +108,20 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
     let editUrl = getEditUrlPath(marketplace, listingId);
 
-    chrome.tabs.create(
-      {
-        url: editUrl,
-        active: false,
-      },
-      (tab) => {
-        let listingObject = {
-          marketplace: marketplace,
-          listingUrl: listingUrl,
-          listingId: listingId,
-          tab: tab,
-        };
-
-        getListingDetails(tab, listingObject, marketplace);
-      }
-    );
+    chrome.tabs.create({ url: editUrl, active: false }, (tab) => {
+      //wait for tab to finish pending after create
+      waitForTabLoad(tab.id).then(() => {
+        chrome.tabs.get(tab.id, (loadedTab) => {
+          let listingObject = {
+            marketplace: marketplace,
+            listingUrl: listingUrl,
+            listingId: listingId,
+            tab: loadedTab,
+          };
+          getListingDetails(loadedTab, listingObject, marketplace);
+        });
+      });
+    });
   }
 
   //import items; after import session is completed
@@ -152,6 +161,8 @@ function createItem(properties, marketplace) {
 
   chrome.tabs.create(
     { url: marketplaceNewListingFormPaths[marketplace], active: false },
+
+    //TODO: wait for tab
     (tab) => {
       switch (marketplace) {
         case "ebay":
@@ -175,31 +186,53 @@ function injectScriptInNewTab(tab, data, marketplace) {
 
   console.log("script injected: ", data, marketplace);
 
-  chrome.tabs.executeScript(
-    tab.id,
+  chrome.scripting.executeScript(
     {
-      file: `chrome/third-party/jquery-3.6.0.min.js`,
-      runAt: "document_start",
+      target: { tabId: tab.id },
+      files: [`chrome/third-party/jquery-3.6.0.min.js`],
     },
     () => {
-      console.log("script execute 1 completed");
-      chrome.tabs.executeScript(
-        tab.id,
+      chrome.scripting.executeScript(
         {
-          code: `var itemData = ${itemData};`,
-          runAt: "document_start",
+          target: { tabId: tab.id },
+          files: [`chrome/marketplaces/new-item/${marketplace}-item.js`],
         },
         () => {
-          console.log("script execute 2 completed => 3");
-
-          chrome.tabs.executeScript(tab.id, {
-            file: `chrome/marketplaces/new-item/${marketplace}-item.js`,
-            runAt: "document_start",
-          });
+          //TODO
+          // chrome.tabs.sendMessage(tabId, {
+          //   command: "set-tab-id",
+          //   data: { tabId: tabId },
+          // });
         }
       );
     }
   );
+
+  // chrome.tabs.executeScript(
+  //   tab.id,
+  //   {
+  //     file: `chrome/third-party/jquery-3.6.0.min.js`,
+  //     runAt: "document_start",
+  //   },
+  //   () => {
+  //     console.log("script execute 1 completed");
+  //     chrome.tabs.executeScript(
+  //       tab.id,
+  //       {
+  //         code: `var itemData = ${itemData};`,
+  //         runAt: "document_start",
+  //       },
+  //       () => {
+  //         console.log("script execute 2 completed => 3");
+
+  //         chrome.tabs.executeScript(tab.id, {
+  //           file: `chrome/marketplaces/new-item/${marketplace}-item.js`,
+  //           runAt: "document_start",
+  //         });
+  //       }
+  //     );
+  //   }
+  // );
 }
 
 //Functions ====>
@@ -237,30 +270,55 @@ function createItemInServer(
 }
 
 function getListingDetails(tab, data, marketplace) {
+  data["tab"] = tab; //add tab properties to data object
+
   const listingObject = JSON.stringify(data);
 
-  chrome.tabs.executeScript(
-    tab.id,
+  console.log("listing object => ", listingObject);
+  chrome.scripting.executeScript(
     {
-      file: `chrome/third-party/jquery-3.6.0.min.js`,
-      runAt: "document_start",
+      target: { tabId: tab.id },
+      files: [`chrome/third-party/jquery-3.6.0.min.js`],
     },
     () => {
-      chrome.tabs.executeScript(
-        tab.id,
+      chrome.scripting.executeScript(
         {
-          code: `const listingObject = ${listingObject};`,
-          runAt: "document_start",
+          target: { tabId: tab.id },
+          files: [`chrome/marketplaces/get-item/${marketplace}-edit.js`],
         },
         () => {
-          chrome.tabs.executeScript(tab.id, {
-            file: `chrome/marketplaces/get-item/${marketplace}-edit.js`,
-            runAt: "document_start",
+          //TODO
+          chrome.tabs.sendMessage(tab.id, {
+            command: "set-listing-object",
+            data: { listingObject: listingObject },
           });
         }
       );
     }
   );
+
+  // chrome.tabs.executeScript(
+  //   tab.id,
+  //   {
+  //     file: `chrome/third-party/jquery-3.6.0.min.js`,
+  //     runAt: "document_start",
+  //   },
+  //   () => {
+  //     chrome.tabs.executeScript(
+  //       tab.id,
+  //       {
+  //         code: `const listingObject = ${listingObject};`,
+  //         runAt: "document_start",
+  //       },
+  //       () => {
+  //         chrome.tabs.executeScript(tab.id, {
+  //           file: `chrome/marketplaces/get-item/${marketplace}-edit.js`,
+  //           runAt: "document_start",
+  //         });
+  //       }
+  //     );
+  //   }
+  // );
 }
 
 //listen to active ebay tabs = {123: {stage: 'title', properties: properties}}

@@ -7,7 +7,7 @@
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
   },
-  "permissions": ["activeTab", "management", "scripting"],
+  "permissions": ["activeTab", "management", "scripting", "tabs"],
 
   "host_permissions": [
     "*://*.ebay.com/*",
@@ -51,7 +51,8 @@
         "chrome/classes/swal-alert.js",
         "chrome/classes/dom-event.js",
         "chrome/classes/helpers.js",
-        "chrome/classes/image-renderer.js"
+        "chrome/classes/image-renderer.js",
+        "chrome/classes/remove-listeners.js"
       ],
       "css": [
         "chrome/third-party/bootstrap.min.css",

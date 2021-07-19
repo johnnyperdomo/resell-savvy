@@ -202,7 +202,6 @@ async function validateSubscription(user) {
     };
 
     //LATER: handle errors; try catch
-
     const response = await fetch(server, options);
     const subscription = await response.json();
 
