@@ -97,7 +97,7 @@ function sendMessageToBackground(data) {
   });
 }
 
-//listen for message from the import listings iframe modal.
+//listen for message from the import listings
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.command == "set-listing-object") {
     console.log("set listing objected detected: ", msg);

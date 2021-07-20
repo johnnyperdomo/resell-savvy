@@ -12,7 +12,7 @@ const closetPaths = {
   mercari: "mercari.com/mypage/listings",
   poshmark: "poshmark.com/closet/",
   resellsavvy: "app.resellsavvy.com/item/", //for testing purposes
-  resellsavvy: "localhost:4200/item/", //for testing purposes
+  resellsavvy: "localhost:4200/item/", //for testing purposes "*://localhost:*/*"
 };
 
 function injectClosetScript(tabId, marketplace) {

@@ -164,25 +164,38 @@ function createItem(properties, marketplace) {
 
     //TODO: wait for tab
     (tab) => {
-      switch (marketplace) {
-        case "ebay":
-          injectScriptInNewTab(tab, properties, "ebay-bulksell");
-          ebaySessionTabs[tab.id] = { stage: "title", properties };
+      //wait for tab to finish pending after create
+      waitForTabLoad(tab.id).then(() => {
+        chrome.tabs.get(tab.id, (loadedTab) => {
+          // let listingObject = {
+          //   marketplace: marketplace,
+          //   listingUrl: listingUrl,
+          //   listingId: listingId,
+          //   tab: loadedTab,
+          // };
+          // getListingDetails(loadedTab, listingObject, marketplace);
 
-          break;
+          switch (marketplace) {
+            case "ebay":
+              injectScriptInNewTab(loadedTab, properties, "ebay-bulksell");
+              ebaySessionTabs[loadedTab.id] = { stage: "title", properties };
 
-        default:
-          injectScriptInNewTab(tab, properties, marketplace);
+              break;
 
-          break;
-      }
+            default:
+              injectScriptInNewTab(loadedTab, properties, marketplace);
+
+              break;
+          }
+        });
+      });
     }
   );
 }
 
 function injectScriptInNewTab(tab, data, marketplace) {
   data["tab"] = tab; //add tab properties to data object
-  var itemData = JSON.stringify(data);
+  const itemData = JSON.stringify(data);
 
   console.log("script injected: ", data, marketplace);
 
@@ -199,10 +212,10 @@ function injectScriptInNewTab(tab, data, marketplace) {
         },
         () => {
           //TODO
-          // chrome.tabs.sendMessage(tabId, {
-          //   command: "set-tab-id",
-          //   data: { tabId: tabId },
-          // });
+          chrome.tabs.sendMessage(tab.id, {
+            command: "set-item-data",
+            data: { itemData: itemData },
+          });
         }
       );
     }
@@ -287,7 +300,6 @@ function getListingDetails(tab, data, marketplace) {
           files: [`chrome/marketplaces/get-item/${marketplace}-edit.js`],
         },
         () => {
-          //TODO
           chrome.tabs.sendMessage(tab.id, {
             command: "set-listing-object",
             data: { listingObject: listingObject },
@@ -296,29 +308,6 @@ function getListingDetails(tab, data, marketplace) {
       );
     }
   );
-
-  // chrome.tabs.executeScript(
-  //   tab.id,
-  //   {
-  //     file: `chrome/third-party/jquery-3.6.0.min.js`,
-  //     runAt: "document_start",
-  //   },
-  //   () => {
-  //     chrome.tabs.executeScript(
-  //       tab.id,
-  //       {
-  //         code: `const listingObject = ${listingObject};`,
-  //         runAt: "document_start",
-  //       },
-  //       () => {
-  //         chrome.tabs.executeScript(tab.id, {
-  //           file: `chrome/marketplaces/get-item/${marketplace}-edit.js`,
-  //           runAt: "document_start",
-  //         });
-  //       }
-  //     );
-  //   }
-  // );
 }
 
 //listen to active ebay tabs = {123: {stage: 'title', properties: properties}}
@@ -328,7 +317,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //if this is an active ebay tab, and, if the tab is at the ('form' - stage), inject script in tab that fills in ebay form
   if (
     ebaySessionTabs.hasOwnProperty(tabId) &&
-    ebaySessionTabs[tabId].stage === "form"
+    ebaySessionTabs[tabId].stage === "form" &&
+    changeInfo.status === "loading"
   ) {
     console.log("this tab is active, script will be inject into tab:", tabId);
     let data = ebaySessionTabs[tabId];

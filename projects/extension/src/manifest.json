@@ -19,7 +19,8 @@
     "*://*.grailed.com/*",
     "*://*.poshmark.com/*",
     "*://www.picupload.ebay.com/*",
-    "*://app.resellsavvy.com/*"
+    "*://app.resellsavvy.com/*",
+    "*://localhost:*/*"
   ],
 
   "background": {
@@ -68,7 +69,8 @@
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*",
-        "*://app.resellsavvy.com/*"
+        "*://app.resellsavvy.com/*",
+        "*://localhost:*/*"
       ],
       "run_at": "document_start",
       "all_frames": true
@@ -92,7 +94,8 @@
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*",
-        "*://app.resellsavvy.com/*"
+        "*://app.resellsavvy.com/*",
+        "*://localhost:*/*"
       ],
       "extension_ids": []
     }

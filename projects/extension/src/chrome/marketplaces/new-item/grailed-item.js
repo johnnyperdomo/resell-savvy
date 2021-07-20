@@ -130,22 +130,58 @@ async function uploadImages(images, targetElement) {
 //LATER: do more error checking for fields, example like price/currency validation
 
 //detect if document is ready
-document.onreadystatechange = function () {
-  //doc tree is loaded
+// document.onreadystatechange = function () {
+//   //doc tree is loaded
+//   if (document.readyState === "interactive") {
+//     swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+//   }
+
+//   if (document.readyState === "complete") {
+//     swalAlert.showProcessingAlert(); //swal alert ui waiting;
+//     fillOutGrailedForm(
+//       itemData.imageUrls,
+//       itemData.title,
+//       itemData.description,
+//       itemData.color,
+//       itemData.condition,
+//       itemData.brand,
+//       itemData.price
+//     );
+//   }
+// };
+
+//listen for message from the crosslist listings
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "set-item-data") {
+    console.log("set listing objected detected: ", msg);
+
+    //set item data, parse stringified json
+    window.itemData = JSON.parse(msg.data.itemData);
+
+    checkDocumentState();
+  }
+});
+
+function checkDocumentState() {
+  //doc is loaded
   if (document.readyState === "interactive") {
-    swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
-  if (document.readyState === "complete") {
-    swalAlert.showProcessingAlert(); //swal alert ui waiting;
-    fillOutGrailedForm(
-      itemData.imageUrls,
-      itemData.title,
-      itemData.description,
-      itemData.color,
-      itemData.condition,
-      itemData.brand,
-      itemData.price
-    );
-  }
-};
+  document.addEventListener("readystatechange", () => {
+    //doc tree is fully ready to be manipulated
+    if (document.readyState === "complete") {
+      swalAlert.showProcessingAlert();
+
+      fillOutGrailedForm(
+        window.itemData.imageUrls,
+        window.itemData.title,
+        window.itemData.description,
+        window.itemData.color,
+        window.itemData.condition,
+        window.itemData.brand,
+        window.itemData.price
+      );
+    }
+  });
+}

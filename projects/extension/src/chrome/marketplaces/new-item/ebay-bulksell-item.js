@@ -13,7 +13,7 @@ async function enterEbayItemTitle() {
 
   iframe.contentWindow.postMessage(
     {
-      data: itemData,
+      data: window.itemData,
       command: "add-ebay-title-iframe",
     },
     "*"
@@ -25,7 +25,7 @@ async function enterEbayItemTitle() {
 
 //ebay listing will now advanced to stage 'form'
 function updateEbayListingStage() {
-  let tabId = itemData.tab;
+  let tabId = window.itemData.tab;
   let newStage = "form";
 
   let data = {
@@ -51,13 +51,49 @@ function fillInputValue(input, value) {
   input.dispatchEvent(inputEvent);
 }
 
-document.onreadystatechange = function () {
+// document.onreadystatechange = function () {
+//   if (document.readyState === "interactive") {
+//     swalAlert.showPageLoadingAlert();
+//   }
+
+//   if (document.readyState === "complete") {
+//     swalAlert.showProcessingAlert();
+//     enterEbayItemTitle(itemData.title);
+//   }
+// };
+
+//listen for message from the crosslist listings
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.command == "set-item-data") {
+    console.log("set listing objected detected: ", msg);
+
+    //set item data, parse stringified json
+    window.itemData = JSON.parse(msg.data.itemData);
+
+    checkDocumentState();
+  }
+});
+
+function checkDocumentState() {
+  //doc is loaded
   if (document.readyState === "interactive") {
-    swalAlert.showPageLoadingAlert();
+    swalAlert.showPageLoadingAlert(); //swal alert ui waiting
   }
 
-  if (document.readyState === "complete") {
-    swalAlert.showProcessingAlert();
-    enterEbayItemTitle(itemData.title);
-  }
-};
+  document.addEventListener("readystatechange", () => {
+    //doc tree is fully ready to be manipulated
+    if (document.readyState === "complete") {
+      swalAlert.showProcessingAlert();
+
+      enterEbayItemTitle(window.itemData.title);
+
+      // fillOutDepopForm(
+      //   window.itemData.imageUrls,
+      //   window.itemData.description,
+      //   window.itemData.condition,
+      //   window.itemData.color,
+      //   window.itemData.price
+      // );
+    }
+  });
+}
