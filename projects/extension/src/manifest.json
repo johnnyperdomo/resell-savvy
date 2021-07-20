@@ -7,7 +7,7 @@
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
   },
-  "permissions": ["activeTab", "management", "scripting", "tabs"],
+  "permissions": ["activeTab", "management", "scripting"],
 
   "host_permissions": [
     "*://*.ebay.com/*",
@@ -19,8 +19,7 @@
     "*://*.grailed.com/*",
     "*://*.poshmark.com/*",
     "*://www.picupload.ebay.com/*",
-    "*://app.resellsavvy.com/*",
-    "*://localhost:*/*"
+    "*://app.resellsavvy.com/*"
   ],
 
   "background": {
@@ -68,8 +67,7 @@
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*",
-        "*://app.resellsavvy.com/*",
-        "*://localhost:*/*"
+        "*://app.resellsavvy.com/*"
       ],
       "run_at": "document_start",
       "all_frames": true
@@ -93,8 +91,7 @@
         "*://*.grailed.com/*",
         "*://*.poshmark.com/*",
         "*://www.picupload.ebay.com/*",
-        "*://app.resellsavvy.com/*",
-        "*://localhost:*/*"
+        "*://app.resellsavvy.com/*"
       ],
       "extension_ids": []
     }
