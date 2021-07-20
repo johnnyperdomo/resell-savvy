@@ -92,3 +92,5 @@ function checkDocumentState() {
     }
   });
 }
+
+//NOTE: sometimes ebay fires onbeforeunload messages on the tabs, so the user is prompted with a "are you sure you want to leave message" (this is rarely fired, usually triggered when user interacts with page on import listing, but unfortunately we can't disable this since chrome extension scripts live in isolated worlds) see here: https://superuser.com/questions/705307/how-can-i-disable-are-you-sure-you-want-to-leave-this-page-popups-in-chrome/705308 ; https://developer.chrome.com/docs/extensions/mv2/content_scripts/#isolated_world

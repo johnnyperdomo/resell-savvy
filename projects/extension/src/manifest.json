@@ -52,8 +52,7 @@
         "chrome/classes/swal-alert.js",
         "chrome/classes/dom-event.js",
         "chrome/classes/helpers.js",
-        "chrome/classes/image-renderer.js",
-        "chrome/classes/remove-listeners.js"
+        "chrome/classes/image-renderer.js"
       ],
       "css": [
         "chrome/third-party/bootstrap.min.css",
