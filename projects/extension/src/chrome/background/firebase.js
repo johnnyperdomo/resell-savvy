@@ -14,6 +14,8 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
   if (extensionInfo.installType === "development") {
     //development keys
 
+    console.log("development mode detected");
+
     firebaseConfig = {
       apiKey: "AIzaSyAbbTWPL-KsWsYT18EDJMNq4fhYwQL-kFY",
       authDomain: "resell-savvy-dev.firebaseapp.com",
@@ -33,8 +35,10 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
 
     azureStoragePath =
       "https://resellsavvydev.blob.core.windows.net/item-images/";
-  } else if (extensionInfo.installType === "production") {
+  } else {
     //production keys
+
+    console.log("production mode detected");
 
     firebaseConfig = {
       apiKey: "AIzaSyB0NJRwgphk79xSOJ9j6vh2-PP0xSPJxg4",
@@ -45,6 +49,7 @@ chrome.management.get(chrome.runtime.id, (extensionInfo) => {
       appId: "1:624998877316:web:9b8222b4eca78adbb45ad1",
       measurementId: "G-7E7J9FLK9Y",
     };
+
     console.log("production mode: = ", firebaseConfig);
 
     // Initialize Firebase
