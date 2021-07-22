@@ -1,9 +1,9 @@
 {
   "targets": {
-    "reseller-savvy-dev": {
+    "resell-savvy": {
       "hosting": {
-        "reseller-savvy": [
-          "reseller-savvy-dev"
+        "resell-savvy": [
+          "resell-savvy"
         ]
       }
     }
