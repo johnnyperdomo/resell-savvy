@@ -118,6 +118,17 @@ function checkDocumentState() {
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
+
+    fillOutEtsyForm(
+      window.itemData.imageUrls,
+      window.itemData.title,
+      window.itemData.description,
+      window.itemData.price,
+      window.itemData.sku
+    );
   }
 
   document.addEventListener("readystatechange", () => {

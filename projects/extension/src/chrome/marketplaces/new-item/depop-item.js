@@ -119,24 +119,6 @@ async function uploadImages(images, targetElement) {
 
 //LATER: do more error checking for fields, example like price/currency validation, splices, and maximum length values
 
-//detect if document is ready
-// document.onreadystatechange = function () {
-//   if (document.readyState === "interactive") {
-//     swalAlert.showPageLoadingAlert(); //swal alert ui waiting;
-//   }
-
-//   if (document.readyState === "complete") {
-//     swalAlert.showProcessingAlert(); //swal alert ui waiting;
-//     fillOutDepopForm(
-//       window.itemData.imageUrls,
-//       window.itemData.description,
-//       window.itemData.condition,
-//       window.itemData.color,
-//       window.itemData.price
-//     );
-//   }
-// };
-
 //listen for message from the crosslist listings
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.command == "set-item-data") {
@@ -153,6 +135,17 @@ function checkDocumentState() {
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
+    
+    fillOutDepopForm(
+      window.itemData.imageUrls,
+      window.itemData.description,
+      window.itemData.condition,
+      window.itemData.color,
+      window.itemData.price
+    );
   }
 
   document.addEventListener("readystatechange", () => {

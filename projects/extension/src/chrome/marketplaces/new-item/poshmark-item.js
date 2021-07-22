@@ -176,9 +176,25 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 });
 
 function checkDocumentState() {
+  console.log("check doc state", document.readyState);
+
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
+
+    fillOutPoshmarkForm(
+      window.itemData.imageUrls,
+      window.itemData.title,
+      window.itemData.description,
+      window.itemData.brand,
+      window.itemData.condition,
+      window.itemData.color,
+      window.itemData.price,
+      window.itemData.sku
+    );
   }
 
   document.addEventListener("readystatechange", () => {

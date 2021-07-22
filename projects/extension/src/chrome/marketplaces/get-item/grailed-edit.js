@@ -105,6 +105,11 @@ function checkDocumentState() {
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
+
+    getItemDetails(); //run process
   }
 
   document.addEventListener("readystatechange", () => {

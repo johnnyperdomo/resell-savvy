@@ -73,18 +73,6 @@ function unlinkItemFromListing(id) {
 
 createLinkButton();
 
-// chrome.runtime.onMessage.addListener((msg, sender, response) => {
-//   //check user authentication
-//   if (msg.command == "depop-tester") {
-//     console.log(
-//       "content script called in depop!!!!!!!!!!! from iframe listing connect"
-//     );
-//     response(
-//       "this is a messge from the depop tester into the iframe listing connect"
-//     );
-//   }
-// });
-
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log(
     sender.tab
@@ -93,20 +81,3 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   );
   if (request.greeting === "hello") sendResponse({ farewell: "goodbye" });
 });
-
-// function getCurrentTabId() {
-//   var tabId = "";
-//   let [tab] = await chrome.tabs.getCurrent();
-
-//   await chrome.tabs.getCurrent((tab) => {
-//     tabId = tab.id;
-//   });
-
-//   return tabId;
-// }
-
-// async function getCurrentTab() {
-//   let queryOptions = { active: true, currentWindow: true };
-//   let [tab] = await chrome.tabs.query(queryOptions);
-//   return tab;
-// }

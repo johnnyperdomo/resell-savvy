@@ -78,6 +78,11 @@ function checkDocumentState() {
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
+
+    enterEbayItemTitle(window.itemData.title);
   }
 
   document.addEventListener("readystatechange", () => {
@@ -86,14 +91,6 @@ function checkDocumentState() {
       swalAlert.showProcessingAlert();
 
       enterEbayItemTitle(window.itemData.title);
-
-      // fillOutDepopForm(
-      //   window.itemData.imageUrls,
-      //   window.itemData.description,
-      //   window.itemData.condition,
-      //   window.itemData.color,
-      //   window.itemData.price
-      // );
     }
   });
 }

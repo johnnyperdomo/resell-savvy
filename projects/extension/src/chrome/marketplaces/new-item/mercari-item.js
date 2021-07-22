@@ -167,12 +167,9 @@ function checkDocumentState() {
   //doc is loaded
   if (document.readyState === "interactive") {
     swalAlert.showPageLoadingAlert(); //swal alert ui waiting
-  }
-
-  document.addEventListener("readystatechange", () => {
-    //doc tree is fully ready to be manipulated
-    if (document.readyState === "complete") {
-      swalAlert.showProcessingAlert();
+  } else {
+    //NOTE: sometimes doc can already be complete when script injected; race condition
+    swalAlert.showProcessingAlert();
 
     fillOutMercariForm(
       window.itemData.imageUrls,
@@ -183,6 +180,22 @@ function checkDocumentState() {
       window.itemData.color,
       window.itemData.price
     );
+  }
+
+  document.addEventListener("readystatechange", () => {
+    //doc tree is fully ready to be manipulated
+    if (document.readyState === "complete") {
+      swalAlert.showProcessingAlert();
+
+      fillOutMercariForm(
+        window.itemData.imageUrls,
+        window.itemData.title,
+        window.itemData.description,
+        window.itemData.brand,
+        window.itemData.condition,
+        window.itemData.color,
+        window.itemData.price
+      );
     }
   });
 }
